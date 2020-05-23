@@ -1,4 +1,4 @@
-# node-ava-dashboard
+# ava-dashboard
 
 ## Project setup
 ```
