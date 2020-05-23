@@ -1,20 +1,33 @@
 <template>
-    <ul>
-        <li class="hello" v-for="metric in metrics" :key="metric.id">
-            <div v-if="metric.type === 'HISTOGRAM'">
-                <p><b>{{metric.help}}</b></p>
-                <histogram-chart :chartdata="{labels: Object.keys(metric.metrics[0].buckets),
+    <v-container class="grey lighten-5">
+        <v-row
+                v-for="(metric, index) in metrics"
+                :key="index"
+                no-gutters
+        >
+            <v-col
+                    v-for="k in 3"
+                    :key="k"
+            >
+                <v-card
+                        class="pa-2"
+                        outlined
+                        tile
+                >
+                    <div v-if="metric.type === 'HISTOGRAM'">
+                        <p><b>{{metric.help}}</b></p>
+                        <histogram-chart :chartdata="{labels: Object.keys(metric.metrics[0].buckets),
                 datasets: [
       {
         label: metric.name,
         data: Object.values(metric.metrics[0].buckets)
       }
     ]}">
-                </histogram-chart>
-            </div>
-            <div v-if="metric.type === 'GAUGE'">
-                <p><b>{{metric.help}}</b></p>
-                <doughnut-chart :chartdata="{
+                        </histogram-chart>
+                    </div>
+                    <div v-if="metric.type === 'GAUGE'">
+                        <p><b>{{metric.help}}</b></p>
+                        <doughnut-chart :chartdata="{
                 labels: [ metric.name, 'unused'],
                 datasets: [
       {
@@ -23,16 +36,18 @@
         data: [metric.metrics[0].value, 100 - metric.metrics[0].value]
       }
     ]}"></doughnut-chart>
-            </div>
-            <div v-if="metric.type === 'COUNTER'">
-                <p><b>{{metric.help}}</b></p>
-                <p>Name : {{ metric.name }}</p>
-                <p>Value : {{ Object.values(metric.metrics[0])[0] }}</p>
-            </div>
-            <div v-else>
-            </div>
-        </li>
-    </ul>
+                    </div>
+                    <div v-if="metric.type === 'COUNTER'">
+                        <p><b>{{metric.help}}</b></p>
+                        <p>Name : {{ metric.name }}</p>
+                        <p>Value : {{ Object.values(metric.metrics[0])[0] }}</p>
+                    </div>
+                    <div v-else>
+                    </div>
+                </v-card>
+            </v-col>
+        </v-row>
+    </v-container>
 </template>
 
 <script lang="ts">
