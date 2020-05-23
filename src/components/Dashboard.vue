@@ -1,14 +1,10 @@
 <template>
     <v-container class="grey lighten-5">
-        <v-row
-                v-for="(metric, index) in metrics"
-                :key="index"
-                no-gutters
+        <v-row no-gutters
+               v-for="(metric, index) in metrics"
+               :key="index"
         >
-            <v-col
-                    v-for="k in 3"
-                    :key="k"
-            >
+            <v-col :key="index">
                 <v-card
                         class="pa-2"
                         outlined
@@ -46,6 +42,11 @@
                     </div>
                 </v-card>
             </v-col>
+            <v-responsive
+                    v-if="n === 2"
+                    :key="`width-${n}`"
+                    width="100%"
+            ></v-responsive>
         </v-row>
     </v-container>
 </template>
