@@ -27,7 +27,7 @@
             <div v-if="metric.type === 'COUNTER'">
                 <p><b>{{metric.help}}</b></p>
                 <p>Name : {{ metric.name }}</p>
-                <p>Value : {{ Object.values(metric.metrics[0]) }}</p>
+                <p>Value : {{ Object.values(metric.metrics[0])[0] }}</p>
             </div>
             <div v-else>
             </div>
