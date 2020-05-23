@@ -38,9 +38,6 @@
 
 <script lang="ts">
     import Vue from 'vue';
-    import axios from "axios";
-    import parsePrometheusTextFormat from "parse-prometheus-text-format";
-    import Dashboard from './components/Dashboard.vue';
 
     export default Vue.extend({
         name: 'App',
