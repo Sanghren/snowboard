@@ -54,7 +54,7 @@
         methods: {
             loadData: function () {
                 axios
-                    .get('http://www.mocky.io/v2/5ec8e9082f0000354adb70ca')
+                    .get('localhost:9650/ext/metrics')
                     .then((response) => this.metrics = parsePrometheusTextFormat(response.data));
             }
         },
