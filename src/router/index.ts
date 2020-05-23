@@ -3,6 +3,7 @@ import VueRouter, { RouteConfig } from 'vue-router'
 import Home from '../views/Dashboard.vue'
 import Dashboard from "@/views/Dashboard.vue";
 import Settings from "@/views/Settings.vue";
+import Users from "@/views/Users.vue";
 
 Vue.use(VueRouter)
 
@@ -21,6 +22,11 @@ const routes: Array<RouteConfig> = [
     path: '/settings',
     name: 'Settings',
     component: Settings
+  },
+  {
+    path: '/users',
+    name: 'Users',
+    component: Users
   },
 ]
 

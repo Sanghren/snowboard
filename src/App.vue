@@ -24,6 +24,11 @@
                         vertical
                 ></v-divider>
                 <router-link to="/settings" class="white--text">Settings</router-link>
+                <v-divider
+                        class="mx-4"
+                        vertical
+                ></v-divider>
+                <router-link to="/users" class="white--text">Users</router-link>
             </div>
             <v-spacer></v-spacer>
 
