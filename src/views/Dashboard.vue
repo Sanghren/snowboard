@@ -60,7 +60,8 @@
         components: {DoughnutChart, HistogramChart}
     })
     export default class Dashboard extends Vue {
-
+        @Prop() private msg!: string;
+        @Prop() private metrics!: any[];
     }
 </script>
 
