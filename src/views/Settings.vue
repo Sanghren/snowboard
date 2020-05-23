@@ -36,13 +36,12 @@
             'nodeUrl': {
                 required: false,
                 default() {
-                    return{};
+                    return "";
                 }
             }
         },
         methods: {
             updateSettings() {
-                console.log("It workssss ", this.nodeUrl)
                 this.$store.commit('updateSettings', this.nodeUrl)
             }
         }

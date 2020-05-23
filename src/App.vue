@@ -58,11 +58,9 @@
         methods: {
             loadMetrics() {
                 this.$store.commit('loadMetrics')
-                console.log(this.$store.state.metrics)
             },
             updateSettings(e: Event) {
                 this.$store.commit('updateSettings')
-                console.log('Update settings ', e)
             }
         },
         mounted: function () {
