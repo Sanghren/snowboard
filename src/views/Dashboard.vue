@@ -1,7 +1,7 @@
 <template>
     <v-container class="grey lighten-5">
         <v-row no-gutters
-               v-for="(metric, index) in metrics"
+               v-for="(metric, index) in this.$store.state.metrics"
                :key="index"
         >
             <v-col :key="index">
@@ -43,8 +43,8 @@
                 </v-card>
             </v-col>
             <v-responsive
-                    v-if="n === 2"
-                    :key="`width-${n}`"
+                    v-if="index === 2"
+                    :key="`width-${index}`"
                     width="100%"
             ></v-responsive>
         </v-row>
@@ -60,8 +60,7 @@
         components: {DoughnutChart, HistogramChart}
     })
     export default class Dashboard extends Vue {
-        @Prop() private msg!: string;
-        @Prop() private metrics!: any[];
+
     }
 </script>
 

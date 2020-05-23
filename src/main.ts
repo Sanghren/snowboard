@@ -4,9 +4,11 @@ import router from './router'
 import store from './store'
 import axios from 'axios'
 import vuetify from './plugins/vuetify';
+import 'es6-promise/auto'
 
 Vue.prototype.$http = axios
 Vue.config.productionTip = false
+
 
 new Vue({
   router,

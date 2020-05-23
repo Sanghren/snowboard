@@ -15,9 +15,11 @@
                         width="40"
                 />
             </div>
-
+            <div>
             <v-spacer></v-spacer>
-
+            <router-link to="/dashboard">Dashboard</router-link>
+            </div>
+            <v-spacer></v-spacer>
             <v-btn
                     href="https://github.com/tbrunain/ava-dashboard"
                     target="_blank"
@@ -29,7 +31,7 @@
         </v-app-bar>
 
         <v-content>
-            <Dashboard msg="Welcome to " :metrics="this.metrics"/>
+            <router-view/>
         </v-content>
     </v-app>
 </template>
@@ -44,7 +46,6 @@
         name: 'App',
 
         components: {
-            Dashboard,
         },
         data() {
             return {
@@ -52,18 +53,15 @@
             }
         },
         methods: {
-            loadData: function () {
-                axios
-                    .get('localhost:9650/ext/metrics')
-                    .then((response) => this.metrics = parsePrometheusTextFormat(response.data));
+            loadMetrics() {
+                this.$store.commit('loadMetrics')
+                console.log(this.$store.state.metrics)
             }
         },
         mounted: function () {
-            this.loadData();
-
+            this.loadMetrics();
             setInterval(() => {
-                //ts-ignore
-                this.loadData();
+                this.loadMetrics();
             }, 10000);
         }
     });
