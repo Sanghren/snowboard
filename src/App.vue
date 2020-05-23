@@ -15,11 +15,18 @@
                         width="40"
                 />
             </div>
-            <div>
+
             <v-spacer></v-spacer>
-            <router-link to="/dashboard">Dashboard</router-link>
+            <div>
+                <router-link to="/dashboard" class="white--text">Dashboard</router-link>
+                <v-divider
+                        class="mx-4"
+                        vertical
+                ></v-divider>
+                <router-link to="/settings" class="white--text">Settings</router-link>
             </div>
             <v-spacer></v-spacer>
+
             <v-btn
                     href="https://github.com/tbrunain/ava-dashboard"
                     target="_blank"
@@ -42,8 +49,7 @@
     export default Vue.extend({
         name: 'App',
 
-        components: {
-        },
+        components: {},
         data() {
             return {
                 metrics: null
@@ -53,6 +59,10 @@
             loadMetrics() {
                 this.$store.commit('loadMetrics')
                 console.log(this.$store.state.metrics)
+            },
+            updateSettings(e: Event) {
+                this.$store.commit('updateSettings')
+                console.log('Update settings ', e)
             }
         },
         mounted: function () {

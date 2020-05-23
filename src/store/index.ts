@@ -7,17 +7,25 @@ Vue.use(Vuex)
 
 export default new Vuex.Store({
   state: {
-    metrics:{}
+    nodeUrl: "http://localhost:9655/ext/metrics",
+    metrics: []
   },
   mutations: {
     loadMetrics (state) {
       axios
-          .get('http://localhost:9650/ext/metrics')
+          .get(state.nodeUrl)
           .then((response) => state.metrics = parsePrometheusTextFormat(response.data));
+    },
+    updateSettings (state, payload) {
+      state.nodeUrl = payload;
+      state.metrics = [];
+      axios
+          .get(state.nodeUrl)
+          .then((response) => state.metrics = parsePrometheusTextFormat(response.data))
+          .catch();
     }
   },
   actions: {
-
   },
   modules: {
   }
