@@ -43,6 +43,7 @@
         </v-app-bar>
 
         <v-content>
+            <v-alert v-model="this.$store.state.nodeDown" type="alert" dismissible>Error connecting to your node, check the url in settings !</v-alert>
             <router-view/>
         </v-content>
     </v-app>
@@ -66,12 +67,14 @@
             },
             updateSettings(e: Event) {
                 this.$store.commit('updateSettings')
+            },
+            isNodeUp() {
+                this.$store.commit('isNodeUp')
             }
         },
         mounted: function () {
-            this.loadMetrics();
             setInterval(() => {
-                this.loadMetrics();
+                this.isNodeUp();
             }, 10000);
         }
     });

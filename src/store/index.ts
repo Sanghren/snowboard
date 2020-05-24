@@ -7,6 +7,7 @@ Vue.use(Vuex)
 
 export default new Vuex.Store({
   state: {
+    nodeDown: true,
     nodeUrl: "http://localhost:9655",
     users: [],
     metrics: []
@@ -28,7 +29,21 @@ export default new Vuex.Store({
       axios
           .get(state.nodeUrl + '/ext/metrics')
           .then((response) => state.metrics = parsePrometheusTextFormat(response.data))
-          .catch();
+          .catch((e) => console.log("BBBBB - ", e));
+    },
+    isNodeUp (state, payload) {
+      if(!state.nodeUrl){
+        state.nodeDown = true;
+      } else {
+        axios
+            .get(state.nodeUrl + '/ext/metrics')
+            .then((response) => {
+              state.metrics = parsePrometheusTextFormat(response.data);
+              state.nodeDown = false;
+            })
+            .catch((e) => state.nodeDown = true);
+      }
+
     }
   },
   actions: {
