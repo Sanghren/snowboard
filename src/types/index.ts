@@ -1,35 +1,42 @@
-export interface IKeystoreState {
-    users: IUser[],
+export interface KeystoreState {
+    users: User[];
 }
 
-export interface IMetricsState {
-    nodeDown: boolean,
-    nodeUrl: string,
-    metrics: object[]
+export interface MetricsState {
+    nodeDown: boolean;
+    nodeUrl: string;
+    metrics: object[];
 }
 
-export interface IAdminState {
-    nodeId: string,
-    peers: string[],
-    networkId: string,
-
-}
-
-
-export interface IPChainState {
-    blockchains: IBlockchain[],
-}
-
-export interface IBlockchain {
-    id: string,
-    name: string,
-    subnetID: string,
-    vmID: string
+export interface AdminState {
+    nodeId: string;
+    peers: string[];
+    networkId: string;
 
 }
 
 
-export interface  IUser {
+export interface PChainState {
+    blockchains: Blockchain[];
+}
+
+export interface Blockchain {
+    id: string;
+    name: string;
+    subnetID: string;
+    vmID: string;
+    status: BlockchainStatus;
+
+}
+
+export enum BlockchainStatus {
+    VALIDATING,
+    CREATED,
+    PREFERRED,
+    UNKNOWN
+}
+
+export interface User {
     name: string;
     password?: string;
     exportData?: string;
