@@ -29,10 +29,15 @@ export default new Vuex.Store({
       axios
           .get(state.nodeUrl + '/ext/metrics')
           .then((response) => state.metrics = parsePrometheusTextFormat(response.data))
+          .catch((e) => {
+            state.nodeDown = true;
+            state.metrics = [];
+          })
     },
-    isNodeUp (state, payload) {
+    isNodeUp (state) {
       if(!state.nodeUrl){
         state.nodeDown = true;
+        state.metrics = [];
       } else {
         axios
             .get(state.nodeUrl + '/ext/metrics')
@@ -40,7 +45,10 @@ export default new Vuex.Store({
               state.metrics = parsePrometheusTextFormat(response.data);
               state.nodeDown = false;
             })
-            .catch((e) => state.nodeDown = true);
+            .catch((e) => {
+              state.metrics = [];
+              state.nodeDown = true;
+            });
       }
 
     }
