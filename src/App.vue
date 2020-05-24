@@ -18,7 +18,7 @@
 
             <v-spacer></v-spacer>
             <div>
-                <router-link to="/dashboard" class="white--text">Dashboard</router-link>
+                <router-link to="/nodemetrics" class="white--text">Node Metrics</router-link>
                 <v-divider
                         class="mx-4"
                         vertical
