@@ -4,6 +4,7 @@ import Home from '../views/NodeMetrics.vue'
 import NodeMetrics from "@/views/NodeMetrics.vue";
 import Settings from "@/views/Settings.vue";
 import Users from "@/views/Users.vue";
+import NodeInfo from "@/views/NodeInfo.vue";
 
 Vue.use(VueRouter)
 
@@ -14,7 +15,7 @@ const routes: Array<RouteConfig> = [
         component: Home
     },
     {
-        path: '/nodemetrics',
+        path: '/node-metrics',
         name: 'NodeMetrics',
         component: NodeMetrics
     },
@@ -27,6 +28,11 @@ const routes: Array<RouteConfig> = [
         path: '/users',
         name: 'Users',
         component: Users
+    },
+    {
+        path: '/node-info',
+        name: 'NodeInfo',
+        component: NodeInfo
     },
 ]
 

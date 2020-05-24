@@ -8,6 +8,13 @@ export interface IMetricsState {
     metrics: object[]
 }
 
+export interface IAdminState {
+    nodeId: string,
+    peers: string[],
+    networkId: string,
+
+}
+
 export interface  IUser {
     name: string;
     password?: string;

@@ -18,7 +18,7 @@
 
             <v-spacer></v-spacer>
             <div>
-                <router-link to="/nodemetrics" class="white--text">Node Metrics</router-link>
+                <router-link to="/node-metrics" class="white--text">Node Metrics</router-link>
                 <v-divider
                         class="mx-4"
                         vertical
@@ -29,6 +29,11 @@
                         vertical
                 ></v-divider>
                 <router-link to="/users" class="white--text">Users</router-link>
+                <v-divider
+                        class="mx-4"
+                        vertical
+                ></v-divider>
+                <router-link to="/node-info" class="white--text">Node Info</router-link>
             </div>
             <v-spacer></v-spacer>
 
