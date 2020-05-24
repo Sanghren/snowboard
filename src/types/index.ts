@@ -1,5 +1,5 @@
 export interface IKeystoreState {
-    users: IUser[]
+    users: IUser[],
 }
 
 export interface IMetricsState {
@@ -10,4 +10,6 @@ export interface IMetricsState {
 
 export interface  IUser {
     name: string;
+    password?: string;
+    exportData?: string;
 }

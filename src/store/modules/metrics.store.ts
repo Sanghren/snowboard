@@ -5,7 +5,7 @@ import {IMetricsState} from "@/types";
 
 const state: IMetricsState = {
     nodeDown: true,
-    nodeUrl: "http://localhost:9655",
+    nodeUrl: "http://localhost:9650",
     metrics: []
 }
 
