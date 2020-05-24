@@ -21,7 +21,7 @@
                         class="mr-4"
                         @click="updateSettings"
                 >
-                    Validate
+                    Save
                 </v-btn>
             </v-container>
         </v-form>
