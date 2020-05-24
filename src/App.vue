@@ -43,7 +43,7 @@
         </v-app-bar>
 
         <v-content>
-            <v-alert v-model="this.$store.state.nodeDown" type="alert" dismissible>Error connecting to your node, check the url in settings !</v-alert>
+            <v-alert v-model="this.$store.state.nodeDown" type="error" dismissible>Error connecting to your node, check the url in settings !</v-alert>
             <router-view/>
         </v-content>
     </v-app>

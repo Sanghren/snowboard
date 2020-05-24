@@ -29,7 +29,6 @@ export default new Vuex.Store({
       axios
           .get(state.nodeUrl + '/ext/metrics')
           .then((response) => state.metrics = parsePrometheusTextFormat(response.data))
-          .catch((e) => console.log("BBBBB - ", e));
     },
     isNodeUp (state, payload) {
       if(!state.nodeUrl){
