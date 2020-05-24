@@ -1,21 +1,22 @@
 <template>
     <div>
-        <h1>Users</h1>
-        <v-simple-table>
+        <h1 class="text-lg-center">Users</h1>
+        <v-simple-table dense="true" class="ml-5 mr-5">
             <thead>
             <tr>
                 <th class="text-left">User</th>
-                <th class="text-left">Export</th>
-                <th class="text-left">Delete</th>
+                <th class="text-left">Export Data</th>
+                <th class="text-right">Actions</th>
             </tr>
             </thead>
             <tbody>
-            <tr v-for="(user, index) in this.$store.state.Keystore.users" :key="index">
+            <tr v-for="(user, index) in this.$store.state.Keystore.users" :key="index" class="mb-4">
                 <td>{{user.name}}</td>
-                <td>
+                <td>{{user.exportData}}</td>
+                <td class="text-right">
                     <v-dialog v-model="exportDialog[user.name]" :key="user.name" persistent max-width="290">
                         <template v-slot:activator="{ on }">
-                            <v-btn color="primary" dark v-on="on">Export</v-btn>
+                            <v-btn color="primary" dark small text v-on="on">Export</v-btn>
                         </template>
                         <v-card>
                             <v-card-title class="headline">Export a user</v-card-title>
@@ -44,12 +45,9 @@
                             </v-card-actions>
                         </v-card>
                     </v-dialog>
-                    {{ user.exportData }}
-                </td>
-                <td>
                     <v-dialog v-model="deleteDialog[user.name]" :key="user.name" persistent max-width="290">
                         <template v-slot:activator="{ on }">
-                            <v-btn color="primary" dark v-on="on">Delete</v-btn>
+                            <v-btn color="primary" dark small text class="ml-1" v-on="on">Delete</v-btn>
                         </template>
                         <v-card>
                             <v-card-title class="headline">Delete this user on the node ?</v-card-title>
@@ -82,7 +80,7 @@
         </v-simple-table>
         <v-dialog v-model="createDialog" persistent max-width="290">
             <template v-slot:activator="{ on }">
-                <v-btn color="primary" dark v-on="on">Create user</v-btn>
+                <v-btn color="primary" dark small text v-on="on">Create user</v-btn>
             </template>
             <v-card>
                 <v-card-title class="headline">Create a user</v-card-title>
@@ -120,7 +118,7 @@
         </v-dialog>
         <v-dialog v-model="importDialog" persistent max-width="290">
             <template v-slot:activator="{ on }">
-                <v-btn color="primary" dark v-on="on">Import a user</v-btn>
+                <v-btn color="primary" dark small text v-on="on">Import a user</v-btn>
             </template>
             <v-card>
                 <v-card-title class="headline">Import a user</v-card-title>

@@ -1,6 +1,6 @@
 <template>
     <div>
-        <h1>Settings</h1>
+        <h1 class="text-lg-center">Settings</h1>
         <v-form>
             <v-container>
                 <v-row>
