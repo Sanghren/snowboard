@@ -1,9 +1,9 @@
 // State object
 import axios from "axios";
 import parsePrometheusTextFormat from "parse-prometheus-text-format";
-import {IMetricsState} from "@/types";
+import {MetricsState} from "@/types";
 
-const state: IMetricsState = {
+const state: MetricsState = {
     nodeDown: true,
     nodeUrl: "http://localhost:9650",
     metrics: []
@@ -12,10 +12,10 @@ const state: IMetricsState = {
 
 // Getter functions
 const getters = {
-    isNodeDown( state: IMetricsState ) {
+    isNodeDown( state: MetricsState ) {
         return state.nodeDown;
     },
-    metrics( state: IMetricsState ) {
+    metrics( state: MetricsState ) {
         return state.metrics;
     },
 }
@@ -51,14 +51,14 @@ const actions = {
 // Mutations
 const mutations = {
     //ToDo Type the metrics
-    setMetrics (state: IMetricsState, data: []) {
+    setMetrics (state: MetricsState, data: []) {
         state.nodeDown = false;
         state.metrics = data
     },
-    setNodeUrl (state: IMetricsState, data: string) {
+    setNodeUrl (state: MetricsState, data: string) {
         state.nodeUrl = data
     },
-    error (state: IMetricsState) {
+    error (state: MetricsState) {
         state.metrics = [];
         state.nodeDown = true;
     },

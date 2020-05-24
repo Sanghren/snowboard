@@ -1,8 +1,8 @@
 // State object
 import axios from "axios";
-import {IAdminState} from "@/types";
+import {AdminState} from "@/types";
 
-const state: IAdminState = {
+const state: AdminState = {
     nodeId: "",
     peers: [],
     networkId: "",
@@ -60,13 +60,13 @@ const actions = {
 }
 // Mutations
 const mutations = {
-    setNodeId(state: IAdminState, nodeId: string) {
+    setNodeId(state: AdminState, nodeId: string) {
         state.nodeId = nodeId;
     },
-    setPeers(state: IAdminState, peers: string[]) {
+    setPeers(state: AdminState, peers: string[]) {
         state.peers = peers;
     },
-    setNetworkIds(state: IAdminState, networkIds: string) {
+    setNetworkIds(state: AdminState, networkIds: string) {
         state.networkId = networkIds;
     },
     error() {

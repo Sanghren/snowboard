@@ -1,15 +1,15 @@
 // State object
-import {IKeystoreState, IMetricsState, IUser} from "@/types";
+import {KeystoreState, MetricsState, User} from "@/types";
 import axios from "axios";
 
-const state: IKeystoreState = {
+const state: KeystoreState = {
     users: [],
 }
 
 
 // Getter functions
 const getters = {
-    getUsers(state: IKeystoreState) {
+    getUsers(state: KeystoreState) {
         return state.users;
     },
 }
@@ -37,7 +37,7 @@ const actions = {
                 })
         })
     },
-    exportUser(context: any, userInfo: IUser) {
+    exportUser(context: any, userInfo: User) {
         return new Promise((resolve, reject) => {
             axios
                 .post(context.rootState.Metrics.nodeUrl + '/ext/keystore', {
@@ -58,7 +58,7 @@ const actions = {
                 })
         })
     },
-    deleteUser(context: any, userInfo: IUser) {
+    deleteUser(context: any, userInfo: User) {
         return new Promise((resolve, reject) => {
             axios
                 .post(context.rootState.Metrics.nodeUrl + '/ext/keystore', {
@@ -82,7 +82,7 @@ const actions = {
                 })
         })
     },
-    createUser(context: any, userInfo: IUser) {
+    createUser(context: any, userInfo: User) {
         return new Promise((resolve, reject) => {
             axios
                 .post(context.rootState.Metrics.nodeUrl + '/ext/keystore', {
@@ -100,7 +100,7 @@ const actions = {
                 })
         })
     },
-    importUser(context: any, userInfo: IUser) {
+    importUser(context: any, userInfo: User) {
         return new Promise((resolve, reject) => {
             axios
                 .post(context.rootState.Metrics.nodeUrl + '/ext/keystore', {
@@ -122,14 +122,14 @@ const actions = {
 }
 // Mutations
 const mutations = {
-    setUsers(state: IKeystoreState, users: IUser[]) {
+    setUsers(state: KeystoreState, users: User[]) {
         state.users = users;
     },
-    setUserExport(state: IKeystoreState, userExport: IUser) {
+    setUserExport(state: KeystoreState, userExport: User) {
         const index = state.users.findIndex(item => item.name === userExport.name);
         state.users[index].exportData = userExport.exportData;
     },
-    error(state: IKeystoreState) {
+    error(state: KeystoreState) {
         state.users = [];
     }
 }

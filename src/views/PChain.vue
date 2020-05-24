@@ -12,7 +12,7 @@
             </thead>
             <tbody>
             <tr v-for="blockchain in this.$store.state.PChain.blockchains" :key="blockchain.id" class="mb-4">
-                <td>{{ blockchain.id }}</td>
+                <td><BlockchainStatusIcon :chain-id="blockchain.id" :status="blockchain.status"></BlockchainStatusIcon></td>
                 <td>{{ blockchain.name }}</td>
                 <td>{{ blockchain.subnetID }}</td>
                 <td>{{ blockchain.vmID }}</td>
@@ -24,8 +24,10 @@
 
 <script lang="ts">
     import Vue from 'vue';
+    import BlockchainStatusIcon from "@/components/BlockchainStatus.vue";
 
     export default Vue.extend({
+        components: {BlockchainStatusIcon},
         props: {},
         mounted() {
             this.$store.dispatch('PChain/fetchBlockchains')
