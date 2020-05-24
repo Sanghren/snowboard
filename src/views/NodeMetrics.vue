@@ -1,5 +1,5 @@
 <template>
-    <v-container class="grey lighten-5">
+    <v-container class="#121212 lighten-5">
         <v-row no-gutters
                v-for="(metric, index) in this.$store.state.Metrics.metrics"
                :key="index"
