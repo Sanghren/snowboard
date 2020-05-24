@@ -33,7 +33,7 @@
             <v-spacer></v-spacer>
 
             <v-btn
-                    href="https://github.com/tbrunain/ava-dashboard"
+                    href="https://github.com/tbrunain/snowboard"
                     target="_blank"
                     text
             >
