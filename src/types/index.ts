@@ -15,6 +15,20 @@ export interface IAdminState {
 
 }
 
+
+export interface IPChainState {
+    blockchains: IBlockchain[],
+}
+
+export interface IBlockchain {
+    id: string,
+    name: string,
+    subnetID: string,
+    vmID: string
+
+}
+
+
 export interface  IUser {
     name: string;
     password?: string;

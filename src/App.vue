@@ -34,6 +34,11 @@
                         vertical
                 ></v-divider>
                 <router-link to="/node-info" class="white--text">Node Info</router-link>
+                <v-divider
+                        class="mx-4"
+                        vertical
+                ></v-divider>
+                <router-link to="/p-chain" class="white--text">P Chain</router-link>
             </div>
             <v-spacer></v-spacer>
 
