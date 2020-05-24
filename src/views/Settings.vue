@@ -42,7 +42,7 @@
         },
         methods: {
             updateSettings() {
-                this.$store.commit('updateSettings', this.nodeUrl)
+                this.$store.dispatch('Metrics/updateSettings', this.nodeUrl)
             }
         }
     })

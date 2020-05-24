@@ -43,7 +43,7 @@
         </v-app-bar>
 
         <v-content>
-            <v-alert v-model="this.$store.state.nodeDown" type="error" dismissible>Error connecting to your node, check the url in settings !</v-alert>
+            <v-alert v-model="this.$store.state.Metrics.nodeDown" type="error" dismissible>Error connecting to your node, check the url in settings !</v-alert>
             <router-view/>
         </v-content>
     </v-app>
@@ -58,18 +58,16 @@
         components: {},
         data() {
             return {
-                metrics: null
+                metrics: null,
+                nodeDown: true,
             }
         },
         methods: {
-            loadMetrics() {
-                this.$store.commit('loadMetrics')
-            },
             updateSettings(e: Event) {
-                this.$store.commit('updateSettings')
+                this.$store.dispatch('Metrics/updateSettings')
             },
             isNodeUp() {
-                this.$store.commit('isNodeUp')
+                this.$store.dispatch('Metrics/isNodeUp')
             }
         },
         mounted: function () {

@@ -10,8 +10,7 @@
 
     export default Vue.extend({
         beforeMount() {
-            console.log("We are mounting it boysssss")
-            this.$store.commit('loadUsers');
+            this.$store.commit('Metrics/loadUsers');
         }
     })
 </script>

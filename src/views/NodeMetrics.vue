@@ -1,7 +1,7 @@
 <template>
     <v-container class="grey lighten-5">
         <v-row no-gutters
-               v-for="(metric, index) in this.$store.state.metrics"
+               v-for="(metric, index) in this.$store.state.Metrics.metrics"
                :key="index"
         >
             <v-col :key="index">
@@ -55,13 +55,13 @@
     import {Component, Prop, Vue} from 'vue-property-decorator';
     import HistogramChart from "@/components/HistogramChart.vue";
     import DoughnutChart from "@/components/DoughnutChart.vue";
-
     @Component({
         components: {DoughnutChart, HistogramChart}
     })
     export default class Dashboard extends Vue {
         @Prop() private msg!: string;
         @Prop() private metrics!: any[];
+
     }
 </script>
 
