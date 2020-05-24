@@ -1,7 +1,7 @@
 <template>
     <div>
         <h1>Settings</h1>
-        <v-form v-model="valid">
+        <v-form>
             <v-container>
                 <v-row>
                     <v-col
@@ -36,7 +36,7 @@
             'nodeUrl': {
                 required: false,
                 default() {
-                    return "";
+                    return this.$store.state.nodeUrl;
                 }
             }
         },
