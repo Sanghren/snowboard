@@ -41,7 +41,8 @@
                             <v-card-actions>
                                 <v-spacer></v-spacer>
                                 <v-btn color="green darken-1" text @click="exportUser(user.name)">Export</v-btn>
-                                <v-btn color="green darken-1" text @click="$set(exportDialog, user.name, false)">Close</v-btn>
+                                <v-btn color="green darken-1" text @click="$set(exportDialog, user.name, false)">Close
+                                </v-btn>
                             </v-card-actions>
                         </v-card>
                     </v-dialog>
@@ -70,7 +71,8 @@
                             <v-card-actions>
                                 <v-spacer></v-spacer>
                                 <v-btn color="green darken-1" text @click="deleteUser(user.name)">Delete</v-btn>
-                                <v-btn color="green darken-1" text @click="$set(deleteDialog, user.name, false)">Close</v-btn>
+                                <v-btn color="green darken-1" text @click="$set(deleteDialog, user.name, false)">Close
+                                </v-btn>
                             </v-card-actions>
                         </v-card>
                     </v-dialog>
@@ -78,91 +80,93 @@
             </tr>
             </tbody>
         </v-simple-table>
-        <v-dialog v-model="createDialog" class="text-md-center" persistent max-width="290">
-            <template v-slot:activator="{ on }">
-                <v-btn color="primary" dark small text v-on="on">Create user</v-btn>
-            </template>
-            <v-card>
-                <v-card-title class="headline">Create a user</v-card-title>
-                <v-form>
-                    <v-container fluid>
-                        <v-row>
-                            <v-text-field
-                                    v-model="username"
-                                    name="input-10-1"
-                                    label="Normal with hint text"
-                                    counter
-                                    @click:append="show1 = !show1"
-                            ></v-text-field>
-                        </v-row>
-                        <v-row>
-                            <v-text-field
-                                    v-model="password"
-                                    :append-icon="show1 ? 'mdi-eye' : 'mdi-eye-off'"
-                                    :type="show1 ? 'text' : 'password'"
-                                    name="input-10-1"
-                                    label="Normal with hint text"
-                                    hint="At least 8 characters"
-                                    counter
-                                    @click:append="show1 = !show1"
-                            ></v-text-field>
-                        </v-row>
-                    </v-container>
-                </v-form>
-                <v-card-actions>
-                    <v-spacer></v-spacer>
-                    <v-btn color="green darken-1" text @click="createDialog = false">Cancel</v-btn>
-                    <v-btn color="green darken-1" text @click="createUser()">Create</v-btn>
-                </v-card-actions>
-            </v-card>
-        </v-dialog>
-        <v-dialog v-model="importDialog" class="text-md-center" persistent max-width="290">
-            <template v-slot:activator="{ on }">
-                <v-btn color="primary" dark small text v-on="on">Import a user</v-btn>
-            </template>
-            <v-card>
-                <v-card-title class="headline">Import a user</v-card-title>
-                <v-form>
-                    <v-container fluid>
-                        <v-row>
-                            <v-text-field
-                                    v-model="username"
-                                    name="input-10-1"
-                                    label="Normal with hint text"
-                                    counter
-                                    @click:append="show1 = !show1"
-                            ></v-text-field>
-                        </v-row>
-                        <v-row>
-                            <v-text-field
-                                    v-model="userData"
-                                    name="input-10-1"
-                                    label="Normal with hint text"
-                                    counter
-                                    @click:append="show1 = !show1"
-                            ></v-text-field>
-                        </v-row>
-                        <v-row>
-                            <v-text-field
-                                    v-model="password"
-                                    :append-icon="show1 ? 'mdi-eye' : 'mdi-eye-off'"
-                                    :type="show1 ? 'text' : 'password'"
-                                    name="input-10-1"
-                                    label="Normal with hint text"
-                                    hint="At least 8 characters"
-                                    counter
-                                    @click:append="show1 = !show1"
-                            ></v-text-field>
-                        </v-row>
-                    </v-container>
-                </v-form>
-                <v-card-actions>
-                    <v-spacer></v-spacer>
-                    <v-btn color="green darken-1" text @click="importDialog = false">Cancel</v-btn>
-                    <v-btn color="green darken-1" text @click="importUser()">Import</v-btn>
-                </v-card-actions>
-            </v-card>
-        </v-dialog>
+        <div class="text-md-center mt-5">
+            <v-dialog v-model="createDialog"  persistent max-width="290">
+                <template v-slot:activator="{ on }">
+                    <v-btn color="primary" dark small text v-on="on">Create user</v-btn>
+                </template>
+                <v-card>
+                    <v-card-title class="headline">Create a user</v-card-title>
+                    <v-form>
+                        <v-container fluid>
+                            <v-row>
+                                <v-text-field
+                                        v-model="username"
+                                        name="input-10-1"
+                                        label="Normal with hint text"
+                                        counter
+                                        @click:append="show1 = !show1"
+                                ></v-text-field>
+                            </v-row>
+                            <v-row>
+                                <v-text-field
+                                        v-model="password"
+                                        :append-icon="show1 ? 'mdi-eye' : 'mdi-eye-off'"
+                                        :type="show1 ? 'text' : 'password'"
+                                        name="input-10-1"
+                                        label="Normal with hint text"
+                                        hint="At least 8 characters"
+                                        counter
+                                        @click:append="show1 = !show1"
+                                ></v-text-field>
+                            </v-row>
+                        </v-container>
+                    </v-form>
+                    <v-card-actions>
+                        <v-spacer></v-spacer>
+                        <v-btn color="green darken-1" text @click="createDialog = false">Cancel</v-btn>
+                        <v-btn color="green darken-1" text @click="createUser()">Create</v-btn>
+                    </v-card-actions>
+                </v-card>
+            </v-dialog>
+            <v-dialog v-model="importDialog" class="text-md-center" persistent max-width="290">
+                <template v-slot:activator="{ on }">
+                    <v-btn color="primary" dark small text v-on="on">Import a user</v-btn>
+                </template>
+                <v-card>
+                    <v-card-title class="headline">Import a user</v-card-title>
+                    <v-form>
+                        <v-container fluid>
+                            <v-row>
+                                <v-text-field
+                                        v-model="username"
+                                        name="input-10-1"
+                                        label="Normal with hint text"
+                                        counter
+                                        @click:append="show1 = !show1"
+                                ></v-text-field>
+                            </v-row>
+                            <v-row>
+                                <v-text-field
+                                        v-model="userData"
+                                        name="input-10-1"
+                                        label="Normal with hint text"
+                                        counter
+                                        @click:append="show1 = !show1"
+                                ></v-text-field>
+                            </v-row>
+                            <v-row>
+                                <v-text-field
+                                        v-model="password"
+                                        :append-icon="show1 ? 'mdi-eye' : 'mdi-eye-off'"
+                                        :type="show1 ? 'text' : 'password'"
+                                        name="input-10-1"
+                                        label="Normal with hint text"
+                                        hint="At least 8 characters"
+                                        counter
+                                        @click:append="show1 = !show1"
+                                ></v-text-field>
+                            </v-row>
+                        </v-container>
+                    </v-form>
+                    <v-card-actions>
+                        <v-spacer></v-spacer>
+                        <v-btn color="green darken-1" text @click="importDialog = false">Cancel</v-btn>
+                        <v-btn color="green darken-1" text @click="importUser()">Import</v-btn>
+                    </v-card-actions>
+                </v-card>
+            </v-dialog>
+        </div>
     </div>
 </template>
 
@@ -201,7 +205,11 @@
             },
             importUser() {
                 this.importDialog = false;
-                this.$store.dispatch("Keystore/importUser", {name: this.username, password: this.password, exportData: this.userData});
+                this.$store.dispatch("Keystore/importUser", {
+                    name: this.username,
+                    password: this.password,
+                    exportData: this.userData
+                });
                 this.password = "";
                 this.username = "";
             }
