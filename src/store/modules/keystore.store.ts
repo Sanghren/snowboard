@@ -99,6 +99,25 @@ const actions = {
                     context.commit(('error'));
                 })
         })
+    },
+    importUser(context: any, userInfo: IUser) {
+        return new Promise((resolve, reject) => {
+            axios
+                .post(context.rootState.Metrics.nodeUrl + '/ext/keystore', {
+                    "jsonrpc":"2.0",
+                    "id"     :1,
+                    "method" :"keystore.importUser",
+                    "params" :{
+                        "username": userInfo.name,
+                        "password": userInfo.password,
+                        "user"    : userInfo.exportData
+                    }
+                }, {headers: {"content-type": "application/json"}})
+                .then((response) => context.dispatch('fetchUsers'))
+                .catch((e) => {
+                    context.commit(('error'));
+                })
+        })
     }
 }
 // Mutations

@@ -13,7 +13,7 @@
             <tr v-for="(user, index) in this.$store.state.Keystore.users" :key="index">
                 <td>{{user.name}}</td>
                 <td>
-                    <v-dialog v-model="exportDialog" persistent max-width="290">
+                    <v-dialog v-model="exportDialog[user.name]" :key="user.name" persistent max-width="290">
                         <template v-slot:activator="{ on }">
                             <v-btn color="primary" dark v-on="on">Export</v-btn>
                         </template>
@@ -40,13 +40,14 @@
                             <v-card-actions>
                                 <v-spacer></v-spacer>
                                 <v-btn color="green darken-1" text @click="exportUser(user.name)">Export</v-btn>
+                                <v-btn color="green darken-1" text @click="$set(exportDialog, user.name, false)">Close</v-btn>
                             </v-card-actions>
                         </v-card>
                     </v-dialog>
                     {{ user.exportData }}
                 </td>
                 <td>
-                    <v-dialog v-model="deleteDialog" persistent max-width="290">
+                    <v-dialog v-model="deleteDialog[user.name]" :key="user.name" persistent max-width="290">
                         <template v-slot:activator="{ on }">
                             <v-btn color="primary" dark v-on="on">Delete</v-btn>
                         </template>
@@ -71,7 +72,7 @@
                             <v-card-actions>
                                 <v-spacer></v-spacer>
                                 <v-btn color="green darken-1" text @click="deleteUser(user.name)">Delete</v-btn>
-                                <v-btn color="green darken-1" text @click="deleteDialog = false">Close</v-btn>
+                                <v-btn color="green darken-1" text @click="$set(deleteDialog, user.name, false)">Close</v-btn>
                             </v-card-actions>
                         </v-card>
                     </v-dialog>
@@ -84,7 +85,7 @@
                 <v-btn color="primary" dark v-on="on">Create user</v-btn>
             </template>
             <v-card>
-                <v-card-title class="headline">Use Google's location service?</v-card-title>
+                <v-card-title class="headline">Create a user</v-card-title>
                 <v-form>
                     <v-container fluid>
                         <v-row>
@@ -117,6 +118,53 @@
                 </v-card-actions>
             </v-card>
         </v-dialog>
+        <v-dialog v-model="importDialog" persistent max-width="290">
+            <template v-slot:activator="{ on }">
+                <v-btn color="primary" dark v-on="on">Import a user</v-btn>
+            </template>
+            <v-card>
+                <v-card-title class="headline">Import a user</v-card-title>
+                <v-form>
+                    <v-container fluid>
+                        <v-row>
+                            <v-text-field
+                                    v-model="username"
+                                    name="input-10-1"
+                                    label="Normal with hint text"
+                                    counter
+                                    @click:append="show1 = !show1"
+                            ></v-text-field>
+                        </v-row>
+                        <v-row>
+                            <v-text-field
+                                    v-model="userData"
+                                    name="input-10-1"
+                                    label="Normal with hint text"
+                                    counter
+                                    @click:append="show1 = !show1"
+                            ></v-text-field>
+                        </v-row>
+                        <v-row>
+                            <v-text-field
+                                    v-model="password"
+                                    :append-icon="show1 ? 'mdi-eye' : 'mdi-eye-off'"
+                                    :type="show1 ? 'text' : 'password'"
+                                    name="input-10-1"
+                                    label="Normal with hint text"
+                                    hint="At least 8 characters"
+                                    counter
+                                    @click:append="show1 = !show1"
+                            ></v-text-field>
+                        </v-row>
+                    </v-container>
+                </v-form>
+                <v-card-actions>
+                    <v-spacer></v-spacer>
+                    <v-btn color="green darken-1" text @click="importDialog = false">Cancel</v-btn>
+                    <v-btn color="green darken-1" text @click="importUser()">Import</v-btn>
+                </v-card-actions>
+            </v-card>
+        </v-dialog>
     </div>
 </template>
 
@@ -126,28 +174,36 @@
     export default Vue.extend({
         data() {
             return {
-                exportDialog: false,
-                deleteDialog: false,
+                exportDialog: {},
+                deleteDialog: {},
                 createDialog: false,
+                importDialog: false,
                 password: "",
                 username: "",
+                userData: "",
                 show1: false,
             }
         },
         methods: {
             exportUser(user: string) {
-                this.exportDialog = false;
+                this.$set(this.exportDialog, user, false)
                 this.$store.dispatch("Keystore/exportUser", {name: user, password: this.password});
                 this.password = "";
             },
             deleteUser(user: string) {
-                this.deleteDialog = false;
+                this.$set(this.deleteDialog, user, false)
                 this.$store.dispatch("Keystore/deleteUser", {name: user, password: this.password});
                 this.password = "";
             },
             createUser() {
                 this.createDialog = false;
                 this.$store.dispatch("Keystore/createUser", {name: this.username, password: this.password});
+                this.password = "";
+                this.username = "";
+            },
+            importUser() {
+                this.importDialog = false;
+                this.$store.dispatch("Keystore/importUser", {name: this.username, password: this.password, exportData: this.userData});
                 this.password = "";
                 this.username = "";
             }
