@@ -37,8 +37,8 @@ const actions = {
     async updateSettings(context: any, payload: string){
         context.commit('setMetrics', []);
         context.commit('setNodeUrl', payload);
+        await context.dispatch('Keystore/fetchUsers', null, { root: true})
         await context.dispatch('fetchMetrics')
-
     },
     async isNodeUp(context: any){
         if(!state.nodeUrl){

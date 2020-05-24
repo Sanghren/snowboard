@@ -1,7 +1,22 @@
 <template>
     <div>
         <h1>Users</h1>
-
+        <v-simple-table>
+            <thead>
+            <tr>
+                <th class="text-left">User</th>
+                <th class="text-left">Export</th>
+                <th class="text-left">Delete</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr v-for="(user, index) in this.$store.state.Keystore.users" :key="index">
+                <td>{{user}}</td>
+                <td>BUTTON</td>
+                <td>BUTTON</td>
+            </tr>
+            </tbody>
+        </v-simple-table>
     </div>
 </template>
 
@@ -10,7 +25,7 @@
 
     export default Vue.extend({
         beforeMount() {
-            this.$store.commit('Metrics/loadUsers');
+            this.$store.dispatch('Keystore/fetchUsers');
         }
     })
 </script>
