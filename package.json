@@ -8,6 +8,9 @@
     "lint": "vue-cli-service lint",
     "start": "vue-cli-service serve"
   },
+  "engines": {
+    "node": "12.16.x"
+  },
   "dependencies": {
     "@types/chart.js": "^2.9.21",
     "axios": "^0.19.2",
