@@ -4,17 +4,6 @@
                 app
                 dark
         >
-            <div class="d-flex align-center">
-                <v-img
-                        alt="AVA Logo"
-                        class="shrink mr-2"
-                        contain
-                        src="./assets/ava-logo.png"
-                        transition="scale-transition"
-                        width="40"
-                />
-            </div>
-
             <v-spacer></v-spacer>
             <div>
                 <router-link to="/node-metrics" class="white--text">Metrics</router-link>
