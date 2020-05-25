@@ -25,6 +25,7 @@
     "vuex": "^3.4.0"
   },
   "devDependencies": {
+    "@fortawesome/fontawesome-free": "^5.13.0",
     "@typescript-eslint/eslint-plugin": "^2.26.0",
     "@typescript-eslint/parser": "^2.26.0",
     "@vue/cli-plugin-babel": "~4.3.0",
