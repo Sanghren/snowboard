@@ -5,50 +5,31 @@
                 <v-col
                         v-for="(metric, index) in chunk"
                         :key="index"
-                       cols="4"
-                       md="4">
+                        cols="4"
+                        md="4">
                     <v-card
                             class="pa-2"
                             outlined
                             tile
                     >
-                        <div v-if="metric.type === 'HISTOGRAM'">
-                            <p><b>{{metric.help}}</b></p>
-                            <histogram-chart :chartdata="{labels: Object.keys(metric.metrics[0].buckets),
-                datasets: [
-      {
-        label: metric.name,
-        data: Object.values(metric.metrics[0].buckets)
-      }
-    ]}">
-                            </histogram-chart>
-                        </div>
-                        <div v-if="metric.type === 'GAUGE'">
-                            <p><b>{{metric.help}}</b></p>
-                            <doughnut-chart :chartdata="{
-                labels: [ metric.name, 'unused'],
-                datasets: [
-      {
-        label: ['value', 'unused'],
-        backgroundColor: ['#c61616', 'rgb(21,248,0)'],
-        data: [metric.metrics[0].value, 100 - metric.metrics[0].value]
-      }
-    ]}"></doughnut-chart>
-                        </div>
-                        <div v-if="metric.type === 'COUNTER'">
-                            <p><b>{{metric.help}}</b></p>
-                            <p>Name : {{ metric.name }}</p>
-                            <p>Value : {{ Object.values(metric.metrics[0])[0] }}</p>
-                        </div>
-                        <div v-else>
+                        <v-list-item>
+                            <v-list-item-content>
+                                <v-list-item-title class="headline">{{ metric.name }}</v-list-item-title>
+                            </v-list-item-content>
+                            <v-tooltip>
+                                <template v-slot:activator="{ on }">
+                                <span v-on="on" class="material-icons">
+                                    help_outline
+                                </span>
+                                </template>
+                                <span>{{ metric.help }}</span>
+                            </v-tooltip>
+                        </v-list-item>
+                        <div>
+                            <MetricChart :metric="metric"></MetricChart>
                         </div>
                     </v-card>
                 </v-col>
-                <v-responsive
-                        v-if="index === 2"
-                        :key="`width-${index}`"
-                        width="100%"
-                ></v-responsive>
             </v-row>
         </template>
     </v-container>
@@ -56,15 +37,14 @@
 
 <script lang="ts">
     import {Vue} from 'vue-property-decorator';
-    import HistogramChart from "@/components/HistogramChart.vue";
-    import DoughnutChart from "@/components/DoughnutChart.vue";
+    import MetricChart from "@/components/MetricChart.vue";
     import _ from 'lodash'
 
     export default Vue.extend({
-        components: {DoughnutChart, HistogramChart},
+        components: {MetricChart},
         props: ['msg', 'metrics'],
         computed: {
-            productChunks(){
+            productChunks() {
                 return _.chunk(Object.values(this.$store.state.Metrics.metrics), 3);
             }
         },
