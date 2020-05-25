@@ -2,6 +2,7 @@
     <v-card
             class="pa-2"
             outlined
+            height="100%"
             tile
     >
         <v-list-item>
@@ -40,7 +41,7 @@
             </div>
             <div v-if="metric.type === 'COUNTER'">
                 <v-card-text>
-                    <p class="display-1 text--primary">
+                    <p class="display-1 text--primary text-center">
                         {{ Object.values(metric.metrics[0])[0] }}
                     </p>
                 </v-card-text>

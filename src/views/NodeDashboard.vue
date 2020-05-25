@@ -13,10 +13,11 @@
         <v-row>
             <v-col
                     cols="4"
-                    md="4"
+                    md="3"
             >
                 <v-card
                         class="pa-2"
+                        height="100%"
                         outlined
                         tile
                 >
@@ -40,11 +41,41 @@
                 </v-card>
             </v-col>
             <v-col
-                    cols="6"
-                    md="4"
+                    cols="4"
+                    md="3"
             >
                 <v-card
                         class="pa-2"
+                        height="100%"
+                        outlined
+                        tile
+                >
+                    <v-list-item>
+                        <v-list-item-content>
+                            <v-list-item-title class="headline">Network ID</v-list-item-title>
+                        </v-list-item-content>
+                        <v-tooltip>
+                            <template v-slot:activator="{ on }">
+                                <span v-on="on" class="material-icons">
+                                    help_outline
+                                </span>
+                            </template>
+                            <span>The NodeID is not an address, it's hash of your staking certificate used to identify your node. The NodeID also becomes a validator ID if you add your node to a subnet.</span>
+                        </v-tooltip>
+                    </v-list-item>
+                    <v-divider></v-divider>
+                    <v-card-text>
+                        {{ this.$store.state.Admin.networkId }}
+                    </v-card-text>
+                </v-card>
+            </v-col>
+            <v-col
+                    cols="4"
+                    md="3"
+            >
+                <v-card
+                        class="pa-2"
+                        height="100%"
                         v-model="this.$store.state.Health.healthy"
                         :class="this.$store.state.Health.healthy ? 'node-status-green-background' : 'node-status-red-background'"
                         outlined
@@ -68,10 +99,11 @@
             </v-col>
             <v-col
                     cols="6"
-                    md="4"
+                    md="3"
             >
                 <v-card
                         class="pa-2"
+                        height="100%"
                         v-model="this.$store.state.XChain.balance.balance"
                         :class="this.$store.state.XChain.balance.balance !== 0 ? 'node-status-green-background' : 'node-status-red-background'"
                         outlined
