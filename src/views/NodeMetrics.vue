@@ -7,28 +7,7 @@
                         :key="index"
                         cols="4"
                         md="4">
-                    <v-card
-                            class="pa-2"
-                            outlined
-                            tile
-                    >
-                        <v-list-item>
-                            <v-list-item-content>
-                                <v-list-item-title class="headline">{{ metric.name }}</v-list-item-title>
-                            </v-list-item-content>
-                            <v-tooltip>
-                                <template v-slot:activator="{ on }">
-                                <span v-on="on" class="material-icons">
-                                    help_outline
-                                </span>
-                                </template>
-                                <span>{{ metric.help }}</span>
-                            </v-tooltip>
-                        </v-list-item>
-                        <div>
-                            <MetricChart :metric="metric"></MetricChart>
-                        </div>
-                    </v-card>
+                    <MetricChart :metric="metric"></MetricChart>
                 </v-col>
             </v-row>
         </template>

@@ -1,17 +1,35 @@
 <template>
-    <div>
-        <div v-if="metric.type === 'HISTOGRAM'">
-            <histogram-chart :chartdata="{labels: Object.keys(metric.metrics[0].buckets),
+    <v-card
+            class="pa-2"
+            outlined
+            tile
+    >
+        <v-list-item>
+            <v-list-item-content>
+                <v-list-item-title class="headline">{{ metric.name }}</v-list-item-title>
+            </v-list-item-content>
+            <v-tooltip>
+                <template v-slot:activator="{ on }">
+                                <span v-on="on" class="material-icons">
+                                    help_outline
+                                </span>
+                </template>
+                <span>{{ metric.help }}</span>
+            </v-tooltip>
+        </v-list-item>
+        <div>
+            <div v-if="metric.type === 'HISTOGRAM'">
+                <histogram-chart :chartdata="{labels: Object.keys(metric.metrics[0].buckets),
                 datasets: [
       {
         label: metric.name,
         data: Object.values(metric.metrics[0].buckets)
       }
     ]}">
-            </histogram-chart>
-        </div>
-        <div v-if="metric.type === 'GAUGE'">
-            <doughnut-chart :chartdata="{
+                </histogram-chart>
+            </div>
+            <div v-if="metric.type === 'GAUGE'">
+                <doughnut-chart :chartdata="{
                 labels: [ metric.name, 'unused'],
                 datasets: [
       {
@@ -20,14 +38,15 @@
         data: [metric.metrics[0].value, 100 - metric.metrics[0].value]
       }
     ]}"></doughnut-chart>
+            </div>
+            <div v-if="metric.type === 'COUNTER'">
+                <p>Name : {{ metric.name }}</p>
+                <p>Value : {{ Object.values(metric.metrics[0])[0] }}</p>
+            </div>
+            <div v-else>
+            </div>
         </div>
-        <div v-if="metric.type === 'COUNTER'">
-            <p>Name : {{ metric.name }}</p>
-            <p>Value : {{ Object.values(metric.metrics[0])[0] }}</p>
-        </div>
-        <div v-else>
-        </div>
-    </div>
+    </v-card>
 </template>
 
 <script>
