@@ -17,7 +17,6 @@
                 <span>{{ metric.help }}</span>
             </v-tooltip>
         </v-list-item>
-        <div>
             <div v-if="metric.type === 'HISTOGRAM'">
                 <histogram-chart :chartdata="{labels: Object.keys(metric.metrics[0].buckets),
                 datasets: [
@@ -40,12 +39,14 @@
     ]}"></doughnut-chart>
             </div>
             <div v-if="metric.type === 'COUNTER'">
-                <p>Name : {{ metric.name }}</p>
-                <p>Value : {{ Object.values(metric.metrics[0])[0] }}</p>
+                <v-card-text>
+                    <p class="display-1 text--primary">
+                        {{ Object.values(metric.metrics[0])[0] }}
+                    </p>
+                </v-card-text>
             </div>
             <div v-else>
             </div>
-        </div>
     </v-card>
 </template>
 

@@ -2,7 +2,6 @@
     <v-app>
         <v-app-bar
                 app
-                color="primary"
                 dark
         >
             <div class="d-flex align-center">
@@ -18,12 +17,7 @@
 
             <v-spacer></v-spacer>
             <div>
-                <router-link to="/node-metrics" class="white--text">Node Metrics</router-link>
-                <v-divider
-                        class="mx-4"
-                        vertical
-                ></v-divider>
-                <router-link to="/settings" class="white--text">Settings</router-link>
+                <router-link to="/node-metrics" class="white--text">Metrics</router-link>
                 <v-divider
                         class="mx-4"
                         vertical
@@ -45,15 +39,25 @@
                 ></v-divider>
                 <router-link to="/" class="white--text">Dashboard</router-link>
             </div>
-            <v-spacer></v-spacer>
 
+            <v-spacer></v-spacer>
+            <v-divider
+                    class="mx-4"
+                    vertical
+            ></v-divider>
+            <router-link to="/settings" class="white--text">
+                    <span class="material-icons">
+                        settings
+                    </span>
+            </router-link>
             <v-btn
                     href="https://github.com/tbrunain/snowboard"
                     target="_blank"
                     text
             >
-                <span class="mr-2">Github</span>
-                <v-icon>mdi-open-in-new</v-icon>
+                <span class="material-icons">
+                    code
+                </span>
             </v-btn>
         </v-app-bar>
 
