@@ -29,7 +29,8 @@
                                                     :append-icon="show1 ? 'mdi-eye' : 'mdi-eye-off'"
                                                     :type="show1 ? 'text' : 'password'"
                                                     name="input-10-1"
-                                                    label="Normal with hint text"
+                                                    label="Password"
+                                                    :rules="[rules.required, rules.min, rules.complexity]"
                                                     hint="At least 8 characters"
                                                     counter
                                                     @click:append="show1 = !show1"
@@ -60,7 +61,8 @@
                                                 :append-icon="show1 ? 'mdi-eye' : 'mdi-eye-off'"
                                                 :type="show1 ? 'text' : 'password'"
                                                 name="input-10-1"
-                                                label="Normal with hint text"
+                                                label="Password"
+                                                :rules="[rules.required, rules.min, rules.complexity]"
                                                 hint="At least 8 characters"
                                                 counter
                                                 @click:append="show1 = !show1"
@@ -81,7 +83,7 @@
             </tbody>
         </v-simple-table>
         <div class="text-md-center mt-5">
-            <v-dialog v-model="createDialog"  persistent max-width="290">
+            <v-dialog v-model="createDialog" persistent max-width="290">
                 <template v-slot:activator="{ on }">
                     <v-btn color="primary" dark small text v-on="on">Create user</v-btn>
                 </template>
@@ -93,7 +95,7 @@
                                 <v-text-field
                                         v-model="username"
                                         name="input-10-1"
-                                        label="Normal with hint text"
+                                        label="User name"
                                         counter
                                         @click:append="show1 = !show1"
                                 ></v-text-field>
@@ -104,8 +106,9 @@
                                         :append-icon="show1 ? 'mdi-eye' : 'mdi-eye-off'"
                                         :type="show1 ? 'text' : 'password'"
                                         name="input-10-1"
-                                        label="Normal with hint text"
-                                        hint="At least 8 characters"
+                                        :rules="[rules.required, rules.min, rules.complexity]"
+                                        label="Password"
+                                        hint="At least 8 characters. With upper,lower,numbers and symbols"
                                         counter
                                         @click:append="show1 = !show1"
                                 ></v-text-field>
@@ -131,7 +134,7 @@
                                 <v-text-field
                                         v-model="username"
                                         name="input-10-1"
-                                        label="Normal with hint text"
+                                        label="User name"
                                         counter
                                         @click:append="show1 = !show1"
                                 ></v-text-field>
@@ -140,8 +143,7 @@
                                 <v-text-field
                                         v-model="userData"
                                         name="input-10-1"
-                                        label="Normal with hint text"
-                                        counter
+                                        label="User data"
                                         @click:append="show1 = !show1"
                                 ></v-text-field>
                             </v-row>
@@ -151,8 +153,9 @@
                                         :append-icon="show1 ? 'mdi-eye' : 'mdi-eye-off'"
                                         :type="show1 ? 'text' : 'password'"
                                         name="input-10-1"
-                                        label="Normal with hint text"
-                                        hint="At least 8 characters"
+                                        label="Password"
+                                        :rules="[rules.required, rules.min, rules.complexity]"
+                                        hint="Must be the same as when you created this user !"
                                         counter
                                         @click:append="show1 = !show1"
                                 ></v-text-field>
@@ -184,6 +187,11 @@
                 username: "",
                 userData: "",
                 show1: false,
+                rules: {
+                    required: (value: any) => !!value || 'Required.',
+                    min: (v: any) => v.length >= 8 || 'Min 8 characters',
+                    complexity: (v: any) => new RegExp('^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[$@$!%*?&])[A-Za-z\\d$@$!%*?&]{8,}').test(v) || 'Must have Upper, Lower, Numbers and Symbols !',
+                }
             }
         },
         methods: {
