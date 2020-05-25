@@ -25,6 +25,28 @@ export interface PChainState {
     blockchains: Blockchain[];
 }
 
+export interface XChainState {
+    bootstrapped: boolean;
+    balance: XBalance;
+}
+
+export interface Metric {
+    help: string;
+    metrics: object[];
+    name: string;
+    type: string;
+}
+
+interface UtxoId {
+    txID: string;
+    outputIndex: number;
+}
+
+export interface XBalance {
+    balance: number;
+    utxoIDs: UtxoId[];
+}
+
 export interface Blockchain {
     id: string;
     name: string;

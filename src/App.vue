@@ -58,7 +58,9 @@
         </v-app-bar>
 
         <v-content>
-            <v-alert v-model="this.$store.state.Metrics.nodeDown" type="error" dismissible>Error connecting to your node, check the url in settings !</v-alert>
+            <v-alert v-model="this.$store.state.Metrics.nodeDown" type="error" dismissible>Error connecting to your
+                node, check the url in settings !
+            </v-alert>
             <router-view/>
         </v-content>
     </v-app>
@@ -82,17 +84,26 @@
                 this.$store.dispatch('Metrics/updateSettings')
             },
             isNodeUp() {
+                //ToDo Need to rethink this, becoming messy
                 this.$store.dispatch('Health/fetchLiveness')
                 this.$store.dispatch('Metrics/isNodeUp')
+            },
+            isBootstrapped() {
+                //ToDo Need to rethink this, becoming messy
+                this.$store.dispatch('XChain/fetchBalance')
             }
         },
         beforeMount() {
-                this.isNodeUp();
+            this.isNodeUp();
+            this.isBootstrapped();
         },
         mounted() {
             setInterval(() => {
                 this.isNodeUp();
             }, 10000);
+            setInterval(() => {
+                this.isBootstrapped();
+            }, 100000);
         }
     });
 </script>

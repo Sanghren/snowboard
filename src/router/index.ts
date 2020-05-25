@@ -6,14 +6,15 @@ import Settings from "@/views/Settings.vue";
 import Users from "@/views/Users.vue";
 import NodeInfo from "@/views/NodeInfo.vue";
 import PChain from "@/views/PChain.vue";
+import NodeDashboard from "@/views/NodeDashboard.vue";
 
 Vue.use(VueRouter)
 
 const routes: Array<RouteConfig> = [
     {
         path: '/',
-        name: 'Home',
-        component: Home
+        name: 'Dashboard',
+        component: NodeDashboard
     },
     {
         path: '/node-metrics',

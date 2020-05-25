@@ -35,7 +35,7 @@ const mutations = {
         state.healthy = healthy;
     },
     error() {
-        console.log("ERROR")
+        state.healthy = false;
     }
 }
 
