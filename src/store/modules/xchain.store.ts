@@ -26,7 +26,7 @@ const actions = {
                         "address": "X-6cesTteH62Y5mLoDBUASaBvCXuL2AthL", //Faucet address
                         "assetID": "AVA"
                     }
-                }, { timeout: 10000})
+                }, {timeout: 60000})
                 .then((response) => context.commit('setBalance', response.data.result.balance))
                 .catch((e) => {
                     context.commit(('error'));
@@ -38,11 +38,13 @@ const actions = {
 const mutations = {
     setBalance(state: XChainState, balance: XBalance) {
         //ToDo Improve the logic here !
-        state.balance = balance;
+        if (balance.balance !== 0) {
+            state.balance = balance;
+        }
     },
     error(state: XChainState) {
         console.log("ERROR");
-         state.balance.balance = 0;
+        state.balance.balance = 0;
     }
 }
 

@@ -103,7 +103,7 @@
             }, 10000);
             setInterval(() => {
                 this.isBootstrapped();
-            }, 100000);
+            }, 60000);
         }
     });
 </script>
