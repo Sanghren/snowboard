@@ -2,6 +2,12 @@ export interface KeystoreState {
     users: User[];
 }
 
+export interface HealthState {
+    //ToDo Type that properly
+    checks: object;
+    healthy: boolean;
+}
+
 export interface MetricsState {
     nodeDown: boolean;
     nodeUrl: string;
@@ -14,7 +20,6 @@ export interface AdminState {
     networkId: string;
 
 }
-
 
 export interface PChainState {
     blockchains: Blockchain[];

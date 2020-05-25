@@ -39,6 +39,11 @@
                         vertical
                 ></v-divider>
                 <router-link to="/p-chain" class="white--text">P Chain</router-link>
+                <v-divider
+                        class="mx-4"
+                        vertical
+                ></v-divider>
+                <router-link to="/" class="white--text">Dashboard</router-link>
             </div>
             <v-spacer></v-spacer>
 
@@ -77,10 +82,14 @@
                 this.$store.dispatch('Metrics/updateSettings')
             },
             isNodeUp() {
+                this.$store.dispatch('Health/fetchLiveness')
                 this.$store.dispatch('Metrics/isNodeUp')
             }
         },
-        mounted: function () {
+        beforeMount() {
+                this.isNodeUp();
+        },
+        mounted() {
             setInterval(() => {
                 this.isNodeUp();
             }, 10000);

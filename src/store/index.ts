@@ -5,6 +5,7 @@ import Keystore from './modules/keystore.store';
 import Metrics from './modules/metrics.store';
 import Admin from './modules/admin.store';
 import PChain from './modules/pchain.store';
+import Health from './modules/health.store';
 
 Vue.use(Vuex);
 const debug = process.env.NODE_ENV !== 'production';
@@ -13,7 +14,8 @@ export default new Vuex.Store({
     Keystore,
     Metrics,
     Admin,
-    PChain
+    PChain,
+    Health
   },
   strict: debug,
   plugins: debug? [ createLogger() ] : [],
