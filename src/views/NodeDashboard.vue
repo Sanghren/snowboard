@@ -26,9 +26,9 @@
                         </v-list-item-content>
                         <v-tooltip>
                             <template v-slot:activator="{ on }">
-                                <div>
-                                    <v-icon v-on="on" class="mr-2">fas fa-question</v-icon>
-                                </div>
+                                <span v-on="on" class="material-icons">
+                                    help_outline
+                                </span>
                             </template>
                             <span>The NodeID is not an address, it's hash of your staking certificate used to identify your node. The NodeID also becomes a validator ID if you add your node to a subnet.</span>
                         </v-tooltip>
@@ -56,9 +56,9 @@
                         </v-list-item-content>
                         <v-tooltip>
                             <template v-slot:activator="{ on }">
-                                <div>
-                                    <v-icon v-on="on" class="mr-2">fas fa-question</v-icon>
-                                </div>
+                                <span v-on="on" class="material-icons">
+                                    help_outline
+                                </span>
                             </template>
                             <span>Whether your node is marked as 'healthy'</span>
                         </v-tooltip>
@@ -83,9 +83,9 @@
                         </v-list-item-content>
                         <v-tooltip>
                             <template v-slot:activator="{ on }">
-                                <div>
-                                    <v-icon v-on="on" class="mr-2">fas fa-question</v-icon>
-                                </div>
+                                <span v-on="on" class="material-icons">
+                                    help_outline
+                                </span>
                             </template>
                             <span>We check the balance of the faucet to see whether the node is bootstrapped or not.
                                 <a>https://docs.ava.network/v1.0/en/quickstart/ava-getting-started/</a></span>
@@ -114,9 +114,9 @@
                         </v-list-item-content>
                         <v-tooltip>
                             <template v-slot:activator="{ on }">
-                                <div>
-                                    <v-icon v-on="on" class="mr-2">fas fa-question</v-icon>
-                                </div>
+                                <span v-on="on" class="material-icons">
+                                    help_outline
+                                </span>
                             </template>
                             <span>{{ metric.help }}</span>
                         </v-tooltip>
