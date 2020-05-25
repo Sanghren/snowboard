@@ -32,11 +32,6 @@ const routes: Array<RouteConfig> = [
         component: Users
     },
     {
-        path: '/node-info',
-        name: 'NodeInfo',
-        component: NodeInfo
-    },
-    {
         path: '/p-chain',
         name: 'PChain',
         component: PChain
