@@ -18,18 +18,19 @@
                 <span>{{ metric.help }}</span>
             </v-tooltip>
         </v-list-item>
-            <div v-if="metric.type === 'HISTOGRAM'">
-                <histogram-chart :chartdata="{labels: Object.keys(metric.metrics[0].buckets),
+        <div v-if="metric.type === 'HISTOGRAM'">
+            <histogram-chart :chartdata="{labels: Object.keys(metric.metrics[0].buckets),
                 datasets: [
       {
         label: metric.name,
+        backgroundColor: this.backgroundColors(Object.values(metric.metrics[0].buckets).length),
         data: Object.values(metric.metrics[0].buckets)
       }
     ]}">
-                </histogram-chart>
-            </div>
-            <div v-if="metric.type === 'GAUGE'">
-                <doughnut-chart :chartdata="{
+            </histogram-chart>
+        </div>
+        <div v-if="metric.type === 'GAUGE'">
+            <doughnut-chart :chartdata="{
                 labels: [ metric.name, 'unused'],
                 datasets: [
       {
@@ -38,16 +39,16 @@
         data: [metric.metrics[0].value, 100 - metric.metrics[0].value]
       }
     ]}"></doughnut-chart>
-            </div>
-            <div v-if="metric.type === 'COUNTER'">
-                <v-card-text>
-                    <p class="display-1 text--primary text-center">
-                        {{ Object.values(metric.metrics[0])[0] }}
-                    </p>
-                </v-card-text>
-            </div>
-            <div v-else>
-            </div>
+        </div>
+        <div v-if="metric.type === 'COUNTER'">
+            <v-card-text>
+                <p class="display-1 text--primary text-center">
+                    {{ Object.values(metric.metrics[0])[0] }}
+                </p>
+            </v-card-text>
+        </div>
+        <div v-else>
+        </div>
     </v-card>
 </template>
 
@@ -59,7 +60,15 @@
         name: "MetricChart",
         components: {DoughnutChart, HistogramChart},
         props: ["metric"],
-        methods: {}
+        methods: {
+            backgroundColors(size) {
+                const pool = [];
+                for (let i = 0; i < size; i++) {
+                    pool.push('#008000');
+                }
+                return pool;
+            }
+        }
     };
 </script>
 
