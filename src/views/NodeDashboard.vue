@@ -26,7 +26,7 @@
                     </v-list-item>
                     <v-divider></v-divider>
                     <v-card-text class="headline">
-                        <b>{{ this.$store.state.Admin.nodeId }}</b>
+                        <b class="text--primary">{{ this.$store.state.Admin.nodeId }}</b>
                     </v-card-text>
                 </v-card>
             </v-col>
@@ -55,7 +55,7 @@
                     </v-list-item>
                     <v-divider></v-divider>
                     <v-card-text  height="100%" class="text-center display-3" justify="center">
-                        <b>{{ this.$store.state.Admin.networkId }}</b>
+                        <b class="text--primary">{{ this.$store.state.Admin.networkId }}</b>
                     </v-card-text>
                 </v-card>
             </v-col>
