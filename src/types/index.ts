@@ -16,6 +16,7 @@ export interface MetricsState {
 
 export interface AdminState {
     nodeId: string;
+    validator: ValidatorStatus;
     peers: string[];
     networkId: string;
 
@@ -23,6 +24,7 @@ export interface AdminState {
 
 export interface PChainState {
     blockchains: Blockchain[];
+    validators: Validator[];
 }
 
 export interface XChainState {
@@ -53,7 +55,13 @@ export interface Blockchain {
     subnetID: string;
     vmID: string;
     status: BlockchainStatus;
+}
 
+export interface Validator {
+    startTime: number;
+    endTime: number;
+    stakeAmount: number;
+    id: string;
 }
 
 export enum BlockchainStatus {
@@ -63,8 +71,21 @@ export enum BlockchainStatus {
     UNKNOWN
 }
 
+export enum ValidatorStatus {
+    PENDING,
+    VALIDATING,
+    UNKNOWN
+}
+
+export interface PChainAccount {
+ address: string;
+ nonce: number;
+ balance: number;
+}
+
 export interface User {
     name: string;
     password?: string;
     exportData?: string;
+    accounts?: PChainAccount[];
 }

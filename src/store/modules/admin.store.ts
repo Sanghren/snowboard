@@ -1,9 +1,10 @@
 // State object
 import axios from "axios";
-import {AdminState} from "@/types";
+import {AdminState, ValidatorStatus} from "@/types";
 
 const state: AdminState = {
     nodeId: "",
+    validator: ValidatorStatus.UNKNOWN,
     peers: [],
     networkId: "",
 }
@@ -68,6 +69,9 @@ const mutations = {
     },
     setNetworkIds(state: AdminState, networkIds: string) {
         state.networkId = networkIds;
+    },
+    setValidatorStatus(state: AdminState, validatorStatus: ValidatorStatus) {
+        state.validator = validatorStatus;
     },
     error() {
         console.log("ERROR")

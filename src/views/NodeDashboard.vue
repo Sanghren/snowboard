@@ -54,14 +54,14 @@
                         </v-tooltip>
                     </v-list-item>
                     <v-divider></v-divider>
-                    <v-card-text  height="100%" class="text-center" justify="center">
+                    <v-card-text height="100%" class="text-center" justify="center">
                         <b class="text--primary">{{ this.$store.state.Admin.networkId }}</b>
                     </v-card-text>
                 </v-card>
             </v-col>
             <v-col
                     cols="4"
-                    md="3"
+                    md="2"
             >
                 <v-card
                         class="mx-auto b"
@@ -83,14 +83,14 @@
                         </v-tooltip>
                     </v-list-item>
                     <v-divider></v-divider>
-                    <v-card-text  class="text-center" justify="center">
+                    <v-card-text class="text-center" justify="center">
                         <b class="text--primary">{{this.$store.state.Admin.peers.length}}</b>
                     </v-card-text>
                 </v-card>
             </v-col>
             <v-col
                     cols="4"
-                    md="3"
+                    md="2"
             >
                 <v-container>
                     <v-row>
@@ -105,7 +105,7 @@
                         >
                             <v-list-item>
                                 <v-list-item-content>
-                                    <v-list-item-title class="headline">Node Status</v-list-item-title>
+                                    <v-list-item-title class="headline">Status</v-list-item-title>
                                 </v-list-item-content>
                                 <v-tooltip>
                                     <template v-slot:activator="{ on }">
@@ -120,7 +120,7 @@
                     </v-row>
                     <v-row>
                         <v-card
-                                class="mx-auto"
+                                class="mb-2"
                                 height="100%"
                                 width="100%"
                                 v-model="this.$store.state.XChain.balance.balance"
@@ -146,9 +146,39 @@
                     </v-row>
                 </v-container>
             </v-col>
+            <v-col
+                    cols="4"
+                    md="2"
+            >
+                <v-container>
+                    <v-row>
+                        <v-card
+                                class="mb-2"
+                                height="100%"
+                                width="100%"
+                                v-model="this.$store.state.Admin.validator"
+                                :class="this.$store.state.Admin.validator === 1 ? 'node-status-green-background' : this.$store.state.Admin.validator === 2 ? 'node-status-red-background' : 'node-status-orange-background'"
+                                outlined
+                                tile
+                        >
+                            <v-list-item>
+                                <v-list-item-content>
+                                    <v-list-item-title class="headline">Validating</v-list-item-title>
+                                </v-list-item-content>
+                                <v-tooltip>
+                                    <template v-slot:activator="{ on }">
+                                <span v-on="on" class="material-icons">
+                                    help_outline
+                                </span>
+                                    </template>
+                                    <span>Whether your node is present in the "current validator" list or in the "pending" list .'</span>
+                                </v-tooltip>
+                            </v-list-item>
+                        </v-card>
+                    </v-row>
+                </v-container>
+            </v-col>
         </v-row>
-
-        <!-- Columns start at 50% wide on mobile and bump up to 33.3% wide on desktop -->
         <v-row>
             <v-col
                     v-for="(metric, index) in this.$store.state.Metrics.metrics.slice(0,3)"
@@ -174,6 +204,7 @@
             this.$store.dispatch('Admin/fetchNetworkIds');
             this.$store.dispatch('Admin/fetchPeers');
             this.$store.dispatch('Metrics/fetchMetrics');
+            this.$store.dispatch('PChain/fetchCurrentValidators');
         },
         methods: {}
     })
@@ -187,5 +218,9 @@
 
     .node-status-red-background {
         background-color: red;
+    }
+
+    .node-status-orange-background {
+        background-color: orange;
     }
 </style>

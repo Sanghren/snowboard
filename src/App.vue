@@ -16,7 +16,7 @@
                         class="mx-4"
                         vertical
                 ></v-divider>
-                <router-link to="/p-chain" class="white--text">P Chain</router-link>
+                <router-link to="/p-chain" class="white--text">Chains</router-link>
                 <v-divider
                         class="mx-4"
                         vertical
