@@ -32,7 +32,7 @@
             </v-col>
             <v-col
                     cols="1"
-                    md="3"
+                    md="2"
             >
                 <v-card
                         class="mx-auto"
