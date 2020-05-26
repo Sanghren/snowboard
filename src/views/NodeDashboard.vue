@@ -181,7 +181,7 @@
         </v-row>
         <v-row>
             <v-col
-                    v-for="(metric, index) in this.$store.state.Metrics.metrics.slice(0,3)"
+                    v-for="(metric, index) in metricToDisplay"
                     :key="index"
                     cols="6"
                     md="4"
@@ -195,18 +195,33 @@
 <script lang="ts">
     import Vue from 'vue';
     import MetricChart from "@/components/MetricChart.vue";
+    import {Metric} from "@/types";
 
     export default Vue.extend({
         components: {MetricChart},
         props: {},
+        data() {
+            return {
+                metricToDisplay: [] as Metric[]
+            }
+        },
         mounted() {
             this.$store.dispatch('Admin/fetchNodeId');
             this.$store.dispatch('Admin/fetchNetworkIds');
             this.$store.dispatch('Admin/fetchPeers');
             this.$store.dispatch('Metrics/fetchMetrics');
             this.$store.dispatch('PChain/fetchCurrentValidators');
+            this.fetchInterestingMetrics();
         },
-        methods: {}
+        methods: {
+            fetchInterestingMetrics() {
+                this.$store.state.Metrics.metrics.filter((m: Metric) => {
+                    if(['gecko_P_accepted','gecko_P_sm_blk_requests','gecko_C_processing'].includes(m.name)){
+                        this.metricToDisplay.push(m);
+                    }
+                })
+            }
+        }
     })
 </script>
 
