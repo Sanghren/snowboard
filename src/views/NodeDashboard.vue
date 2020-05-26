@@ -13,9 +13,9 @@
                 >
                     <v-list-item>
                         <v-list-item-content>
-                            <v-list-item-title class="headline">Node ID</v-list-item-title>
+                            <v-list-item-title class="headline text--secondary">Node ID</v-list-item-title>
                         </v-list-item-content>
-                        <v-tooltip>
+                        <v-tooltip top>
                             <template v-slot:activator="{ on }">
                                 <span v-on="on" class="material-icons">
                                     help_outline
@@ -25,7 +25,7 @@
                         </v-tooltip>
                     </v-list-item>
                     <v-divider></v-divider>
-                    <v-card-text class="text-center">
+                    <v-card-text class="headline">
                         <b>{{ this.$store.state.Admin.nodeId }}</b>
                     </v-card-text>
                 </v-card>
@@ -42,9 +42,9 @@
                 >
                     <v-list-item>
                         <v-list-item-content>
-                            <v-list-item-title class="headline">Network ID</v-list-item-title>
+                            <v-list-item-title class="headline text--secondary">Network ID</v-list-item-title>
                         </v-list-item-content>
-                        <v-tooltip>
+                        <v-tooltip top>
                             <template v-slot:activator="{ on }">
                                 <span v-on="on" class="material-icons">
                                     help_outline
@@ -54,8 +54,8 @@
                         </v-tooltip>
                     </v-list-item>
                     <v-divider></v-divider>
-                    <v-card-text height="100%" class="text-center" justify="center">
-                        <b class="text--primary">{{ this.$store.state.Admin.networkId }}</b>
+                    <v-card-text  height="100%" class="text-center display-3" justify="center">
+                        <b>{{ this.$store.state.Admin.networkId }}</b>
                     </v-card-text>
                 </v-card>
             </v-col>
@@ -71,9 +71,9 @@
                 >
                     <v-list-item>
                         <v-list-item-content>
-                            <v-list-item-title class="headline">Peers</v-list-item-title>
+                            <v-list-item-title class="headline text--secondary">Peers</v-list-item-title>
                         </v-list-item-content>
-                        <v-tooltip>
+                        <v-tooltip top>
                             <template v-slot:activator="{ on }">
                                 <span v-on="on" class="material-icons">
                                     help_outline
@@ -83,7 +83,7 @@
                         </v-tooltip>
                     </v-list-item>
                     <v-divider></v-divider>
-                    <v-card-text class="text-center" justify="center">
+                    <v-card-text class="text-center display-3" justify="center">
                         <b class="text--primary">{{this.$store.state.Admin.peers.length}}</b>
                     </v-card-text>
                 </v-card>
@@ -107,7 +107,7 @@
                                 <v-list-item-content>
                                     <v-list-item-title class="headline">Status</v-list-item-title>
                                 </v-list-item-content>
-                                <v-tooltip>
+                                <v-tooltip top>
                                     <template v-slot:activator="{ on }">
                                 <span v-on="on" class="material-icons">
                                     help_outline
@@ -132,7 +132,7 @@
                                 <v-list-item-content>
                                     <v-list-item-title class="headline">Bootstrapped</v-list-item-title>
                                 </v-list-item-content>
-                                <v-tooltip>
+                                <v-tooltip top>
                                     <template v-slot:activator="{ on }">
                                 <span v-on="on" class="material-icons">
                                     help_outline
@@ -165,7 +165,7 @@
                                 <v-list-item-content>
                                     <v-list-item-title class="headline">Validating</v-list-item-title>
                                 </v-list-item-content>
-                                <v-tooltip>
+                                <v-tooltip top>
                                     <template v-slot:activator="{ on }">
                                 <span v-on="on" class="material-icons">
                                     help_outline

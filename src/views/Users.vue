@@ -47,6 +47,7 @@
                             </v-card-actions>
                         </v-card>
                     </v-dialog>
+                    <v-btn color="primary" dark small text class="ml-1" @click="navigate(user.name)">Accounts</v-btn>
                     <v-dialog v-model="deleteDialog[user.name]" persistent max-width="290">
                         <template v-slot:activator="{ on }">
                             <v-btn color="primary" dark small text class="ml-1" v-on="on">Delete</v-btn>
@@ -179,12 +180,14 @@
     export default Vue.extend({
         data() {
             return {
+                createAccountDialog: {},
                 exportDialog: {},
                 deleteDialog: {},
                 createDialog: false,
                 importDialog: false,
                 password: "",
                 username: "",
+                privateKey: "",
                 userData: "",
                 show1: false,
                 rules: {
@@ -195,6 +198,9 @@
             }
         },
         methods: {
+            navigate(user: string) {
+                this.$router.push({path: `/accounts/${user}`})
+            },
             exportUser(user: string) {
                 this.$set(this.exportDialog, user, false)
                 this.$store.dispatch("Keystore/exportUser", {name: user, password: this.password});
@@ -210,6 +216,19 @@
                 this.$store.dispatch("Keystore/createUser", {name: this.username, password: this.password});
                 this.password = "";
                 this.username = "";
+            },
+            createAccount() {
+                this.createAccountDialog = false;
+                console.log(this.username);
+                console.log(this.password);
+                this.$store.dispatch("PChain/createAccountForUser", {
+                    username: this.username,
+                    password: this.password,
+                    privateKey: ""
+                })
+                this.password = "";
+                this.username = "";
+                this.privateKey = "";
             },
             importUser() {
                 this.importDialog = false;

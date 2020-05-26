@@ -1,8 +1,7 @@
 <template>
     <div>
-    <v-tooltip>
+    <v-tooltip top>
         <template v-slot:activator="{ on }">
-
             <v-icon v-on="on" class="mr-2">fab fa-circle-notch fa-spin</v-icon>
         </template>
         <span>Bottom tooltip</span>

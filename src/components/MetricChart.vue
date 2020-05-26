@@ -9,7 +9,7 @@
             <v-list-item-content>
                 <v-list-item-title class="headline">{{ metric.name }}</v-list-item-title>
             </v-list-item-content>
-            <v-tooltip>
+            <v-tooltip top>
                 <template v-slot:activator="{ on }">
                                 <span v-on="on" class="material-icons">
                                     help_outline
