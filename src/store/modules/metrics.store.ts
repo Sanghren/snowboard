@@ -5,17 +5,17 @@ import {MetricsState} from "@/types";
 
 const state: MetricsState = {
     nodeDown: true,
-    nodeUrl: "http://localhost:9650",
+    nodeUrl: "https://bootstrap.ava.network:21000/ext/P",
     metrics: []
 }
 
 
 // Getter functions
 const getters = {
-    isNodeDown( state: MetricsState ) {
+    isNodeDown(state: MetricsState) {
         return state.nodeDown;
     },
-    metrics( state: MetricsState ) {
+    metrics(state: MetricsState) {
         return state.metrics;
     },
 }
@@ -24,7 +24,7 @@ const getters = {
 // Actions
 const actions = {
     //ToDo Find what is the type of context
-    fetchMetrics(context: any){
+    fetchMetrics(context: any) {
         axios
             .get(state.nodeUrl + '/ext/metrics')
             .then((response) => {
@@ -32,16 +32,16 @@ const actions = {
             })
             .catch((e: any) => {
                 context.commit('error')
-        });
+            });
     },
-    async updateSettings(context: any, payload: string){
+    async updateSettings(context: any, payload: string) {
         context.commit('setMetrics', []);
         context.commit('setNodeUrl', payload);
-        await context.dispatch('Keystore/fetchUsers', null, { root: true})
+        await context.dispatch('Keystore/fetchUsers', null, {root: true})
         await context.dispatch('fetchMetrics')
     },
-    async isNodeUp(context: any){
-        if(!state.nodeUrl){
+    async isNodeUp(context: any) {
+        if (!state.nodeUrl) {
             context.commit('error')
         } else {
             await context.dispatch('fetchMetrics')
@@ -51,14 +51,14 @@ const actions = {
 // Mutations
 const mutations = {
     //ToDo Type the metrics
-    setMetrics (state: MetricsState, data: []) {
+    setMetrics(state: MetricsState, data: []) {
         state.nodeDown = false;
         state.metrics = data
     },
-    setNodeUrl (state: MetricsState, data: string) {
+    setNodeUrl(state: MetricsState, data: string) {
         state.nodeUrl = data
     },
-    error (state: MetricsState) {
+    error(state: MetricsState) {
         state.metrics = [];
         state.nodeDown = true;
     },
