@@ -54,7 +54,7 @@
                         </v-tooltip>
                     </v-list-item>
                     <v-divider></v-divider>
-                    <v-card-text  height="100%" class="text-center display-3" justify="center">
+                    <v-card-text height="100%" class="text-center display-3" justify="center">
                         <b class="text--primary">{{ this.$store.state.Admin.networkId }}</b>
                     </v-card-text>
                 </v-card>
@@ -215,8 +215,9 @@
         },
         methods: {
             fetchInterestingMetrics() {
+                this.$store.dispatch('Metrics/fetchMetrics');
                 this.$store.state.Metrics.metrics.filter((m: Metric) => {
-                    if(['gecko_P_accepted','gecko_P_sm_blk_requests','gecko_C_processing'].includes(m.name)){
+                    if (['gecko_P_accepted', 'gecko_P_sm_blk_requests', 'gecko_C_processing'].includes(m.name)) {
                         this.metricToDisplay.push(m);
                     }
                 })
