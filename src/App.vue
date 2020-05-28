@@ -7,11 +7,11 @@
             <v-spacer></v-spacer>
             <div>
                 <router-link to="/node-metrics" class="white--text">Metrics</router-link>
-                <v-divider
-                        class="mx-4"
-                        vertical
-                ></v-divider>
-                <router-link to="/users" class="white--text">Users</router-link>
+<!--                <v-divider-->
+<!--                        class="mx-4"-->
+<!--                        vertical-->
+<!--                ></v-divider>-->
+<!--                <router-link to="/users" class="white&#45;&#45;text">Users</router-link>-->
                 <v-divider
                         class="mx-4"
                         vertical
