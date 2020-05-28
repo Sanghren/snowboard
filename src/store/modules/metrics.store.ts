@@ -5,7 +5,7 @@ import {MetricsState} from "@/types";
 
 const state: MetricsState = {
     nodeDown: true,
-    nodeUrl: "https://bootstrap.ava.network:21000/ext/P",
+    nodeUrl: "https://bootstrap.ava.network:21000",
     metrics: []
 }
 
