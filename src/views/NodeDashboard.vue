@@ -211,6 +211,7 @@
             this.$store.dispatch('Admin/fetchPeers');
             this.$store.dispatch('Metrics/fetchMetrics');
             this.$store.dispatch('PChain/fetchCurrentValidators');
+            setTimeout(() => console.log("I slept"), 1000);
             this.fetchInterestingMetrics();
         },
         methods: {
