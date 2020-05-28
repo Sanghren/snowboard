@@ -211,12 +211,11 @@
             this.$store.dispatch('Admin/fetchPeers');
             this.$store.dispatch('Metrics/fetchMetrics');
             this.$store.dispatch('PChain/fetchCurrentValidators');
-            setTimeout(() => console.log("I slept"), 1000);
             this.fetchInterestingMetrics();
         },
         methods: {
-            fetchInterestingMetrics() {
-                this.$store.dispatch('Metrics/fetchMetrics');
+            async fetchInterestingMetrics() {
+                await new Promise(r => setTimeout(r, 2000));
                 this.$store.state.Metrics.metrics.filter((m: Metric) => {
                     if (['gecko_P_accepted', 'gecko_P_sm_blk_requests', 'gecko_C_processing'].includes(m.name)) {
                         this.metricToDisplay.push(m);
