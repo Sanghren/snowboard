@@ -8,6 +8,9 @@ Why Snowboard ? Well ... I had no inspiration, so I just picked something relate
 with **board** because it's a kind of dash**board** .
 
 If you want to test, it's [here](https://snowboard-ava.herokuapp.com/)
+
+![Screenshot of the dashbord](./scrnsht_01.png)
+
 ## Installation
 
 ### Gecko
