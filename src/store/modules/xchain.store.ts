@@ -52,11 +52,10 @@ const actions = {
                         txStatus: "INVALID"
                     })
                 } else {
-                    const txStatus: keyof typeof TxStatus = (response.data.result.status).toUpperCase()
                     context.commit('setTxStatus', {
                         txId: txCheck.txId,
                         ownNode: txCheck.ownNode,
-                        txStatus: txStatus
+                        txStatus: response.data.result.status.toUpperCase()
                     })
                 }
 
@@ -66,6 +65,7 @@ const actions = {
             })
     }
 }
+
 // Mutations
 const mutations = {
     setBalance(state: XChainState, balance: XBalance) {
