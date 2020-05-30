@@ -119,12 +119,13 @@
                 this.loadingNode = true;
                 this.$store.dispatch("XChain/checkTxStatus", {ownNode: false, txId: this.txId}).then(values => {
                     this.loadingBootstrap = false;
+                    this.txId = "";
                 }).catch(e => {
                     console.error("Uh oh")
                 });
-                this.txId = "";
                 this.$store.dispatch("XChain/checkTxStatus", {ownNode: true, txId: this.txId}).then(values => {
                     this.loadingNode = false;
+                    this.txId = "";
                 }).catch(e => {
                     console.error("Uh oh")
                 });
