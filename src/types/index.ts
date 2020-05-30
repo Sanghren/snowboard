@@ -11,7 +11,8 @@ export interface HealthState {
 export interface MetricsState {
     nodeDown: boolean;
     nodeUrl: string;
-    metrics: object[];
+    bootstrapNodeUrl: string;
+    metrics: Metric[];
 }
 
 export interface AdminState {
@@ -30,6 +31,7 @@ export interface PChainState {
 export interface XChainState {
     bootstrapped: boolean;
     balance: XBalance;
+    txs: TxStatusRes[];
 }
 
 export interface Metric {
@@ -47,6 +49,18 @@ interface UtxoId {
 export interface XBalance {
     balance: number;
     utxoIDs: UtxoId[];
+}
+
+export interface TxStatusRes {
+    txId: string;
+    txStatusOwnNode: string;
+    txStatusBootstrapNode: string;
+}
+
+export interface TxStatusUdate {
+    txId: string;
+    ownNode: boolean;
+    txStatus: string;
 }
 
 export interface Blockchain {

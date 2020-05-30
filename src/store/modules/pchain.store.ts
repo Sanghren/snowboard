@@ -41,7 +41,7 @@ const actions = {
                 .then(async (response) => {
                     context.commit('setCurrentValidators', response.data.result.validators);
                     const res = response.data.result.validators.filter((v: Validator) => v.id === context.rootState.Admin.nodeId);
-                    if (res) {
+                    if (res && res.length > 0) {
                         context.commit('Admin/setValidatorStatus', ValidatorStatus.VALIDATING, {root: true})
                     } else {
                         await context.dispatch('fetchPendingValidators');
@@ -63,7 +63,7 @@ const actions = {
                 })
                 .then((response) => {
                     const res = response.data.result.validators.filter((v: Validator) => v.id === context.rootState.Admin.nodeId);
-                    if (res) {
+                    if (res && res.length > 0) {
                         context.commit('Admin/setValidatorStatus', ValidatorStatus.PENDING, {root: true})
                     }
                 })

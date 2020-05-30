@@ -1,13 +1,14 @@
 // State object
 import axios from "axios";
-import {Blockchain, PChainState, XBalance, XChainState} from "@/types";
+import {TxStatusRes, TxStatusUdate, XBalance, XChainState} from "@/types";
 
 const state: XChainState = {
     bootstrapped: false,
     balance: {
         balance: 0,
-        utxoIDs: []
-    }
+        utxoIDs: [],
+    },
+    txs: []
 }
 
 // Getter functions
@@ -32,6 +33,37 @@ const actions = {
                     context.commit(('error'));
                 })
         })
+    },
+    async checkTxStatus(context: any, txCheck: any) {
+        return await axios
+            .post(`${txCheck.ownNode ? context.rootState.Metrics.nodeUrl : context.rootState.Metrics.bootstrapNodeUrl}` + '/ext/bc/X', {
+                "jsonrpc": "2.0",
+                "id": 6,
+                "method": "avm.getTxStatus",
+                "params": {
+                    "txID": txCheck.txId
+                }
+            }, {timeout: 120000})
+            .then((response) => {
+                if (response.data.error) {
+                    context.commit('setTxStatus', {
+                        txId: txCheck.txId,
+                        ownNode: txCheck.ownNode,
+                        txStatus: "INVALID"
+                    })
+                } else {
+                    const txStatus: keyof typeof TxStatus = (response.data.result.status).toUpperCase()
+                    context.commit('setTxStatus', {
+                        txId: txCheck.txId,
+                        ownNode: txCheck.ownNode,
+                        txStatus: txStatus
+                    })
+                }
+
+            })
+            .catch((e) => {
+                //Do nothing
+            })
     }
 }
 // Mutations
@@ -41,6 +73,31 @@ const mutations = {
         if (balance.balance !== 0) {
             state.balance = balance;
         }
+    },
+    setTxStatus(state: XChainState, res: TxStatusUdate) {
+        const toUpdate = state.txs.find((i: TxStatusRes) => i.txId === res.txId);
+        if (toUpdate) {
+            switch (res.ownNode) {
+                case true:
+                    toUpdate.txStatusOwnNode = res.txStatus;
+                    break;
+                case false:
+                    toUpdate.txStatusBootstrapNode = res.txStatus;
+                    break;
+            }
+        } else {
+            switch (res.ownNode) {
+                case true:
+                    state.txs.push({txStatusOwnNode: res.txStatus,txStatusBootstrapNode: "UNKNOWN", txId: res.txId} as TxStatusRes);
+                    break
+                case false:
+                    state.txs.push({txStatusBootstrapNode: res.txStatus, txStatusOwnNode: "UNKNOWN", txId: res.txId} as TxStatusRes);
+                    break
+            }
+        }
+    },
+    cleanTxs(state: XChainState) {
+        state.txs = [];
     },
     error(state: XChainState) {
         console.log("ERROR");

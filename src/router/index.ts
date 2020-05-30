@@ -7,6 +7,7 @@ import Users from "@/views/Users.vue";
 import NodeInfo from "@/views/NodeInfo.vue";
 import PChain from "@/views/PChain.vue";
 import NodeDashboard from "@/views/NodeDashboard.vue";
+import Tools from "@/views/Tools.vue";
 
 Vue.use(VueRouter)
 
@@ -36,6 +37,11 @@ const routes: Array<RouteConfig> = [
         name: 'PChain',
         component: PChain
     },
+    {
+        path: '/tools',
+        name: 'Tools',
+        component: Tools
+    }
 ]
 
 const router = new VueRouter({

@@ -22,6 +22,11 @@
                         vertical
                 ></v-divider>
                 <router-link to="/" class="white--text">Dashboard</router-link>
+                <v-divider
+                        class="mx-4"
+                        vertical
+                ></v-divider>
+                <router-link to="/tools" class="white--text">Tools</router-link>
             </div>
 
             <v-spacer></v-spacer>
