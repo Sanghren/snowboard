@@ -14,6 +14,15 @@
                                 label="Gecko node url"
                                 required
                         ></v-text-field>
+
+                    </v-col>
+                    <v-col
+                            cols="12"
+                            md="4"
+                    >
+                        <span>By default we use the bootstrap node but you can set your own node.</span><br/>
+                        <b><span>Be aware that if you are using snowboard on heroku, you will not be able to view the data from a node that is not accessible via https (browser restriction).</span></b><br/>
+                        <span>If you are in that case, better to run snowboard locally, go check the github repo !</span>
                     </v-col>
                 </v-row>
                 <v-btn
