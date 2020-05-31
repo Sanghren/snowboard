@@ -51,7 +51,7 @@
         </v-app-bar>
 
         <v-content>
-            <v-alert v-model="this.$store.state.Metrics.nodeDown" type="error" dismissible>Error connecting to your
+            <v-alert :value="!this.$store.state.Health.healthy" type="error" dismissible>Error connecting to your
                 node, check the url in settings !
             </v-alert>
             <router-view/>
@@ -66,38 +66,18 @@
         name: 'App',
 
         components: {},
-        data() {
-            return {
-                metrics: null,
-                nodeDown: true,
-            }
-        },
         methods: {
-            updateSettings(e: Event) {
-                this.$store.dispatch('Metrics/updateSettings')
-            },
-            isNodeUp() {
-                //ToDo Need to rethink this, becoming messy
+            checkNode() {
                 this.$store.dispatch('Health/fetchLiveness')
-                this.$store.dispatch('Metrics/isNodeUp')
-            },
-            isBootstrapped() {
-                //ToDo Need to rethink this, becoming messy
-                this.$store.dispatch('XChain/fetchBalance')
             }
         },
         beforeMount() {
-            this.$store.dispatch('Api/setupSlopes');
-            this.isNodeUp();
-            this.isBootstrapped();
+            this.checkNode();
         },
         mounted() {
             setInterval(() => {
-                this.isNodeUp();
+                this.checkNode();
             }, 10000);
-            setInterval(() => {
-                this.isBootstrapped();
-            }, 60000);
         }
     });
 </script>
