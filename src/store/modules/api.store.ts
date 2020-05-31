@@ -32,8 +32,6 @@ const actions = {
         context.commit('updateNodeApiConfig', update);
 
         updateSlopesApi(context.state.nodeApi);
-        console.log(`AFTER : ${nodeApi.getIP()}`)
-        console.log(`AFTER : ${await nodeApi.Admin().getNodeID()}`)
     }
 }
 // Mutations
