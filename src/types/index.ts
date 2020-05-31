@@ -1,3 +1,5 @@
+import {Slopes} from "slopes";
+
 export interface KeystoreState {
     users: User[];
 }
@@ -32,6 +34,29 @@ export interface XChainState {
     bootstrapped: boolean;
     balance: XBalance;
     txs: TxStatusRes[];
+}
+
+export interface UsersState {
+    users: User[];
+}
+
+export interface Config {
+    api?: Slopes;
+    nodeUrl: string;
+    protocol: string;
+    chainId: string;
+    nodePort: string;
+    networkId: string;
+}
+
+export interface ApiState {
+    bootstrapApi: Config;
+    nodeApi: Config;
+}
+
+export interface User {
+    name: string;
+    xAddress: string[];
 }
 
 export interface Metric {

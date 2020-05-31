@@ -87,6 +87,7 @@
             }
         },
         beforeMount() {
+            this.$store.dispatch('Api/setupSlopes');
             this.isNodeUp();
             this.isBootstrapped();
         },

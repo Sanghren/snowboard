@@ -7,6 +7,7 @@ import Admin from './modules/admin.store';
 import PChain from './modules/pchain.store';
 import XChain from './modules/xchain.store';
 import Health from './modules/health.store';
+import Api from './modules/api.store';
 
 Vue.use(Vuex);
 const debug = process.env.NODE_ENV !== 'production';
@@ -17,7 +18,8 @@ export default new Vuex.Store({
     Admin,
     PChain,
     XChain,
-    Health
+    Health,
+    Api
   },
   strict: debug,
   plugins: debug? [ createLogger() ] : [],
