@@ -66,17 +66,12 @@
         name: 'App',
 
         components: {},
-        methods: {
-            checkNode() {
-                this.$store.dispatch('Health/fetchLiveness')
-            }
-        },
         beforeMount() {
-            this.checkNode();
+            this.$store.dispatch('Health/fetchLiveness')
         },
         mounted() {
             setInterval(() => {
-                this.checkNode();
+                this.$store.dispatch('Health/fetchLiveness')
             }, 10000);
         }
     });
