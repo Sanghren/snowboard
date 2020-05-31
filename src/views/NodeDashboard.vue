@@ -26,7 +26,7 @@
                     </v-list-item>
                     <v-divider></v-divider>
                     <v-card-text class="headline">
-                        <b class="text--primary">{{ this.$store.state.Dashboard.nodeId }}</b>
+                        <b class="text--primary">{{ $store.state.Dashboard.nodeId }}</b>
                     </v-card-text>
                 </v-card>
             </v-col>
@@ -98,8 +98,8 @@
                                 class="mb-2"
                                 height="100%"
                                 width="100%"
-                                v-model="this.$store.state.Health.healthy"
-                                :class="this.$store.state.Health.healthy ? 'node-status-green-background' : 'node-status-red-background'"
+                                v-model="$store.state.Health.healthy"
+                                :class="$store.state.Health.healthy ? 'node-status-green-background' : 'node-status-red-background'"
                                 outlined
                                 tile
                         >
@@ -120,11 +120,11 @@
                     </v-row>
                     <v-row>
                         <v-card
-                                :loading="this.$store.state.Dashboard.loading.get('bootstrap')"
+                                :loading="$store.state.Dashboard.loading.get('bootstrap')"
                                 class="mb-2"
                                 height="100%"
                                 width="100%"
-                                :class="this.$store.state.Dashboard.bootstrapped ? 'node-status-green-background' : this.$store.state.Dashboard.loading.get('bootstrap') ? 'node-status-orange-background' : 'node-status-red-background'"
+                                :class="$store.state.Dashboard.bootstrapped ? 'node-status-green-background' : $store.state.Dashboard.loading.get('bootstrap') ? 'node-status-orange-background' : 'node-status-red-background'"
                                 outlined
                                 tile
                         >
@@ -156,8 +156,8 @@
                                 class="mb-2"
                                 height="100%"
                                 width="100%"
-                                v-model="this.$store.getters['Dashboard/validatingStatus']"
-                                :class="this.$store.getters['Dashboard/validatingStatus'] === 1 ? 'node-status-green-background' : this.$store.getters['Dashboard/validatingStatus'] === 2 ? 'node-status-red-background' : 'node-status-orange-background'"
+                                v-model="$store.getters['Dashboard/validatingStatus']"
+                                :class="$store.getters['Dashboard/validatingStatus'] === 1 ? 'node-status-green-background' : $store.getters['Dashboard/validatingStatus'] === 2 ? 'node-status-red-background' : 'node-status-orange-background'"
                                 outlined
                                 tile
                         >
@@ -180,14 +180,27 @@
             </v-col>
         </v-row>
         <v-row>
-            <v-col
-                    v-for="(metric, index) in metricToDisplay"
-                    :key="index"
-                    cols="6"
-                    md="4"
-            >
-                <MetricChart :metric="metric"></MetricChart>
-            </v-col>
+            <template v-if="!$store.state.Metrics.loading.get('metrics')">
+                <v-col
+                        v-for="(metric, index) in metricToDisplay"
+                        :key="index"
+                        cols="6"
+                        md="4"
+                >
+                    <MetricChart :metric="metric"></MetricChart>
+                </v-col>
+            </template>
+            <!-- ToDo Not optimal            -->
+            <template v-if="$store.state.Metrics.loading.get('metrics')">
+                <v-col
+                        v-for="(metric, index) in [1,2,3]"
+                        :key="index"
+                        cols="6"
+                        md="4"
+                >
+                    <MetricChart :metric="metric" :loading="$store.state.Metrics.loading.get('metrics')"></MetricChart>
+                </v-col>
+            </template>
         </v-row>
     </v-container>
 </template>

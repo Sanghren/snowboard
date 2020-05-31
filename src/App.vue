@@ -68,11 +68,15 @@
         components: {},
         beforeMount() {
             this.$store.dispatch('Health/fetchLiveness')
+            this.$store.dispatch('Metrics/fetchMetrics')
         },
         mounted() {
             setInterval(() => {
                 this.$store.dispatch('Health/fetchLiveness')
             }, 10000);
+            setInterval(() => {
+                this.$store.dispatch('Metrics/fetchMetrics')
+            }, 60000);
         }
     });
 </script>

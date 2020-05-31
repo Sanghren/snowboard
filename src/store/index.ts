@@ -8,6 +8,7 @@ import PChain from './modules/pchain.store';
 import XChain from './modules/xchain.store';
 import Health from './modules/health.store';
 import Api from './modules/api.store';
+import Dashboard from './modules/dashboard.store';
 
 Vue.use(Vuex);
 const debug = process.env.NODE_ENV !== 'production';
@@ -19,7 +20,8 @@ export default new Vuex.Store({
     PChain,
     XChain,
     Health,
-    Api
+    Api,
+    Dashboard
   },
   strict: debug,
   plugins: debug? [ createLogger() ] : [],
