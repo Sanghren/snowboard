@@ -1,7 +1,10 @@
-import {Slopes} from "slopes";
-
 export interface KeystoreState {
     users: User[];
+}
+
+export interface ErrorContext {
+    key: string;
+    error: Error;
 }
 
 export interface HealthState {
@@ -10,10 +13,7 @@ export interface HealthState {
     healthy: boolean;
 }
 
-export interface MetricsState {
-    nodeDown: boolean;
-    nodeUrl: string;
-    bootstrapNodeUrl: string;
+export interface MetricsState extends State{
     metrics: Metric[];
 }
 
@@ -41,12 +41,27 @@ export interface UsersState {
 }
 
 export interface Config {
-    api?: Slopes;
     nodeUrl: string;
     protocol: string;
     chainId: string;
     nodePort: string;
     networkId: string;
+}
+
+interface State {
+    loading: Map<string, boolean>;
+    error: Map<string, Error>;
+}
+
+export interface DashboardState extends State{
+    nodeId: string;
+    networkId: string;
+    peers: string[];
+    status: string;
+    bootstrapped: boolean;
+    validating: ValidatorStatus;
+    validatingNodes: [];
+    pendingValidators: [];
 }
 
 export interface ApiState {
