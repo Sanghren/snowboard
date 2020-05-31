@@ -32,7 +32,11 @@ function createSlopes(config: Config): slopes.Slopes {
 }
 
 // Getter functions
-const getters = {}
+const getters = {
+    getNodeUrl: (state: ApiState) => {
+        return state.nodeApi.protocol + "://" + state.nodeApi.nodeUrl + ":" + state.nodeApi.nodePort
+    }
+}
 
 // Actions
 const actions = {
