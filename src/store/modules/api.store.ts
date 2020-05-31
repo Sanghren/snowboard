@@ -44,6 +44,12 @@ const actions = {
         const bootstrapApi = createSlopes(context.state.bootstrapApi);
         const nodeApi = createSlopes(context.state.nodeApi);
         context.commit('setApis', [bootstrapApi, nodeApi]);
+    },
+    changeNodeUrl(context: any, update: Config){
+        context.commit('updateNodeApiConfig', update);
+        const nodeApi = createSlopes(context.state.nodeApi);
+        context.commit('updateNodeApiSlopes', nodeApi);
+
     }
 }
 // Mutations
@@ -51,6 +57,16 @@ const mutations = {
     setApis(state: ApiState, apis: slopes.Slopes[]) {
         state.bootstrapApi.api = apis[0];
         state.nodeApi.api = apis[1];
+    },
+    updateNodeApiConfig(state: ApiState, update: Config) {
+        state.nodeApi.nodeUrl = update.nodeUrl;
+        state.nodeApi.protocol = update.protocol;
+        state.nodeApi.nodePort = update.nodePort;
+        state.nodeApi.chainId = update.chainId;
+        state.nodeApi.networkId = update.networkId;
+    },
+    updateNodeApiSlopes(state: ApiState, api: slopes.Slopes) {
+        state.nodeApi.api = api;
     }
 }
 
