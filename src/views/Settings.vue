@@ -110,6 +110,8 @@
                     networkId: this.networkId
                 })
                 this.currentNodeUrl = this.$store.getters["Api/getNodeUrl"]
+                this.$store.dispatch("Health/fetchLiveness")
+                //ToDo Somewhere we need to flush state
             },
             validate () {
                 if (this.form.validate()) {
