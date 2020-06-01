@@ -40,6 +40,11 @@ export interface UsersState {
     users: User[];
 }
 
+export interface ToolsState extends State {
+        txStatus: string;
+        bootstrapTxStatus: string;
+}
+
 export interface Config {
     nodeUrl: string;
     protocol: string;
