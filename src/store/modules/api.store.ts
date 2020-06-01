@@ -6,16 +6,16 @@ const state: ApiState = {
     bootstrapApi: {
         nodeUrl: process.env.VUE_APP_SNWBRD_BOOTSTRAP_HOST || 'bootstrap.ava.network',
         protocol: process.env.VUE_APP_SNWBRD_BOOTSTRAP_PROTOCOL || 'https',
-        chainId: process.env.VUE_APP_SNWBRD_BOOTSTRAP_CHAIN_ID || '2',
+        chainId: process.env.VUE_APP_SNWBRD_BOOTSTRAP_CHAIN_ID || 'X',
         nodePort: process.env.VUE_APP_SNWBRD_BOOTSTRAP_PORT || '2100',
-        networkId: process.env.VUE_APP_SNWBRD_BOOTSTRAP_NETWORK_ID || '4ktRjsAKxgMr2aEzv9SWmrU7Xk5FniHUrVCX4P1TZSfTLZWFM',
+        networkId: process.env.VUE_APP_SNWBRD_BOOTSTRAP_NETWORK_ID || '3',
     },
     nodeApi: {
-        nodeUrl: process.env.VUE_APP_SNWBRD_NODE_HOST || 'localhost',
-        protocol: process.env.VUE_APP_SNWBRD_NODE_PROTOCOL || 'http',
-        chainId: process.env.VUE_APP_SNWBRD_NODE_CHAIN_ID || '2',
-        nodePort: process.env.VUE_APP_SNWBRD_NODE_PORT || '9650',
-        networkId: process.env.VUE_APP_SNWBRD_NODE_NETWORK_ID || '4ktRjsAKxgMr2aEzv9SWmrU7Xk5FniHUrVCX4P1TZSfTLZWFM',
+        nodeUrl: process.env.VUE_APP_SNWBRD_NODE_HOST || 'bootstrap.ava.network',
+        protocol: process.env.VUE_APP_SNWBRD_NODE_PROTOCOL || 'https',
+        chainId: process.env.VUE_APP_SNWBRD_NODE_CHAIN_ID || 'X',
+        nodePort: process.env.VUE_APP_SNWBRD_NODE_PORT || '2100',
+        networkId: process.env.VUE_APP_SNWBRD_NODE_NETWORK_ID || '3',
     }
 }
 
