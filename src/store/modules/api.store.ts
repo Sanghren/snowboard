@@ -7,14 +7,14 @@ const state: ApiState = {
         nodeUrl: process.env.VUE_APP_SNWBRD_BOOTSTRAP_HOST || 'bootstrap.ava.network',
         protocol: process.env.VUE_APP_SNWBRD_BOOTSTRAP_PROTOCOL || 'https',
         chainId: process.env.VUE_APP_SNWBRD_BOOTSTRAP_CHAIN_ID || 'X',
-        nodePort: process.env.VUE_APP_SNWBRD_BOOTSTRAP_PORT || '2100',
+        nodePort: process.env.VUE_APP_SNWBRD_BOOTSTRAP_PORT || '21000',
         networkId: process.env.VUE_APP_SNWBRD_BOOTSTRAP_NETWORK_ID || '3',
     },
     nodeApi: {
         nodeUrl: process.env.VUE_APP_SNWBRD_NODE_HOST || 'bootstrap.ava.network',
         protocol: process.env.VUE_APP_SNWBRD_NODE_PROTOCOL || 'https',
         chainId: process.env.VUE_APP_SNWBRD_NODE_CHAIN_ID || 'X',
-        nodePort: process.env.VUE_APP_SNWBRD_NODE_PORT || '2100',
+        nodePort: process.env.VUE_APP_SNWBRD_NODE_PORT || '21000',
         networkId: process.env.VUE_APP_SNWBRD_NODE_NETWORK_ID || '3',
     }
 }
@@ -22,8 +22,6 @@ const state: ApiState = {
 // Getter functions
 const getters = {
     getNodeUrl: (state: ApiState) => {
-        console.log("Or just too tired ?")
-        console.log(nodeApi.getURL())
         return state.nodeApi.protocol + "://" + state.nodeApi.nodeUrl + ":" + state.nodeApi.nodePort
     },
 }
