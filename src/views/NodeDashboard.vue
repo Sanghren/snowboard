@@ -279,8 +279,7 @@
                 <v-col
                         v-for="(metric, index) in metricToDisplay"
                         :key="index"
-                        cols="6"
-                        md="4"
+                        cols="4"
                 >
                     <MetricChart :metric="metric"></MetricChart>
                 </v-col>
