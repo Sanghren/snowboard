@@ -12,6 +12,7 @@ const state: DashboardState = {
     validatingNodes: [],
     pendingValidators: [],
     validating: ValidatorStatus.UNKNOWN,
+    users: [],
     loading: new Map(),
     error: new Map()
 }
@@ -47,6 +48,10 @@ const actions = {
     async fetchPeers(context: any) {
         const peers = await nodeApi.Admin().peers();
         context.commit('setPeers', peers)
+    },
+    async fetchUsers(context: any) {
+        const users = await nodeApi.NodeKeys().listUsers();
+        context.commit('setUsers', users)
     },
     async fetchBootstrapStatus(context: any, intervalId: NodeJS.Timeout) {
         context.commit('setLoading', 'bootstrap');
@@ -89,6 +94,9 @@ const mutations = {
     },
     setPeers(state: DashboardState, peers: string[]) {
         state.peers = peers;
+    },
+    setUsers(state: DashboardState, users: []) {
+        state.users = users;
     },
     setBootstrapStatus(state: DashboardState, bootstrapped: boolean) {
         state.bootstrapped = bootstrapped;

@@ -1,9 +1,83 @@
 <template>
-    <v-container class="theme--dark lighten-5">
-        <v-row>
+    <v-container fluid class="theme--dark">
+        <v-row dense>
             <v-col
-                    cols="4"
-                    md="3"
+                    cols="1"
+                    class="ma-1 pa-0"
+                    no-gutters
+            >
+                <v-card
+                        v-model="$store.state.Health.healthy"
+                        :class="$store.state.Health.healthy ? 'node-status-green-background' : 'node-status-red-background'"
+                        tile
+                >
+                    <v-card-title class="justify-center">
+                        <v-tooltip top>
+                            <template :class="$store.state.Health.healthy ? 'node-status-green-background' : 'node-status-red-background'" v-slot:activator="{ on }">
+                                <span v-on="on" class="material-icons md14">
+                                    favorite_border
+                                </span>
+                            </template>
+                            <span>Whether your node is marked as 'healthy'</span>
+                        </v-tooltip>
+                    </v-card-title>
+                </v-card>
+            </v-col>
+            <v-col
+                    cols="2"
+                    class="ma-1 pa-0"
+            >
+                <v-card
+                        :loading="$store.state.Dashboard.loading.get('bootstrap')"
+                        :class="$store.state.Dashboard.bootstrapped ? 'node-status-green-background' : $store.state.Dashboard.loading.get('bootstrap') ? 'node-status-orange-background' : 'node-status-red-background'"
+                        tile
+                >
+                    <v-list-item>
+                        <v-list-item-content>
+                            <v-list-item-title class="headline">Bootstrapped</v-list-item-title>
+                        </v-list-item-content>
+                        <v-tooltip top>
+                            <template v-slot:activator="{ on }">
+                                <span v-on="on" class="material-icons">
+                                    help_outline
+                                </span>
+                            </template>
+                            <span>We check the balance of the faucet to see whether the node is bootstrapped or not.
+                                <a>https://docs.ava.network/v1.0/en/quickstart/ava-getting-started/</a></span>
+                        </v-tooltip>
+                    </v-list-item>
+                </v-card>
+            </v-col>
+            <v-col
+                    cols="2"
+                    class="ma-1 pa-0"
+            >
+                <v-card
+                        class="mb-2"
+                        v-model="$store.getters['Dashboard/validatingStatus']"
+                        :class="$store.getters['Dashboard/validatingStatus'] === 1 ? 'node-status-green-background' : $store.getters['Dashboard/validatingStatus'] === 2 ? 'node-status-red-background' : 'node-status-orange-background'"
+                        tile
+                >
+                    <v-list-item>
+                        <v-list-item-content>
+                            <v-list-item-title class="headline">Validating</v-list-item-title>
+                        </v-list-item-content>
+                        <v-tooltip top>
+                            <template v-slot:activator="{ on }">
+                                <span v-on="on" class="material-icons">
+                                    help_outline
+                                </span>
+                            </template>
+                            <span>Whether your node is present in the "current validator" list or in the "pending" list .'</span>
+                        </v-tooltip>
+                    </v-list-item>
+                </v-card>
+            </v-col>
+        </v-row>
+        <v-row dense>
+            <v-col
+                    cols="3"
+                    class="ma-1 pa-0"
             >
                 <v-card
                         class="mx-auto"
@@ -31,8 +105,8 @@
                 </v-card>
             </v-col>
             <v-col
-                    cols="1"
-                    md="2"
+                    cols="2"
+                    class="ma-1 pa-0"
             >
                 <v-card
                         class="mx-auto"
@@ -60,8 +134,8 @@
                 </v-card>
             </v-col>
             <v-col
-                    cols="4"
-                    md="2"
+                    cols="2"
+                    class="ma-1 pa-0"
             >
                 <v-card
                         class="mx-auto b"
@@ -89,97 +163,49 @@
                 </v-card>
             </v-col>
             <v-col
+                    cols="2"
+                    class="ma-1 pa-0"
+            >
+                <v-card
+                        class="mx-auto b"
+                        height="100%"
+                        outlined
+                        tile
+                >
+                    <v-list-item>
+                        <v-list-item-content>
+                            <v-list-item-title class="headline text--secondary">Users</v-list-item-title>
+                        </v-list-item-content>
+                        <v-tooltip top>
+                            <template v-slot:activator="{ on }">
+                                <span v-on="on" class="material-icons">
+                                    help_outline
+                                </span>
+                            </template>
+                            <span>Bunber of users in the keystore of this node.</span>
+                        </v-tooltip>
+                    </v-list-item>
+                    <v-divider></v-divider>
+                    <v-card-text class="text-center display-3" justify="center">
+                        <b class="text--primary">{{this.$store.state.Dashboard.users.length}}</b>
+                    </v-card-text>
+                </v-card>
+            </v-col>
+            <v-col
                     cols="4"
                     md="2"
             >
-                <v-container>
-                    <v-row>
-                        <v-card
-                                class="mb-2"
-                                height="100%"
-                                width="100%"
-                                v-model="$store.state.Health.healthy"
-                                :class="$store.state.Health.healthy ? 'node-status-green-background' : 'node-status-red-background'"
-                                outlined
-                                tile
-                        >
-                            <v-list-item>
-                                <v-list-item-content>
-                                    <v-list-item-title class="headline">Status</v-list-item-title>
-                                </v-list-item-content>
-                                <v-tooltip top>
-                                    <template v-slot:activator="{ on }">
-                                <span v-on="on" class="material-icons">
-                                    help_outline
-                                </span>
-                                    </template>
-                                    <span>Whether your node is marked as 'healthy'</span>
-                                </v-tooltip>
-                            </v-list-item>
-                        </v-card>
-                    </v-row>
-                    <v-row>
-                        <v-card
-                                :loading="$store.state.Dashboard.loading.get('bootstrap')"
-                                class="mb-2"
-                                height="100%"
-                                width="100%"
-                                :class="$store.state.Dashboard.bootstrapped ? 'node-status-green-background' : $store.state.Dashboard.loading.get('bootstrap') ? 'node-status-orange-background' : 'node-status-red-background'"
-                                outlined
-                                tile
-                        >
-                            <v-list-item>
-                                <v-list-item-content>
-                                    <v-list-item-title class="headline">Bootstrapped</v-list-item-title>
-                                </v-list-item-content>
-                                <v-tooltip top>
-                                    <template v-slot:activator="{ on }">
-                                <span v-on="on" class="material-icons">
-                                    help_outline
-                                </span>
-                                    </template>
-                                    <span>We check the balance of the faucet to see whether the node is bootstrapped or not.
-                                <a>https://docs.ava.network/v1.0/en/quickstart/ava-getting-started/</a></span>
-                                </v-tooltip>
-                            </v-list-item>
-                        </v-card>
-                    </v-row>
-                </v-container>
             </v-col>
             <v-col
                     cols="4"
                     md="2"
             >
                 <v-container>
-                    <v-row>
-                        <v-card
-                                class="mb-2"
-                                height="100%"
-                                width="100%"
-                                v-model="$store.getters['Dashboard/validatingStatus']"
-                                :class="$store.getters['Dashboard/validatingStatus'] === 1 ? 'node-status-green-background' : $store.getters['Dashboard/validatingStatus'] === 2 ? 'node-status-red-background' : 'node-status-orange-background'"
-                                outlined
-                                tile
-                        >
-                            <v-list-item>
-                                <v-list-item-content>
-                                    <v-list-item-title class="headline">Validating</v-list-item-title>
-                                </v-list-item-content>
-                                <v-tooltip top>
-                                    <template v-slot:activator="{ on }">
-                                <span v-on="on" class="material-icons">
-                                    help_outline
-                                </span>
-                                    </template>
-                                    <span>Whether your node is present in the "current validator" list or in the "pending" list .'</span>
-                                </v-tooltip>
-                            </v-list-item>
-                        </v-card>
-                    </v-row>
+
                 </v-container>
             </v-col>
         </v-row>
-        <v-row>
+        <v-row dense>
             <template v-if="!$store.state.Metrics.loading.get('metrics')">
                 <v-col
                         v-for="(metric, index) in metricToDisplay"
@@ -226,6 +252,7 @@
             this.$store.dispatch('Dashboard/fetchNodeId');
             this.$store.dispatch('Dashboard/fetchNetworkId');
             this.$store.dispatch('Dashboard/fetchPeers');
+            this.$store.dispatch('Dashboard/fetchUsers');
             this.$store.dispatch('Metrics/fetchMetrics');
             this.$store.dispatch('Dashboard/fetchCurrentValidators');
             this.fetchInterestingMetrics();
@@ -259,5 +286,9 @@
 
     .node-status-orange-background {
         background-color: orange;
+    }
+
+    .material-icons.md14 {
+        font-size: 24px;
     }
 </style>

@@ -62,6 +62,7 @@ export interface DashboardState extends State{
     validating: ValidatorStatus;
     validatingNodes: [];
     pendingValidators: [];
+    users: [];
 }
 
 export interface ApiState {
