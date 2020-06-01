@@ -275,7 +275,8 @@
             </v-col>
         </v-row>
         <v-row dense>
-            <template v-if="!$store.state.Metrics.loading.get('metrics')">
+            <template
+                    v-if="initialMetricLoad && !$store.state.Metrics.loading.get('metrics') ">
                 <v-col
                         v-for="(metric, index) in metricToDisplay"
                         :key="index"
@@ -285,13 +286,13 @@
                 </v-col>
             </template>
             <!-- ToDo Not optimal            -->
-            <template v-if="$store.state.Metrics.loading.get('metrics')">
+            <template v-if="!initialMetricLoad || $store.state.Metrics.loading.get('metrics')">
                 <v-col
                         v-for="(metric, index) in [1,2,3,4]"
                         :key="index"
                         cols="3"
                 >
-                    <MetricChart :metric="metric" :loading="$store.state.Metrics.loading.get('metrics')"></MetricChart>
+                    <MetricChart :metric="metric" :loading="true"></MetricChart>
                 </v-col>
             </template>
         </v-row>
@@ -308,20 +309,21 @@
         props: {},
         data() {
             return {
+                initialMetricLoad: false,
                 metricToDisplay: [] as Metric[],
                 intervalId: {} as NodeJS.Timeout,
                 refreshDisabled: false
             }
         },
         beforeMount() {
-            this.$store.dispatch('Dashboard/fetchBootstrapStatus')
+            this.$store.dispatch('Dashboard/fetchBootstrapStatus');
+            this.$store.dispatch('Metrics/fetchMetrics');
         },
         mounted() {
             this.$store.dispatch('Dashboard/fetchNodeId');
             this.$store.dispatch('Dashboard/fetchNetworkId');
             this.$store.dispatch('Dashboard/fetchPeers');
             this.$store.dispatch('Dashboard/fetchUsers');
-            this.$store.dispatch('Metrics/fetchMetrics');
             this.$store.dispatch('Dashboard/fetchCurrentValidators');
             this.fetchInterestingMetrics();
 
@@ -331,9 +333,11 @@
         },
         methods: {
             async fetchInterestingMetrics() {
+                await new Promise(r => setTimeout(r, 2000));
                 this.$store.state.Metrics.metrics.filter((m: Metric) => {
                     if (['gecko_P_accepted', 'gecko_P_sm_blk_requests', 'gecko_X_av_blocked_vts', 'gecko_X_tx_accepted'].includes(m.name)) {
                         this.metricToDisplay.push(m);
+                        this.initialMetricLoad = true;
                     }
                 })
             },
