@@ -6,14 +6,23 @@
                     class="ma-1 pa-0"
                     no-gutters
             >
-                <v-btn :disabled="refreshDisabled">
+                <v-layout row wrap align-center>
+                    <v-flex
+                            :class="`d-flex justify-center align-center mb-6`"
+                            >
+                        <v-btn
+                                class="grid-center"
+                                :disabled="refreshDisabled"
+                                @click="refresh()"
+                        >
                     <span
                             class="material-icons"
-                            @click="refresh()"
                     >
                         refresh
                     </span>
-                </v-btn>
+                        </v-btn>
+                    </v-flex>
+                </v-layout>
             </v-col>
             <v-col
                     cols="1"
@@ -365,5 +374,8 @@
 
     .material-icons.md14 {
         font-size: 24px;
+    }
+    .material-icons.md14 {
+        display: inline-block
     }
 </style>
