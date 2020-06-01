@@ -12,11 +12,11 @@
 <!--                        vertical-->
 <!--                ></v-divider>-->
 <!--                <router-link to="/users" class="white&#45;&#45;text">Users</router-link>-->
-                <v-divider
-                        class="mx-4"
-                        vertical
-                ></v-divider>
-                <router-link to="/p-chain" class="white--text">Chains</router-link>
+<!--                <v-divider-->
+<!--                        class="mx-4"-->
+<!--                        vertical-->
+<!--                ></v-divider>-->
+<!--                <router-link to="/p-chain" class="white&#45;&#45;text">Chains</router-link>-->
                 <v-divider
                         class="mx-4"
                         vertical

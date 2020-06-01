@@ -46,7 +46,7 @@
                                 v-model="networkId"
                                 :rules="[rules.required]"
                                 placeholder="2"
-                                label="Netwrok Id"
+                                label="Network Id"
                                 outline
                         ></v-text-field>
 
