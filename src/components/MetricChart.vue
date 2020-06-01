@@ -1,11 +1,10 @@
 <template>
-    <div>
-        <v-card v-if="loading"
-                class="pa-2"
-                outlined
-                height="300"
-                tile
-        >
+    <v-card
+            class="mx-auto b"
+            height="100%"
+            outlined
+            tile>
+        <template v-if="loading">
             <v-list-item>
                 <v-list-item-content>
                     <v-list-item-title class="headline">{{ metric.name }}</v-list-item-title>
@@ -24,13 +23,8 @@
                 <br/>
                 <span>Loading data</span>
             </div>
-        </v-card>
-        <v-card v-if="!loading"
-                class="pa-2"
-                outlined
-                height="100%"
-                tile
-        >
+        </template>
+        <template v-if="!loading">
             <v-list-item>
                 <v-list-item-content>
                     <v-list-item-title class="headline">{{ metric.name }}</v-list-item-title>
@@ -57,26 +51,31 @@
             </div>
             <div v-if="metric.type === 'GAUGE'">
                 <doughnut-chart :chartdata="{
-                labels: [ metric.name, 'unused'],
+                labels: [ metric.name],
                 datasets: [
       {
-        label: ['value', 'unused'],
-        backgroundColor: ['#008000', '#ff0000'],
+        label: ['value'],
+        backgroundColor: ['#008000', '#483434'],
         data: [metric.metrics[0].value, 100 - metric.metrics[0].value]
       }
     ]}"></doughnut-chart>
             </div>
             <div v-if="metric.type === 'COUNTER'">
-                <v-card-text>
-                    <p class="display-1 text--primary text-center">
-                        {{ Object.values(metric.metrics[0])[0] }}
-                    </p>
-                </v-card-text>
+                <v-layout row wrap align-center>
+                    <v-flex
+                            :class="`d-flex justify-center align-center mb-6`"
+                    >
+                        <v-card-text class="text-center display-3" justify="center">
+                            <b class="text--primary"> {{ Object.values(metric.metrics[0])[0] }}
+                            </b>
+                        </v-card-text>
+                    </v-flex>
+                </v-layout>
             </div>
             <div v-else>
             </div>
-        </v-card>
-    </div>
+        </template>
+    </v-card>
 </template>
 
 <script>
