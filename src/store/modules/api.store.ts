@@ -22,6 +22,8 @@ const state: ApiState = {
 // Getter functions
 const getters = {
     getNodeUrl: (state: ApiState) => {
+        console.log("Or just too tired ?")
+        console.log(nodeApi.getURL())
         return state.nodeApi.protocol + "://" + state.nodeApi.nodeUrl + ":" + state.nodeApi.nodePort
     },
 }
