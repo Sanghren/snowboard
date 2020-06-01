@@ -6,6 +6,20 @@
                     class="ma-1 pa-0"
                     no-gutters
             >
+                <v-btn :disabled="refreshDisabled">
+                    <span
+                            class="material-icons"
+                            @click="refresh()"
+                    >
+                        refresh
+                    </span>
+                </v-btn>
+            </v-col>
+            <v-col
+                    cols="1"
+                    class="ma-1 pa-0"
+                    no-gutters
+            >
                 <v-card
                         v-model="$store.state.Health.healthy"
                         :class="$store.state.Health.healthy ? 'node-status-green-background' : 'node-status-red-background'"
@@ -13,7 +27,9 @@
                 >
                     <v-card-title class="justify-center">
                         <v-tooltip top>
-                            <template :class="$store.state.Health.healthy ? 'node-status-green-background' : 'node-status-red-background'" v-slot:activator="{ on }">
+                            <template
+                                    :class="$store.state.Health.healthy ? 'node-status-green-background' : 'node-status-red-background'"
+                                    v-slot:activator="{ on }">
                                 <span v-on="on" class="material-icons md14">
                                     favorite_border
                                 </span>
@@ -76,7 +92,7 @@
         </v-row>
         <v-row dense>
             <v-col
-                    cols="3"
+                    cols="2"
                     class="ma-1 pa-0"
             >
                 <v-card
@@ -134,7 +150,7 @@
                 </v-card>
             </v-col>
             <v-col
-                    cols="2"
+                    cols="1"
                     class="ma-1 pa-0"
             >
                 <v-card
@@ -163,7 +179,7 @@
                 </v-card>
             </v-col>
             <v-col
-                    cols="2"
+                    cols="1 "
                     class="ma-1 pa-0"
             >
                 <v-card
@@ -182,7 +198,7 @@
                                     help_outline
                                 </span>
                             </template>
-                            <span>Bunber of users in the keystore of this node.</span>
+                            <span>Number of users in the keystore of this node.</span>
                         </v-tooltip>
                     </v-list-item>
                     <v-divider></v-divider>
@@ -192,17 +208,61 @@
                 </v-card>
             </v-col>
             <v-col
-                    cols="4"
-                    md="2"
+                    cols="2"
+                    class="ma-1 pa-0"
             >
+                <v-card
+                        class="mx-auto b"
+                        height="100%"
+                        outlined
+                        tile
+                >
+                    <v-list-item>
+                        <v-list-item-content>
+                            <v-list-item-title class="headline text--secondary">Validators</v-list-item-title>
+                        </v-list-item-content>
+                        <v-tooltip top>
+                            <template v-slot:activator="{ on }">
+                                <span v-on="on" class="material-icons">
+                                    help_outline
+                                </span>
+                            </template>
+                            <span>Number of validator nodes.</span>
+                        </v-tooltip>
+                    </v-list-item>
+                    <v-divider></v-divider>
+                    <v-card-text class="text-center display-3" justify="center">
+                        <b class="text--primary">{{this.$store.state.Dashboard.validatingNodes.length}}</b>
+                    </v-card-text>
+                </v-card>
             </v-col>
             <v-col
-                    cols="4"
-                    md="2"
+                    cols="2"
+                    class="ma-1 pa-0"
             >
-                <v-container>
-
-                </v-container>
+                <v-card
+                        class="mx-auto b"
+                        height="100%"
+                        outlined
+                        tile>
+                    <v-list-item>
+                        <v-list-item-content>
+                            <v-list-item-title class="headline text--secondary">Pending</v-list-item-title>
+                        </v-list-item-content>
+                        <v-tooltip top>
+                            <template v-slot:activator="{ on }">
+                                <span v-on="on" class="material-icons">
+                                    help_outline
+                                </span>
+                            </template>
+                            <span>Number of pending validator nodes.</span>
+                        </v-tooltip>
+                    </v-list-item>
+                    <v-divider></v-divider>
+                    <v-card-text class="text-center display-3" justify="center">
+                        <b class="text--primary">{{this.$store.state.Dashboard.pendingValidators.length}}</b>
+                    </v-card-text>
+                </v-card>
             </v-col>
         </v-row>
         <v-row dense>
@@ -242,7 +302,8 @@
         data() {
             return {
                 metricToDisplay: [] as Metric[],
-                intervalId: {} as NodeJS.Timeout
+                intervalId: {} as NodeJS.Timeout,
+                refreshDisabled: false
             }
         },
         beforeMount() {
@@ -257,8 +318,8 @@
             this.$store.dispatch('Dashboard/fetchCurrentValidators');
             this.fetchInterestingMetrics();
 
-            const intervalId = setInterval(() => {
-                this.$store.dispatch('Dashboard/fetchBootstrapStatus', intervalId)
+            this.intervalId = setInterval(() => {
+                this.$store.dispatch('Dashboard/fetchBootstrapStatus', this.intervalId)
             }, 120000);
         },
         methods: {
@@ -269,6 +330,20 @@
                         this.metricToDisplay.push(m);
                     }
                 })
+            },
+            async refresh() {
+                this.refreshDisabled = true;
+                this.$store.dispatch('Dashboard/fetchNodeId');
+                this.$store.dispatch('Health/fetchLiveness')
+                this.$store.dispatch('Dashboard/fetchNetworkId');
+                this.$store.dispatch('Dashboard/fetchPeers');
+                this.$store.dispatch('Dashboard/fetchUsers');
+                this.$store.dispatch('Metrics/fetchMetrics');
+                this.$store.dispatch('Dashboard/fetchBootstrapStatus', this.intervalId)
+                this.$store.dispatch('Dashboard/fetchCurrentValidators');
+                this.fetchInterestingMetrics();
+                await new Promise(r => setTimeout(() => this.refreshDisabled = false, 10000));
+
             }
         }
     })
