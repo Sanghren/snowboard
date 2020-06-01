@@ -1,18 +1,53 @@
 <template>
     <div>
         <h1 class="text-lg-center">Settings</h1>
-        <v-form>
+        <v-form
+                ref="form"
+                v-model="valid"
+                lazy-validation
+        >
             <v-container>
                 <v-row>
                     <v-col
                             cols="12"
                             md="4"
                     >
+                        <div>Current node is : {{ currentNodeUrl }}</div>
+
                         <v-text-field
-                                v-model="nodeUrl"
-                                placeholder="localhost:9250"
-                                label="Gecko node url"
-                                required
+                                v-model="protocol"
+                                placeholder="http"
+                                :rules="[rules.required, rules.http]"
+                                label="Http / Https"
+                                outline
+                        ></v-text-field>
+                        <v-text-field
+                                v-model="host"
+                                placeholder="localhost / 127.0.01"
+                                :rules="[rules.required]"
+                                label="Gecko node hostname or ip"
+                                outline
+                        ></v-text-field>
+                        <v-text-field
+                                v-model="port"
+                                placeholder="9250"
+                                :rules="[rules.required, rules.number]"
+                                label="Gecko node port"
+                                outline
+                        ></v-text-field>
+                        <v-text-field
+                                v-model="chainId"
+                                placeholder="X"
+                                :rules="[rules.required]"
+                                label="Chain Id"
+                                outline
+                        ></v-text-field>
+                        <v-text-field
+                                v-model="networkId"
+                                :rules="[rules.required]"
+                                placeholder="2"
+                                label="Netwrok Id"
+                                outline
                         ></v-text-field>
 
                     </v-col>
@@ -20,15 +55,15 @@
                             cols="12"
                             md="4"
                     >
-                        <span>By default we use the bootstrap node but you can set your own node.</span><br/>
                         <b><span>Be aware that if you are using snowboard on heroku, you will not be able to view the data from a node that is not accessible via https (browser restriction).</span></b><br/>
                         <span>If you are in that case, better to run snowboard locally, go check the github repo !</span>
                     </v-col>
                 </v-row>
                 <v-btn
-                        color="success"
+                        :disabled="!valid"
+                        @click="validate"
+                        color="primary" dark
                         class="mr-4"
-                        @click="updateSettings"
                 >
                     Save
                 </v-btn>
@@ -41,17 +76,47 @@
     import Vue from 'vue';
 
     export default Vue.extend({
-        props: {
-            'nodeUrl': {
-                required: false,
-                default() {
-                    return this.$store.state.nodeUrl;
-                }
+        data() {
+            return {
+                protocol: "",
+                host: "",
+                port: "",
+                chainId: "",
+                networkId: "",
+                valid: true,
+                rules: {
+                    required: (value: any) => !!value || 'Required.',
+                    http: (v: any) => (v === 'http' || v === 'https') || 'Must be either http or https',
+                    number: (v: any) => parseInt(v) || 'must be a number',
+                },
+                currentNodeUrl: "",
             }
+        },
+        computed: {
+            form(): Vue & { validate: () => boolean } {
+                return this.$refs.form as Vue & { validate: () => boolean }
+            }
+        },
+        beforeMount() {
+            this.currentNodeUrl = this.$store.getters["Api/getNodeUrl"]
         },
         methods: {
             updateSettings() {
-                this.$store.dispatch('Metrics/updateSettings', this.nodeUrl)
+                this.$store.dispatch("Api/changeNodeUrl",{
+                    nodeUrl: this.host,
+                    protocol: this.protocol,
+                    chainId: this.chainId,
+                    nodePort: this.port,
+                    networkId: this.networkId
+                })
+                this.currentNodeUrl = this.$store.getters["Api/getNodeUrl"]
+                this.$store.dispatch("Health/fetchLiveness")
+                //ToDo Somewhere we need to flush state
+            },
+            validate () {
+                if (this.form.validate()) {
+                    this.updateSettings()
+                }
             }
         }
     })

@@ -1,12 +1,11 @@
 <template>
     <v-container class="theme--dark lighten-5">
         <template v-for="(chunk, rowIndex) in productChunks">
-            <v-row :key="rowIndex">
+            <v-row :key="rowIndex" dense>
                 <v-col
                         v-for="(metric, index) in chunk"
                         :key="index"
-                        cols="4"
-                        md="4">
+                        cols="3">
                     <MetricChart :metric="metric"></MetricChart>
                 </v-col>
             </v-row>
@@ -24,7 +23,7 @@
         props: ['msg', 'metrics'],
         computed: {
             productChunks() {
-                return _.chunk(Object.values(this.$store.state.Metrics.metrics), 3);
+                return _.chunk(Object.values(this.$store.state.Metrics.metrics), 4);
             }
         },
         methods: {}

@@ -1,25 +1,45 @@
 <template>
     <v-card
-            class="pa-2"
-            outlined
+            class="mx-auto b"
             height="100%"
-            tile
-    >
-        <v-list-item>
-            <v-list-item-content>
-                <v-list-item-title class="headline">{{ metric.name }}</v-list-item-title>
-            </v-list-item-content>
-            <v-tooltip top>
-                <template v-slot:activator="{ on }">
+            outlined
+            tile>
+        <template v-if="loading">
+            <v-list-item>
+                <v-list-item-content>
+                    <v-list-item-title class="headline">{{ metric.name }}</v-list-item-title>
+                </v-list-item-content>
+                <v-tooltip top>
+                    <template v-slot:activator="{ on }">
                                 <span v-on="on" class="material-icons">
                                     help_outline
                                 </span>
-                </template>
-                <span>{{ metric.help }}</span>
-            </v-tooltip>
-        </v-list-item>
-        <div v-if="metric.type === 'HISTOGRAM'">
-            <histogram-chart :chartdata="{labels: Object.keys(metric.metrics[0].buckets),
+                    </template>
+                    <span>We will display here some metrics coming from your node .</span>
+                </v-tooltip>
+            </v-list-item>
+            <div class="text-center">
+                <v-progress-circular indeterminate color="red"/>
+                <br/>
+                <span>Loading data</span>
+            </div>
+        </template>
+        <template v-if="!loading">
+            <v-list-item>
+                <v-list-item-content>
+                    <v-list-item-title class="headline">{{ metric.name }}</v-list-item-title>
+                </v-list-item-content>
+                <v-tooltip top>
+                    <template v-slot:activator="{ on }">
+                                <span v-on="on" class="material-icons">
+                                    help_outline
+                                </span>
+                    </template>
+                    <span>{{ metric.help }}</span>
+                </v-tooltip>
+            </v-list-item>
+            <div v-if="metric.type === 'HISTOGRAM'">
+                <histogram-chart :chartdata="{labels: Object.keys(metric.metrics[0].buckets),
                 datasets: [
       {
         label: metric.name,
@@ -27,28 +47,34 @@
         data: Object.values(metric.metrics[0].buckets)
       }
     ]}">
-            </histogram-chart>
-        </div>
-        <div v-if="metric.type === 'GAUGE'">
-            <doughnut-chart :chartdata="{
-                labels: [ metric.name, 'unused'],
+                </histogram-chart>
+            </div>
+            <div v-if="metric.type === 'GAUGE'">
+                <doughnut-chart :chartdata="{
+                labels: [ metric.name],
                 datasets: [
       {
-        label: ['value', 'unused'],
-        backgroundColor: ['#008000', '#ff0000'],
+        label: ['value'],
+        backgroundColor: ['#008000', '#483434'],
         data: [metric.metrics[0].value, 100 - metric.metrics[0].value]
       }
     ]}"></doughnut-chart>
-        </div>
-        <div v-if="metric.type === 'COUNTER'">
-            <v-card-text>
-                <p class="display-1 text--primary text-center">
-                    {{ Object.values(metric.metrics[0])[0] }}
-                </p>
-            </v-card-text>
-        </div>
-        <div v-else>
-        </div>
+            </div>
+            <div v-if="metric.type === 'COUNTER'">
+                <v-layout row wrap align-center>
+                    <v-flex
+                            :class="`d-flex justify-center align-center mb-6`"
+                    >
+                        <v-card-text class="text-center display-3" justify="center">
+                            <b class="text--primary"> {{ Object.values(metric.metrics[0])[0] }}
+                            </b>
+                        </v-card-text>
+                    </v-flex>
+                </v-layout>
+            </div>
+            <div v-else>
+            </div>
+        </template>
     </v-card>
 </template>
 
@@ -59,7 +85,7 @@
     export default {
         name: "MetricChart",
         components: {DoughnutChart, HistogramChart},
-        props: ["metric"],
+        props: ["metric", "loading"],
         methods: {
             backgroundColors(size) {
                 const pool = [];

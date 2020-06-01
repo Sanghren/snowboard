@@ -25,7 +25,8 @@
                         </v-tooltip>
                     </v-list-item>
                     <v-divider></v-divider>
-                    <v-form v-if="!isLoading()" class="mx-2">
+                    {{ isLoading }}
+                    <v-form v-if="!isLoading" class="mx-2">
                         <v-container fluid>
                             <v-row>
                                 <v-text-field
@@ -33,13 +34,13 @@
                                         name="input-10-1"
                                         label="Tx Id"
                                         counter
-                                        @click:append="show1 = !show1"
+                                        @input="resetTxs"
                                 ></v-text-field>
                             </v-row>
                         </v-container>
                     </v-form>
-                    <v-progress-circular v-if="isLoading()" color="red" indeterminate/>
-                    <v-btn v-if="!isLoading()" @click="checkTx()">Check !</v-btn>
+                    <v-progress-circular v-if="isLoading" color="red" indeterminate/>
+                    <v-btn v-if="!isLoading" primary @click="checkTx()">Check !</v-btn>
                 </v-card>
             </v-col>
             <v-col
@@ -66,7 +67,7 @@
                             </v-tooltip>
                         </v-list-item>
                         <v-divider></v-divider>
-                        <v-simple-table v-if="!isLoading() && this.$store.state.XChain.txs.length > 0" dense
+                        <v-simple-table v-if="!isLoading && display" dense
                                         class="ml-5 mr-5">
                             <thead>
                             <tr>
@@ -76,21 +77,29 @@
                             </tr>
                             </thead>
                             <tbody>
-                            <tr v-for="(tx , index) in this.$store.state.XChain.txs" :key="index" class="mb-4">
-                                <td>{{tx.txId}}</td>
-                                <td>{{tx.txStatusBootstrapNode}}</td>
-                                <td>{{tx.txStatusOwnNode}}</td>
+                            <tr class="mb-4">
+                                <td>{{txId}}</td>
+                                <td>{{$store.state.Tools.bootstrapTxStatus}}</td>
+                                <td>{{$store.state.Tools.txStatus}}</td>
                             </tr>
                             </tbody>
-                            <v-btn @click="resetTxs()">Clean</v-btn>
                         </v-simple-table>
                     </template>
-                    <div v-if="this.$store.state.XChain.txs.length === 0">
+                    <div v-if="!display && !checkError()">
                         Enter a txId you want to check on the box on the left .
                     </div>
-                    <div v-if="isLoading()">
+                    <div v-if="isLoading">
                         Please wait while we wait for Gecko answer .
-                        <v-progress-circular v-if="isLoading()" color="red" indeterminate/>
+                        <v-progress-circular v-if="isLoading" color="red" indeterminate/>
+                    </div>
+                    <div v-if="checkError()">
+                        <v-alert
+                                border="bottom"
+                                color="pink darken-1"
+                                dark
+                        >
+                            {{ checkError()}}
+                        </v-alert>
                     </div>
                 </v-card>
             </v-col>
@@ -101,40 +110,32 @@
 
 <script lang="ts">
     import Vue from 'vue';
+    import {mapGetters} from "vuex";
 
     export default Vue.extend({
-        components: {},
-        props: {},
         data() {
             return {
-                txId: "",
-                show1: true,
-                loadingBootstrap: false,
-                loadingNode: false,
+                txId: ""
             }
+        },
+        computed: {
+            ...mapGetters("Tools", [
+                'isLoading',
+                'display',
+                'hasError'
+            ])
         },
         methods: {
             checkTx() {
-                this.loadingBootstrap = true;
-                this.loadingNode = true;
-                this.$store.dispatch("XChain/checkTxStatus", {ownNode: false, txId: this.txId}).then(values => {
-                    this.loadingBootstrap = false;
-                    this.txId = "";
-                }).catch(e => {
-                    console.error("Uh oh")
-                });
-                this.$store.dispatch("XChain/checkTxStatus", {ownNode: true, txId: this.txId}).then(values => {
-                    this.loadingNode = false;
-                    this.txId = "";
-                }).catch(e => {
-                    console.error("Uh oh")
-                });
+                this.$store.dispatch("Tools/checkTxStatus", {bootstrapNode: false, txId: this.txId})
+                this.$store.dispatch("Tools/checkTxStatus", {bootstrapNode: true, txId: this.txId})
+            },
+            checkError() {
+                return (this.$store.state.Tools.error.has('bootstrapTxCheck') && this.$store.state.Tools.error.get('bootstrapTxCheck')) || (this.$store.state.Tools.error.has('nodeTxCheck') && this.$store.state.Tools.error.get('nodeTxCheck'))
+
             },
             resetTxs() {
-                this.$store.commit("XChain/cleanTxs");
-            },
-            isLoading() {
-                return this.loadingBootstrap || this.loadingNode;
+                this.$store.commit("Tools/cleanState");
             }
         }
     })

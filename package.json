@@ -12,7 +12,10 @@
     "node": "12.16.x"
   },
   "dependencies": {
+    "@types/bn.js": "^4.11.6",
     "@types/chart.js": "^2.9.21",
+    "@types/elliptic": "^6.4.12",
+    "@types/libsodium-wrappers": "^0.7.7",
     "@types/lodash": "^4.14.152",
     "axios": "^0.19.2",
     "bn.js": "^5.1.2",
@@ -24,6 +27,7 @@
     "material-design-icons-iconfont": "^5.0.1",
     "parse-prometheus-text-format": "^1.1.1",
     "slopes": "^1.5.2",
+    "vee-validate": "^3.3.1",
     "vue": "^2.6.11",
     "vue-arc-counter": "^3.1.0",
     "vue-chartjs": "^3.5.0",

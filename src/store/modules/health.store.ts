@@ -17,11 +17,12 @@ const actions = {
     fetchLiveness(context: any) {
         return new Promise((resolve, reject) => {
             axios
-                .post(context.rootState.Metrics.nodeUrl + '/ext/health', {
+                .post(context.rootGetters["Api/getNodeUrl"] + '/ext/health', {
                     "jsonrpc": "2.0",
                     "id": 1,
                     "method": "health.getLiveness"
                 })
+                //ToDo We can do more with the response of that call .
                 .then((response) => context.commit('setHealthy', response.data.result.healthy))
                 .catch((e) => {
                     context.commit(('error'));

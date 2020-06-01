@@ -1,10 +1,8 @@
 import Vue from 'vue'
 import VueRouter, {RouteConfig} from 'vue-router'
-import Home from '../views/NodeMetrics.vue'
 import NodeMetrics from "@/views/NodeMetrics.vue";
 import Settings from "@/views/Settings.vue";
 import Users from "@/views/Users.vue";
-import NodeInfo from "@/views/NodeInfo.vue";
 import PChain from "@/views/PChain.vue";
 import NodeDashboard from "@/views/NodeDashboard.vue";
 import Tools from "@/views/Tools.vue";
@@ -32,6 +30,12 @@ const routes: Array<RouteConfig> = [
         name: 'Users',
         component: Users
     },
+    // {
+    //     path: '/accounts/:id',
+    //     props: true,
+    //     name: 'Accounts',
+    //     component: Accounts
+    // },
     {
         path: '/p-chain',
         name: 'PChain',
