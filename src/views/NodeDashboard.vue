@@ -289,8 +289,7 @@
                 <v-col
                         v-for="(metric, index) in [1,2,3,4]"
                         :key="index"
-                        cols="6"
-                        md="4"
+                        cols="3"
                 >
                     <MetricChart :metric="metric" :loading="$store.state.Metrics.loading.get('metrics')"></MetricChart>
                 </v-col>
@@ -340,6 +339,7 @@
             },
             async refresh() {
                 this.refreshDisabled = true;
+                this.metricToDisplay = [];
                 this.$store.dispatch('Dashboard/fetchNodeId');
                 this.$store.dispatch('Health/fetchLiveness')
                 this.$store.dispatch('Dashboard/fetchNetworkId');
