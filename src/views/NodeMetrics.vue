@@ -5,7 +5,10 @@
                 <v-col
                         v-for="(metric, index) in chunk"
                         :key="index"
-                        cols="3">
+                        xs="3"
+                        sm="6"
+                        md="3"
+                >
                     <MetricChart :metric="metric"></MetricChart>
                 </v-col>
             </v-row>

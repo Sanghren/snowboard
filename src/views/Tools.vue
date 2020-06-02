@@ -2,7 +2,8 @@
     <v-container class="theme--dark lighten-5">
         <v-row>
             <v-col
-                    cols="4"
+                    xs="4"
+                    sm="12"
                     md="5"
             >
                 <v-card
@@ -44,9 +45,9 @@
                 </v-card>
             </v-col>
             <v-col
-                    cols="4"
-                    md="7"
-            >
+                    xs="4"
+                    sm="12"
+                    md="5"            >
                 <v-card class="mx-auto"
                         height="100%"
                         outlined
