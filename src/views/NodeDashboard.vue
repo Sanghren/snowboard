@@ -2,7 +2,9 @@
     <v-container fluid class="theme--dark">
         <v-row dense>
             <v-col
-                    cols="1"
+                    xs="2"
+                    sm="2"
+                    md="2"
                     class="ma-1 pa-0"
                     no-gutters
             >
@@ -25,7 +27,10 @@
                 </v-layout>
             </v-col>
             <v-col
-                    cols="1"
+                    xs="1"
+                    sm="1"
+                    md="1"
+
                     class="ma-1 pa-0"
                     no-gutters
             >
@@ -49,7 +54,9 @@
                 </v-card>
             </v-col>
             <v-col
-                    cols="2"
+                    xs="1"
+                    sm="4"
+                    md="2"
                     class="ma-1 pa-0"
             >
                 <v-card
@@ -74,7 +81,8 @@
                 </v-card>
             </v-col>
             <v-col
-                    cols="2"
+                    xs="12"
+                    md="2"
                     class="ma-1 pa-0"
             >
                 <v-card
@@ -101,7 +109,9 @@
         </v-row>
         <v-row dense>
             <v-col
-                    cols="2"
+                    xs="2"
+                    sm="6"
+                    md="4"
                     class="ma-1 pa-0"
             >
                 <v-card
@@ -130,7 +140,9 @@
                 </v-card>
             </v-col>
             <v-col
-                    cols="2"
+                    xs="2"
+                    sm="2"
+                    md="1"
                     class="ma-1 pa-0"
             >
                 <v-card
@@ -159,7 +171,7 @@
                 </v-card>
             </v-col>
             <v-col
-                    cols="1"
+                    xs="1"
                     class="ma-1 pa-0"
             >
                 <v-card
@@ -188,7 +200,8 @@
                 </v-card>
             </v-col>
             <v-col
-                    cols="1 "
+                    xs="1"
+                    md="1"
                     class="ma-1 pa-0"
             >
                 <v-card
@@ -217,7 +230,9 @@
                 </v-card>
             </v-col>
             <v-col
-                    cols="2"
+                    xs="2"
+                    sm="3"
+                    md="2"
                     class="ma-1 pa-0"
             >
                 <v-card
@@ -246,7 +261,9 @@
                 </v-card>
             </v-col>
             <v-col
-                    cols="2"
+                    xs="2"
+                    sm="4"
+                    md="2"
                     class="ma-1 pa-0"
             >
                 <v-card
@@ -280,7 +297,9 @@
                 <v-col
                         v-for="(metric, index) in metricToDisplay"
                         :key="index"
-                        cols="3"
+                        xs="3"
+                        sm="6"
+                        md="3"
                 >
                     <MetricChart :metric="metric"></MetricChart>
                 </v-col>
@@ -290,7 +309,9 @@
                 <v-col
                         v-for="(metric, index) in [1,2,3,4]"
                         :key="index"
-                        cols="3"
+                        xs="3"
+                        sm="6"
+                        md="3"
                 >
                     <MetricChart :metric="metric" :loading="true"></MetricChart>
                 </v-col>
