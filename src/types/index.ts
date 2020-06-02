@@ -13,7 +13,7 @@ export interface HealthState {
     healthy: boolean;
 }
 
-export interface MetricsState extends State{
+export interface MetricsState extends State {
     metrics: Metric[];
 }
 
@@ -41,8 +41,9 @@ export interface UsersState {
 }
 
 export interface ToolsState extends State {
-        txStatus: string;
-        bootstrapTxStatus: string;
+    nodeStatus: string;
+    txStatus: string;
+    bootstrapTxStatus: string;
 }
 
 export interface Config {
@@ -58,7 +59,7 @@ interface State {
     error: Map<string, Error>;
 }
 
-export interface DashboardState extends State{
+export interface DashboardState extends State {
     nodeId: string;
     networkId: string;
     peers: string[];
@@ -138,9 +139,9 @@ export enum ValidatorStatus {
 }
 
 export interface PChainAccount {
- address: string;
- nonce: number;
- balance: number;
+    address: string;
+    nonce: number;
+    balance: number;
 }
 
 export interface User {

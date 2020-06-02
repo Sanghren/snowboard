@@ -4,6 +4,7 @@ import {bootstrapNodeApi, nodeApi} from "@/AVA";
 import Tools from "@/views/Tools.vue";
 
 const state: ToolsState = {
+    nodeStatus: "",
     txStatus: "",
     bootstrapTxStatus: "",
     loading: new Map(),
@@ -12,15 +13,19 @@ const state: ToolsState = {
 
 // Getter functions
 const getters = {
-    isLoading: (state: ToolsState) => {
+    isTxLoading: (state: ToolsState) => {
         return state.loading.has('bootstrapTxCheck') && state.loading.get('bootstrapTxCheck') || state.loading.has('nodeTxCheck') && state.loading.get('nodeTxCheck')
     },
-    display: (state: ToolsState) => {
+    isNodeStatusLoading: (state: ToolsState) => {
+        return state.loading.has('nodeStatusCheck') && state.loading.get('nodeStatusCheck')
+    },
+    displayTx: (state: ToolsState) => {
         return state.bootstrapTxStatus.length > 0 && state.txStatus.length > 0;
     },
+    displayNodeStatus: (state: ToolsState) => {
+        return state.nodeStatus.length > 0;
+    },
     hasError: (state: ToolsState) => {
-        console.log((state.error.has('bootstrapTxCheck') && state.error.get('bootstrapTxCheck')))
-        console.log(( state.error.has('nodeTxCheck') && state.error.get('nodeTxCheck')))
         return (state.error.has('bootstrapTxCheck') && state.error.get('bootstrapTxCheck')) || (state.error.has('nodeTxCheck') && state.error.get('nodeTxCheck'))
     },
 }
@@ -46,6 +51,22 @@ const actions = {
             context.commit('setLoaded', key)
             context.commit('setError', {key, error: e})
         }
+    },
+    async checkBootstrapStatus(context: any, payload: any) {
+        const pendingValidators = await nodeApi.Platform().getPendingValidators();
+        const pending = pendingValidators.find((i: any) => i.id === payload.nodeId);
+
+        if(pending) {
+            context.commit('setNodeStatus', 'Pending');
+        } else {
+            const currentValidators = await nodeApi.Platform().getCurrentValidators();
+            const validator = currentValidators.find((i: any) => i.id === payload.nodeId);
+            if(validator) {
+                context.commit('setNodeStatus', 'Validating');
+            } else {
+                context.commit('setNodeStatus', 'Unknown');
+            }
+        }
     }
 }
 // Mutations
@@ -57,11 +78,15 @@ const mutations = {
             state.txStatus = data.status;
         }
     },
+    setNodeStatus(state: ToolsState, data: string) {
+        state.nodeStatus = data;
+    },
     setLoading(state: ToolsState, key: string) {
         state.loading.set(key, true)
     },
     cleanState(state: ToolsState) {
         state.txStatus = "";
+        state.nodeStatus = "";
         state.bootstrapTxStatus = "";
         state.error = new Map();
         state.loading = new Map();
