@@ -22,12 +22,6 @@ jobs:
         run: |
           yarn
 
-      - name: Lint
-        uses: mooyoul/tslint-actions@v1.1.1
-        with:
-          token: ${{ secrets.GITHUB_TOKEN }}
-          pattern: '*.ts'
-
       - name: Compile and run the tests
         run: |
           yarn build
