@@ -1,12 +1,12 @@
 // State object
 import {ErrorContext, Validator} from "@/types";
 import {bootstrapNodeApi, nodeApi} from "@/AVA";
-import {Actions, Getters, Module, Mutations} from "vuex-smart-module";
+import {Actions, createMapper, Getters, Module, Mutations} from "vuex-smart-module";
 
 
 interface TxStatusUpdate {
     bootstrapNode: boolean;
-    status: string;
+    status?: string;
     txId?: string;
 }
 
@@ -28,6 +28,8 @@ class ToolsGetters extends Getters<ToolsState> {
     }
 
     displayTx() {
+        console.log(this.state.bootstrapTxStatus.length)
+        console.log(this.state.txStatus.length)
         return this.state.bootstrapTxStatus.length > 0 && this.state.txStatus.length > 0;
     }
 
@@ -42,10 +44,11 @@ class ToolsGetters extends Getters<ToolsState> {
 
 class ToolsMutations extends Mutations<ToolsState> {
     setTxStatus(data: TxStatusUpdate) {
+        console.log("BOUHHHHH ", data)
         if (data.bootstrapNode) {
-            this.state.bootstrapTxStatus = data.status;
+            this.state.bootstrapTxStatus = data.status || "UNKNOWN";
         } else {
-            this.state.txStatus = data.status;
+            this.state.txStatus = data.status || "UNKNOWN";
         }
     }
 
@@ -85,7 +88,7 @@ class ToolsActions extends Actions<ToolsState,
     async checkTxStatus(txCheck: TxStatusUpdate) {
         let avmApi;
         const key = txCheck.bootstrapNode ? 'bootstrapTxCheck' : 'nodeTxCheck'
-        this.commit('setLoading', key)
+        this.mutations.setLoading(key)
         if (txCheck.bootstrapNode) {
             avmApi = await bootstrapNodeApi.AVM();
         } else {
@@ -94,28 +97,29 @@ class ToolsActions extends Actions<ToolsState,
         try {
             if (txCheck.txId) {
                 const txStatus = await avmApi.getTxStatus(txCheck.txId);
-                this.commit('setTxStatus', {bootstrapNode: txCheck.bootstrapNode, status: txStatus})
-                this.commit('setLoaded', key)
+                this.mutations.setTxStatus({bootstrapNode: txCheck.bootstrapNode, status: txStatus})
+                this.mutations.setLoaded(key)
             }
         } catch (e) {
-            this.commit('setTxStatus', {bootstrapNode: txCheck.bootstrapNode, status: "INVALID"})
-            this.commit('setLoaded', key)
-            this.commit('setError', {key, error: e})
+            this.mutations.setTxStatus({bootstrapNode: txCheck.bootstrapNode, status: "INVALID"})
+            this.mutations.setLoaded(key)
+            this.mutations.setError({key, error: e})
         }
     }
-    async checkBootstrapStatus(nodeId: string) {
+
+    async checkNodeStatus(nodeId: string) {
         const pendingValidators = await nodeApi.Platform().getPendingValidators() as Validator[];
         const pending = pendingValidators.find((i: Validator) => i.id === nodeId);
 
         if (pending) {
-            this.commit('setNodeStatus', 'Pending');
+            this.mutations.setNodeStatus('Pending');
         } else {
             const currentValidators = await nodeApi.Platform().getCurrentValidators() as Validator[];
             const validator = currentValidators.find((i: Validator) => i.id === nodeId);
             if (validator) {
-                this.commit('setNodeStatus', 'Validating');
+                this.mutations.setNodeStatus('Validating');
             } else {
-                this.commit('setNodeStatus', 'Unknown');
+                this.mutations.setNodeStatus('Unknown');
             }
         }
     }
@@ -127,3 +131,4 @@ export const Tools = new Module({
     mutations: ToolsMutations,
     actions: ToolsActions
 })
+export const ToolsMapper = createMapper(Tools)

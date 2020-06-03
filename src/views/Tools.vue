@@ -31,7 +31,7 @@
                     </v-tooltip>
                 </v-list-item>
                 <v-divider></v-divider>
-                <v-form v-if="!isTxLoading" class="mx-2">
+                <v-form v-if="!this.isTxLoading()" class="mx-2">
                     <v-container fluid>
                         <v-row>
                             <v-text-field
@@ -39,23 +39,24 @@
                                     name="input-10-1"
                                     label="Tx Id"
                                     counter
-                                    @input="resetTxs"
+                                    @input="reset"
                             ></v-text-field>
                         </v-row>
                     </v-container>
                 </v-form>
-                <v-progress-circular v-if="isTxLoading" color="red" indeterminate/>
+                <v-progress-circular v-if="this.isTxLoading()" color="red" indeterminate/>
                 <v-container>
                     <v-row dense>
                         <v-col>
-                            <v-btn v-if="!isTxLoading" primary @click="checkTx()">Check !</v-btn>
+                            <v-btn v-if="!this.isTxLoading()" primary @click="checkTx()">Check !</v-btn>
                         </v-col>
                         <v-col v-if=!checkTxError()>
-                            <div v-if="displayTx" width="100%" height="100%">Bootstrap : <span :class="bootstrapTxClass()">{{$store.state.Tools.bootstrapTxStatus}}</span>
+                            <div v-if="this.displayTx()" width="100%" height="100%">Bootstrap : <span
+                                    :class="bootstrapTxClass()">{{$store.state.Tools.bootstrapTxStatus}}</span>
                             </div>
                         </v-col>
                         <v-col v-if=!checkTxError()>
-                            <div v-if="displayTx" width="100%" height="100%">
+                            <div v-if="this.displayTx()" width="100%" height="100%">
                                 Node : <span :class="nodeTxClass()">{{$store.state.Tools.txStatus}}</span>
                             </div>
                         </v-col>
@@ -82,7 +83,7 @@
                     </v-tooltip>
                 </v-list-item>
                 <v-divider></v-divider>
-                <v-form v-if="!isNodeStatusLoading" class="mx-2">
+                <v-form v-if="!this.isNodeStatusLoading()" class="mx-2">
                     <v-container fluid>
                         <v-row dense>
                             <v-text-field
@@ -91,21 +92,21 @@
                                     label="Node Id"
                                     counter
                                     :rules="[rules.inputLength]"
-                                    @input="resetNodeId"
+                                    @input="reset"
                             ></v-text-field>
                         </v-row>
                     </v-container>
                 </v-form>
-                <v-progress-circular v-if="isNodeStatusLoading" color="red" indeterminate/>
+                <v-progress-circular v-if="this.isNodeStatusLoading()" color="red" indeterminate/>
                 <v-container>
                     <v-row dense>
                         <v-col>
-                            <v-btn v-if="!isNodeStatusLoading" primary @click="checkNodeStatus()">Check !</v-btn>
+                            <v-btn v-if="!this.isNodeStatusLoading()" primary @click="checkNodeStatus()">Check !</v-btn>
                         </v-col>
                         <v-spacer/>
                         <v-col v-if=!checkNodeStatusError()>
                             <div disabled width="100%" height="100%">
-                                 <span :class="nodeTxClass()">{{$store.state.Tools.nodeStatus}}</span>
+                                <span :class="nodeTxClass()">{{$store.state.Tools.nodeStatus}}</span>
                             </div>
                         </v-col>
                         <v-col v-if=checkNodeStatusError()>
@@ -119,7 +120,8 @@
 
 <script lang="ts">
     import Vue from 'vue';
-    import {mapGetters} from "vuex";
+    import {ToolsMapper, Tools} from '@/store/modules/tools.store'
+
 
     export default Vue.extend({
         data() {
@@ -127,40 +129,43 @@
                 txId: "",
                 nodeId: "",
                 rules: {
-                    inputLength: (value: any) => value.length === 33 || 'Your node id seems off, please check.',
+                    inputLength: (value: string) => value.length === 33 || 'Your node id seems off, please check.',
                 }
             }
         },
-        computed: {
-            ...mapGetters("Tools", [
-                'isTxLoading',
-                'isNodeStatusLoading',
-                'displayTx',
-                'displayNodeStatus',
-                'hasError'
-            ]),
-        },
+        computed:
+            ToolsMapper.mapGetters(
+                [
+                    'isTxLoading',
+                    'isNodeStatusLoading',
+                    'displayTx',
+                    'displayNodeStatus',
+                    'hasError'
+                ]
+            ),
         methods: {
             checkTx() {
-                this.$store.dispatch("Tools/checkTxStatus", {bootstrapNode: false, txId: this.txId})
-                this.$store.dispatch("Tools/checkTxStatus", {bootstrapNode: true, txId: this.txId})
+                const ctx = Tools.context(this.$store);
+                ctx.actions.checkTxStatus({bootstrapNode: false, txId: this.txId})
+                ctx.actions.checkTxStatus({bootstrapNode: true, txId: this.txId})
             },
             checkNodeStatus() {
-                this.$store.dispatch("Tools/checkBootstrapStatus", {nodeId: this.nodeId})
+                const ctx = Tools.context(this.$store);
+                ctx.actions.checkNodeStatus(this.nodeId)
             },
             checkTxError() {
-                return (this.$store.state.Tools.error.has('bootstrapTxCheck') && this.$store.state.Tools.error.get('bootstrapTxCheck')) || (this.$store.state.Tools.error.has('nodeTxCheck') && this.$store.state.Tools.error.get('nodeTxCheck'))
+                const ctx = Tools.context(this.$store);
+                return (ctx.state.error.has('bootstrapTxCheck') && ctx.state.error.get('bootstrapTxCheck')) || (ctx.state.error.has('nodeTxCheck') && ctx.state.error.get('nodeTxCheck'))
 
             },
             checkNodeStatusError() {
-                return (this.$store.state.Tools.error.has('bootstrapTxCheck') && this.$store.state.Tools.error.get('bootstrapTxCheck')) || (this.$store.state.Tools.error.has('nodeTxCheck') && this.$store.state.Tools.error.get('nodeTxCheck'))
+                const ctx = Tools.context(this.$store);
+                return (ctx.state.error.has('bootstrapTxCheck') && ctx.state.error.get('bootstrapTxCheck')) || (ctx.state.error.has('nodeTxCheck') && ctx.state.error.get('nodeTxCheck'))
 
             },
-            resetTxs() {
-                this.$store.commit("Tools/cleanState");
-            },
-            resetNodeId() {
-                this.$store.commit("Tools/cleanState");
+            reset() {
+                const ctx = Tools.context(this.$store);
+                ctx.mutations.cleanState();
             },
             bootstrapTxClass() {
                 let color = "";
