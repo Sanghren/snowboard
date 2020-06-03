@@ -74,6 +74,9 @@
 
 <script lang="ts">
     import Vue from 'vue';
+    import {Dashboard} from "@/store/modules/dashboard.store";
+    import {Api} from "@/store/modules/api.store";
+    import {Health} from "@/store/modules/health.store";
 
     export default Vue.extend({
         data() {
@@ -102,15 +105,21 @@
         },
         methods: {
             updateSettings() {
-                this.$store.dispatch("Api/changeNodeUrl",{
-                    nodeUrl: this.host,
-                    protocol: this.protocol,
-                    chainId: this.chainId,
-                    nodePort: this.port,
-                    networkId: this.networkId
-                })
-                this.currentNodeUrl = this.$store.getters["Api/getNodeUrl"]
-                this.$store.dispatch("Health/fetchLiveness")
+                const apiCtx = Api.context(this.$store);
+                const healtCtx = Health.context(this.$store);
+
+                apiCtx.actions.changeNodeUrl(
+                    {
+                        nodeUrl: this.host,
+                        protocol: this.protocol,
+                        chainId: this.chainId,
+                        nodePort: this.port,
+                        networkId: this.networkId
+                    }
+                )
+
+                this.currentNodeUrl = apiCtx.getters.nodeUrl
+                healtCtx.actions.fetchLiveness()
                 //ToDo Somewhere we need to flush state
             },
             validate () {
