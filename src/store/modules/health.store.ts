@@ -1,8 +1,8 @@
 // State object
 import axios from "axios";
-import {HealthCheck} from "@/types";
+import {ErrorContext, HealthCheck} from "@/types";
 import {Actions, Context, Getters, Module, Mutations} from "vuex-smart-module";
-import {Api} from "@/store/modules/api.store";
+import {Api, ApiState} from "@/store/modules/api.store";
 import {Store} from "vuex";
 
 class HealthState {
@@ -14,6 +14,8 @@ class HealthState {
         timeOfFirstFailure: 0,
         timestamp: ""
     }
+    loading = new Map();
+    error = new Map();
 }
 
 class HealthGetters extends Getters<HealthState> {
@@ -25,8 +27,9 @@ class HealthMutations extends Mutations<HealthState> {
         this.state.healthy = healthy;
     }
 
-    error() {
+    setError(error: ErrorContext) {
         this.state.healthy = false;
+        this.state.error.set(error.key, error.error)
     }
 }
 
@@ -39,7 +42,7 @@ class HealthActions extends Actions<HealthState,
     // @ts-ignore
     api: Context<typeof Api>;
 
-    $init(store: Store<any>): void {
+    $init(store: Store<ApiState>): void {
         // Create and retain foo module context
         this.api = Api.context(store)
     }
@@ -54,7 +57,7 @@ class HealthActions extends Actions<HealthState,
             //ToDo We can do more with the response of that call .
             .then((response) => this.commit('setHealthy', response.data.result))
             .catch((e) => {
-                this.commit(('error'));
+                this.commit('setError', {key: 'helatCheck' ,error: e});
             })
     }
 }

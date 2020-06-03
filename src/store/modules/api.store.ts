@@ -3,7 +3,7 @@ import {Config} from "@/types";
 import {updateSlopesApi} from "@/AVA";
 import {Actions, Getters, Module, Mutations} from 'vuex-smart-module'
 
-class ApiState {
+export class ApiState {
     bootstrapApi = {
         nodeUrl: process.env.VUE_APP_SNWBRD_BOOTSTRAP_HOST || 'bootstrap.ava.network',
         protocol: process.env.VUE_APP_SNWBRD_BOOTSTRAP_PROTOCOL || 'https',

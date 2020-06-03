@@ -1,7 +1,14 @@
 // State object
-import {ErrorContext} from "@/types";
+import {ErrorContext, Validator} from "@/types";
 import {bootstrapNodeApi, nodeApi} from "@/AVA";
 import {Actions, Getters, Module, Mutations} from "vuex-smart-module";
+
+
+interface TxStatusUpdate {
+    bootstrapNode: boolean;
+    status: string;
+    txId?: string;
+}
 
 class ToolsState {
     nodeStatus = "";
@@ -34,7 +41,7 @@ class ToolsGetters extends Getters<ToolsState> {
 }
 
 class ToolsMutations extends Mutations<ToolsState> {
-    setTxStatus(data: any) {
+    setTxStatus(data: TxStatusUpdate) {
         if (data.bootstrapNode) {
             this.state.bootstrapTxStatus = data.status;
         } else {
@@ -75,36 +82,36 @@ class ToolsActions extends Actions<ToolsState,
     ToolsGetters,
     ToolsMutations,
     ToolsActions> {
-    async checkTxStatus(txCheck: any) {
+    async checkTxStatus(txCheck: TxStatusUpdate) {
         let avmApi;
         const key = txCheck.bootstrapNode ? 'bootstrapTxCheck' : 'nodeTxCheck'
         this.commit('setLoading', key)
-        if (txCheck.bootstrap) {
+        if (txCheck.bootstrapNode) {
             avmApi = await bootstrapNodeApi.AVM();
         } else {
             avmApi = await nodeApi.AVM();
         }
-
         try {
-            const txStatus = await avmApi.getTxStatus(txCheck.txId);
-            this.commit('setTxStatus', {bootstrapNode: txCheck.bootstrapNode, status: txStatus})
-            this.commit('setLoaded', key)
+            if (txCheck.txId) {
+                const txStatus = await avmApi.getTxStatus(txCheck.txId);
+                this.commit('setTxStatus', {bootstrapNode: txCheck.bootstrapNode, status: txStatus})
+                this.commit('setLoaded', key)
+            }
         } catch (e) {
             this.commit('setTxStatus', {bootstrapNode: txCheck.bootstrapNode, status: "INVALID"})
             this.commit('setLoaded', key)
             this.commit('setError', {key, error: e})
         }
     }
-
-    async checkBootstrapStatus(payload: any) {
-        const pendingValidators = await nodeApi.Platform().getPendingValidators();
-        const pending = pendingValidators.find((i: any) => i.id === payload.nodeId);
+    async checkBootstrapStatus(nodeId: string) {
+        const pendingValidators = await nodeApi.Platform().getPendingValidators() as Validator[];
+        const pending = pendingValidators.find((i: Validator) => i.id === nodeId);
 
         if (pending) {
             this.commit('setNodeStatus', 'Pending');
         } else {
-            const currentValidators = await nodeApi.Platform().getCurrentValidators();
-            const validator = currentValidators.find((i: any) => i.id === payload.nodeId);
+            const currentValidators = await nodeApi.Platform().getCurrentValidators() as Validator[];
+            const validator = currentValidators.find((i: Validator) => i.id === nodeId);
             if (validator) {
                 this.commit('setNodeStatus', 'Validating');
             } else {

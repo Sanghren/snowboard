@@ -3,7 +3,7 @@ import axios from "axios";
 import parsePrometheusTextFormat from "parse-prometheus-text-format";
 import {ErrorContext} from "@/types";
 import {Actions, Context, Getters, Module, Mutations} from "vuex-smart-module";
-import {Api} from "@/store/modules/api.store";
+import {Api, ApiState} from "@/store/modules/api.store";
 import {Store} from "vuex";
 
 class MetricsState {
@@ -48,7 +48,7 @@ class MetricsActions extends Actions<MetricsState,
     // @ts-ignore
     api: Context<typeof Api>;
 
-    $init(store: Store<any>): void {
+    $init(store: Store<ApiState>): void {
         // Create and retain foo module context
         this.api = Api.context(store)
     }

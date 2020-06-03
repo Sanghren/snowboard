@@ -88,13 +88,6 @@ export interface Blockchain {
     status: BlockchainStatus;
 }
 
-export interface Validator {
-    startTime: number;
-    endTime: number;
-    stakeAmount: number;
-    id: string;
-}
-
 export enum BlockchainStatus {
     VALIDATING,
     CREATED,

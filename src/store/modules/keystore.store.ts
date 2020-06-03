@@ -1,11 +1,13 @@
-import {User} from "@/types";
+import {ErrorContext, User} from "@/types";
 import axios from "axios";
 import {Actions, Context, Getters, Module, Mutations} from "vuex-smart-module";
-import {Api} from "@/store/modules/api.store";
+import {Api, ApiState} from "@/store/modules/api.store";
 import {Store} from "vuex";
 
 class KeystoreState {
-    users: User[] = []
+    users: User[] = [];
+    loading = new Map();
+    error = new Map();
 }
 
 
@@ -27,7 +29,7 @@ class KeystoreActions extends Actions<KeystoreState,
     // @ts-ignore
     api: Context<typeof Api>;
 
-    $init(store: Store<any>): void {
+    $init(store: Store<ApiState>): void {
         // Create and retain foo module context
         this.api = Api.context(store)
     }
@@ -39,15 +41,10 @@ class KeystoreActions extends Actions<KeystoreState,
                 "id": 1,
                 "method": "keystore.listUsers"
             }, {headers: {"content-type": "application/json"}})
-            .then((response) => this.commit('setUsers', response.data.result.users.map((e: any) => {
-                return {
-                    name: e,
-                    password: "",
-                    exportData: ""
-                }
-            })))
+            .then((response) => this.commit('setUsers', response.data.result.users
+            ))
             .catch((e) => {
-                this.commit(('error'));
+                this.commit('setError', {key: 'fetchUsers', error: e});
             })
     }
 
@@ -141,8 +138,9 @@ class KeystoreMutations extends Mutations<KeystoreState> {
         this.state.users = users;
     }
 
-    error() {
+    setError(error: ErrorContext) {
         this.state.users = [];
+        this.state.error.set(error.key, error.error);
     }
 }
 
