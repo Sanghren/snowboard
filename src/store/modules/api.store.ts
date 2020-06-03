@@ -42,7 +42,7 @@ class ApiActions extends Actions<ApiState,
     ApiMutations,
     ApiActions> {
     async changeNodeUrl(update: Config): Promise<void> {
-        this.commit('updateNodeApiConfig', update);
+        this.mutations.updateNodeApiConfig(update);
         updateSlopesApi(this.state.nodeApi);
     }
 }

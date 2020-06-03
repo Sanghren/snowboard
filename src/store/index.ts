@@ -1,7 +1,6 @@
 import Vue from 'vue';
 import Vuex from 'vuex';
 import createLogger from 'vuex/dist/logger';
-import {Keystore} from './modules/keystore.store';
 import {Metrics} from './modules/metrics.store';
 import {Health} from './modules/health.store';
 import {Api} from './modules/api.store';
@@ -20,7 +19,6 @@ const root = new Module({
         Health,
         Metrics,
         Tools,
-        Keystore
     }
 })
 

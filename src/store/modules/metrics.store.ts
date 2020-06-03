@@ -58,12 +58,12 @@ class MetricsActions extends Actions<MetricsState,
         axios
             .get(this.api.getters.nodeUrl + '/ext/metrics')
             .then((response) => {
-                this.commit('setMetrics', parsePrometheusTextFormat(response.data))
-                this.commit('setLoaded', 'metrics')
+                this.mutations.setMetrics(parsePrometheusTextFormat(response.data))
+                this.mutations.setLoaded('metrics')
             })
             .catch((e: Error) => {
-                this.commit('setError', {key: 'metrics', error: e})
-                this.commit('setLoaded', 'metrics')
+                this.mutations.setError({key: 'metrics', error: e})
+                this.mutations.setLoaded('metrics')
             });
     }
 }

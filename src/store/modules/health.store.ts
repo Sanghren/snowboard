@@ -55,9 +55,9 @@ class HealthActions extends Actions<HealthState,
                 "method": "health.getLiveness"
             })
             //ToDo We can do more with the response of that call .
-            .then((response) => this.commit('setHealthy', response.data.result))
+            .then((response) => this.mutations.setHealthy(response.data.result))
             .catch((e) => {
-                this.commit('setError', {key: 'helatCheck' ,error: e});
+                this.mutations.setError({key: 'helatCheck' ,error: e});
             })
     }
 }

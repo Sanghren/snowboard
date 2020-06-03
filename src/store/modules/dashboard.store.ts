@@ -84,38 +84,38 @@ class DashboardActions extends Actions<DashboardState,
     DashboardActions> {
     async fetchNodeId() {
         const nodeId = await nodeApi.Admin().getNodeID();
-        this.commit('setNodeId', nodeId);
+        this.mutations.setNodeId(nodeId);
     }
 
     async fetchNetworkId() {
         const networkId = await nodeApi.Admin().getNetworkID();
-        this.commit('setNetworkId', networkId)
+        this.mutations.setNetworkId(networkId)
     }
 
     async fetchPeers() {
         const peers = await nodeApi.Admin().peers();
-        this.commit('setPeers', peers)
+        this.mutations.setPeers(peers)
     }
 
     async fetchUsers() {
         const users = await nodeApi.NodeKeys().listUsers();
-        this.commit('setUsers', users)
+        this.mutations.setUsers(users)
     }
 
     async fetchBootstrapStatus(intervalId: NodeJS.Timeout) {
-        this.commit('setLoading', 'bootstrap');
+        this.mutations.setLoading('bootstrap');
         const api = nodeApi;
         // We fetch the balance of the faucet in order to check the bootstrap status .
         // if it return a balance of '0' or a 404, then we are not yet done with the bootstrap .
         let faucetBalance = new BN(0);
         try {
             faucetBalance = await api.AVM().getBalance("X-6cesTteH62Y5mLoDBUASaBvCXuL2AthL", "AVA");
-            this.commit('setBootstrapStatus', faucetBalance.gt(new BN(0)))
-            this.commit('setLoaded', 'bootstrap');
+            this.mutations.setBootstrapStatus(faucetBalance.gt(new BN(0)))
+            this.mutations.setLoaded('bootstrap');
             clearInterval(intervalId);
         } catch (e) {
-            this.commit('setLoaded', 'bootstrap');
-            this.commit('setError', {key: "bootstrap", error: e});
+            this.mutations.setLoaded('bootstrap');
+            this.mutations.setError({key: "bootstrap", error: e});
         }
     }
 
@@ -127,10 +127,10 @@ class DashboardActions extends Actions<DashboardState,
 
         Promise.all(promises)
             .then((values: Validator[][] ) => {
-                this.commit('setValidators', values[0]);
-                this.commit('setPendingValidators', values[1]);
+                this.mutations.setValidators(values[0]);
+                this.mutations.setPendingValidators(values[1]);
             }).catch((e) => {
-            this.commit('setError', {key: "validators", error: e});
+            this.mutations.setError({key: "validators", error: e});
         })
     }
 }
