@@ -58,6 +58,15 @@ export interface User {
     xAddress: string[];
 }
 
+export interface Metric {
+    help: string;
+    //ToDo Type this properly
+    // eslint-disable-next-line @typescript-eslint/ban-types
+    metrics: object[];
+    name: string;
+    type: string;
+}
+
 interface UtxoId {
     txID: string;
     outputIndex: number;

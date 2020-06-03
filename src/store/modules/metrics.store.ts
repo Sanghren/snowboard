@@ -1,13 +1,13 @@
 // State object
 import axios from "axios";
 import parsePrometheusTextFormat from "parse-prometheus-text-format";
-import {ErrorContext} from "@/types";
+import {ErrorContext, Metric} from "@/types";
 import {Actions, Context, Getters, Module, Mutations} from "vuex-smart-module";
 import {Api, ApiState} from "@/store/modules/api.store";
 import {Store} from "vuex";
 
 class MetricsState {
-    metrics: [] = [];
+    metrics: Metric[] = [];
     loading = new Map();
     error = new Map();
 }
