@@ -166,7 +166,7 @@
                     </v-list-item>
                     <v-divider></v-divider>
                     <v-card-text height="100%" class="text-center display-3" justify="center">
-                        <b class="text--primary">{{ this.$store.state.Dashboard.networkId }}</b>
+                        <b class="text--primary">{{ $store.state.Dashboard.networkId }}</b>
                     </v-card-text>
                 </v-card>
             </v-col>
@@ -195,7 +195,7 @@
                     </v-list-item>
                     <v-divider></v-divider>
                     <v-card-text class="text-center display-3" justify="center">
-                        <b class="text--primary">{{this.$store.state.Dashboard.peers.length}}</b>
+                        <b class="text--primary">{{$store.state.Dashboard.peers.length}}</b>
                     </v-card-text>
                 </v-card>
             </v-col>
@@ -225,7 +225,7 @@
                     </v-list-item>
                     <v-divider></v-divider>
                     <v-card-text class="text-center display-3" justify="center">
-                        <b class="text--primary">{{this.$store.state.Dashboard.users.length}}</b>
+                        <b class="text--primary">{{$store.state.Dashboard.users.length}}</b>
                     </v-card-text>
                 </v-card>
             </v-col>
@@ -256,7 +256,7 @@
                     </v-list-item>
                     <v-divider></v-divider>
                     <v-card-text class="text-center display-3" justify="center">
-                        <b class="text--primary">{{this.$store.state.Dashboard.validatingNodes.length}}</b>
+                        <b class="text--primary">{{$store.state.Dashboard.validatingNodes.length}}</b>
                     </v-card-text>
                 </v-card>
             </v-col>
@@ -324,6 +324,10 @@
     import Vue from 'vue';
     import MetricChart from "@/components/MetricChart.vue";
     import {Metric} from "@/types";
+    import {Dashboard} from '@/store/modules/dashboard.store'
+    import {Tools} from "@/store/modules/tools.store";
+    import {Metrics} from "@/store/modules/metrics.store";
+    import {Health} from "@/store/modules/health.store";
 
     export default Vue.extend({
         components: {MetricChart},
@@ -337,20 +341,25 @@
             }
         },
         beforeMount() {
-            this.$store.dispatch('Dashboard/fetchBootstrapStatus');
-            this.$store.dispatch('Metrics/fetchMetrics');
-        },
-        mounted() {
-            this.$store.dispatch('Dashboard/fetchNodeId');
-            this.$store.dispatch('Dashboard/fetchNetworkId');
-            this.$store.dispatch('Dashboard/fetchPeers');
-            this.$store.dispatch('Dashboard/fetchUsers');
-            this.$store.dispatch('Dashboard/fetchCurrentValidators');
-            this.fetchInterestingMetrics();
+            const dashboardCtx = Dashboard.context(this.$store);
+            const metricsCtx = Metrics.context(this.$store);
 
             this.intervalId = setInterval(() => {
                 this.$store.dispatch('Dashboard/fetchBootstrapStatus', this.intervalId)
             }, 120000);
+            dashboardCtx.actions.fetchBootstrapStatus(this.intervalId);
+            metricsCtx.actions.fetchMetrics();
+        },
+        mounted() {
+            const dashboardCtx = Dashboard.context(this.$store);
+            dashboardCtx.actions.fetchNodeId();
+            dashboardCtx.actions.fetchNetworkId();
+            dashboardCtx.actions.fetchPeers();
+            dashboardCtx.actions.fetchUsers();
+            dashboardCtx.actions.fetchCurrentValidators();
+            this.fetchInterestingMetrics();
+
+
         },
         methods: {
             async fetchInterestingMetrics() {
@@ -363,16 +372,20 @@
                 })
             },
             async refresh() {
+                const dashboardCtx = Dashboard.context(this.$store);
+                const healthCtx = Health.context(this.$store);
+                const metricsCtx = Metrics.context(this.$store);
+
                 this.refreshDisabled = true;
                 this.metricToDisplay = [];
-                this.$store.dispatch('Dashboard/fetchNodeId');
-                this.$store.dispatch('Health/fetchLiveness')
-                this.$store.dispatch('Dashboard/fetchNetworkId');
-                this.$store.dispatch('Dashboard/fetchPeers');
-                this.$store.dispatch('Dashboard/fetchUsers');
-                this.$store.dispatch('Metrics/fetchMetrics');
-                this.$store.dispatch('Dashboard/fetchBootstrapStatus', this.intervalId)
-                this.$store.dispatch('Dashboard/fetchCurrentValidators');
+                dashboardCtx.actions.fetchNodeId('Dashboard/fetchNodeId');
+                healthCtx.actions.fetchLiveness()
+                dashboardCtx.actions.fetchNetworkId();
+                dashboardCtx.actions.fetchPeers();
+                dashboardCtx.actions.fetchUsers();
+                metricsCtx.actions.fetchMetrics()
+                dashboardCtx.actions.fetchBootstrapStatus(this.intervalId)
+                dashboardCtx.actions.fetchCurrentValidators();
                 this.fetchInterestingMetrics();
                 await new Promise(r => setTimeout(() => this.refreshDisabled = false, 10000));
 

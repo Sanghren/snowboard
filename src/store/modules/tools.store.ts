@@ -1,112 +1,134 @@
 // State object
-import {ErrorContext, KeystoreState, MetricsState, ToolsState} from "@/types";
+import {ErrorContext, Validator} from "@/types";
 import {bootstrapNodeApi, nodeApi} from "@/AVA";
-import Tools from "@/views/Tools.vue";
+import {Actions, createMapper, Getters, Module, Mutations} from "vuex-smart-module";
 
-const state: ToolsState = {
-    nodeStatus: "",
-    txStatus: "",
-    bootstrapTxStatus: "",
-    loading: new Map(),
-    error: new Map(),
+
+interface TxStatusUpdate {
+    bootstrapNode: boolean;
+    status?: string;
+    txId?: string;
 }
 
-// Getter functions
-const getters = {
-    isTxLoading: (state: ToolsState) => {
-        return state.loading.has('bootstrapTxCheck') && state.loading.get('bootstrapTxCheck') || state.loading.has('nodeTxCheck') && state.loading.get('nodeTxCheck')
-    },
-    isNodeStatusLoading: (state: ToolsState) => {
-        return state.loading.has('nodeStatusCheck') && state.loading.get('nodeStatusCheck')
-    },
-    displayTx: (state: ToolsState) => {
-        return state.bootstrapTxStatus.length > 0 && state.txStatus.length > 0;
-    },
-    displayNodeStatus: (state: ToolsState) => {
-        return state.nodeStatus.length > 0;
-    },
-    hasError: (state: ToolsState) => {
-        return (state.error.has('bootstrapTxCheck') && state.error.get('bootstrapTxCheck')) || (state.error.has('nodeTxCheck') && state.error.get('nodeTxCheck'))
-    },
+class ToolsState {
+    nodeStatus = "";
+    txStatus = "";
+    bootstrapTxStatus = "";
+    loading = new Map();
+    error = new Map();
 }
 
-// Actions
-const actions = {
-    async checkTxStatus(context: any, txCheck: any) {
+class ToolsGetters extends Getters<ToolsState> {
+    isTxLoading() {
+        return this.state.loading.has('bootstrapTxCheck') && this.state.loading.get('bootstrapTxCheck') || this.state.loading.has('nodeTxCheck') && this.state.loading.get('nodeTxCheck')
+    }
+
+    isNodeStatusLoading() {
+        return this.state.loading.has('nodeStatusCheck') && this.state.loading.get('nodeStatusCheck')
+    }
+
+    displayTx() {
+        console.log(this.state.bootstrapTxStatus.length)
+        console.log(this.state.txStatus.length)
+        return this.state.bootstrapTxStatus.length > 0 && this.state.txStatus.length > 0;
+    }
+
+    displayNodeStatus() {
+        return this.state.nodeStatus.length > 0;
+    }
+
+    hasError() {
+        return (this.state.error.has('bootstrapTxCheck') && this.state.error.get('bootstrapTxCheck')) || (this.state.error.has('nodeTxCheck') && this.state.error.get('nodeTxCheck'))
+    }
+}
+
+class ToolsMutations extends Mutations<ToolsState> {
+    setTxStatus(data: TxStatusUpdate) {
+        console.log("BOUHHHHH ", data)
+        if (data.bootstrapNode) {
+            this.state.bootstrapTxStatus = data.status || "UNKNOWN";
+        } else {
+            this.state.txStatus = data.status || "UNKNOWN";
+        }
+    }
+
+    setNodeStatus(data: string) {
+        this.state.nodeStatus = data;
+    }
+
+    setLoading(key: string) {
+        this.state.loading.set(key, true)
+    }
+
+    cleanState() {
+        this.state.txStatus = "";
+        this.state.nodeStatus = "";
+        this.state.bootstrapTxStatus = "";
+        this.state.error = new Map();
+        this.state.loading = new Map();
+    }
+
+    setLoaded(key: string) {
+        this.state.loading.set(key, false);
+    }
+
+    setError(errorContext: ErrorContext) {
+        this.state.txStatus = "";
+        this.state.bootstrapTxStatus = "";
+        this.state.loading.set('bootstrapTxCheck', false)
+        this.state.loading.set('nodeTxCheck', false)
+        this.state.error.set(errorContext.key, errorContext.error)
+    }
+}
+
+class ToolsActions extends Actions<ToolsState,
+    ToolsGetters,
+    ToolsMutations,
+    ToolsActions> {
+    async checkTxStatus(txCheck: TxStatusUpdate) {
         let avmApi;
         const key = txCheck.bootstrapNode ? 'bootstrapTxCheck' : 'nodeTxCheck'
-        context.commit('setLoading', key)
-        if (txCheck.bootstrap) {
+        this.mutations.setLoading(key)
+        if (txCheck.bootstrapNode) {
             avmApi = await bootstrapNodeApi.AVM();
         } else {
             avmApi = await nodeApi.AVM();
         }
-
         try {
-            const txStatus = await avmApi.getTxStatus(txCheck.txId);
-            context.commit('setTxStatus', {bootstrapNode: txCheck.bootstrapNode, status: txStatus})
-            context.commit('setLoaded', key)
+            if (txCheck.txId) {
+                const txStatus = await avmApi.getTxStatus(txCheck.txId);
+                this.mutations.setTxStatus({bootstrapNode: txCheck.bootstrapNode, status: txStatus})
+                this.mutations.setLoaded(key)
+            }
         } catch (e) {
-            context.commit('setTxStatus', {bootstrapNode: txCheck.bootstrapNode, status: "INVALID"})
-            context.commit('setLoaded', key)
-            context.commit('setError', {key, error: e})
+            this.mutations.setTxStatus({bootstrapNode: txCheck.bootstrapNode, status: "INVALID"})
+            this.mutations.setLoaded(key)
+            this.mutations.setError({key, error: e})
         }
-    },
-    async checkBootstrapStatus(context: any, payload: any) {
-        const pendingValidators = await nodeApi.Platform().getPendingValidators();
-        const pending = pendingValidators.find((i: any) => i.id === payload.nodeId);
+    }
 
-        if(pending) {
-            context.commit('setNodeStatus', 'Pending');
+    async checkNodeStatus(nodeId: string) {
+        const pendingValidators = await nodeApi.Platform().getPendingValidators() as Validator[];
+        const pending = pendingValidators.find((i: Validator) => i.id === nodeId);
+
+        if (pending) {
+            this.mutations.setNodeStatus('Pending');
         } else {
-            const currentValidators = await nodeApi.Platform().getCurrentValidators();
-            const validator = currentValidators.find((i: any) => i.id === payload.nodeId);
-            if(validator) {
-                context.commit('setNodeStatus', 'Validating');
+            const currentValidators = await nodeApi.Platform().getCurrentValidators() as Validator[];
+            const validator = currentValidators.find((i: Validator) => i.id === nodeId);
+            if (validator) {
+                this.mutations.setNodeStatus('Validating');
             } else {
-                context.commit('setNodeStatus', 'Unknown');
+                this.mutations.setNodeStatus('Unknown');
             }
         }
     }
 }
-// Mutations
-const mutations = {
-    setTxStatus(state: ToolsState, data: any) {
-        if (data.bootstrapNode) {
-            state.bootstrapTxStatus = data.status;
-        } else {
-            state.txStatus = data.status;
-        }
-    },
-    setNodeStatus(state: ToolsState, data: string) {
-        state.nodeStatus = data;
-    },
-    setLoading(state: ToolsState, key: string) {
-        state.loading.set(key, true)
-    },
-    cleanState(state: ToolsState) {
-        state.txStatus = "";
-        state.nodeStatus = "";
-        state.bootstrapTxStatus = "";
-        state.error = new Map();
-        state.loading = new Map();
-    },
-    setLoaded(state: ToolsState, key: string) {
-        state.loading.set(key, false);
-    },
-    setError(state: ToolsState, errorContext: ErrorContext) {
-        state.txStatus = "";
-        state.bootstrapTxStatus = "";
-        state.loading.set('bootstrapTxCheck', false)
-        state.loading.set('nodeTxCheck', false)
-        state.error.set(errorContext.key, errorContext.error)
-    },
-}
 
-export default {
-    namespaced: true,
-    state,
-    getters,
-    actions,
-    mutations
-}
+export const Tools = new Module({
+    state: ToolsState,
+    getters: ToolsGetters,
+    mutations: ToolsMutations,
+    actions: ToolsActions
+})
+export const ToolsMapper = createMapper(Tools)

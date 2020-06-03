@@ -1,28 +1,6 @@
-export interface KeystoreState {
-    users: User[];
-}
-
 export interface ErrorContext {
     key: string;
     error: Error;
-}
-
-export interface HealthState {
-    //ToDo Type that properly
-    checks: object;
-    healthy: boolean;
-}
-
-export interface MetricsState extends State {
-    metrics: Metric[];
-}
-
-export interface AdminState {
-    nodeId: string;
-    validator: ValidatorStatus;
-    peers: string[];
-    networkId: string;
-
 }
 
 export interface PChainState {
@@ -40,12 +18,6 @@ export interface UsersState {
     users: User[];
 }
 
-export interface ToolsState extends State {
-    nodeStatus: string;
-    txStatus: string;
-    bootstrapTxStatus: string;
-}
-
 export interface Config {
     nodeUrl: string;
     protocol: string;
@@ -59,21 +31,26 @@ interface State {
     error: Map<string, Error>;
 }
 
-export interface DashboardState extends State {
-    nodeId: string;
-    networkId: string;
-    peers: string[];
-    status: string;
-    bootstrapped: boolean;
-    validating: ValidatorStatus;
-    validatingNodes: [];
-    pendingValidators: [];
-    users: [];
+export interface Validator {
+    startTime: number;
+    endTime: number;
+    stakeAmount: number;
+    address: string;
+    weight?: number;
+    stakeMount?: number;
+    id: string;
 }
 
-export interface ApiState {
-    bootstrapApi: Config;
-    nodeApi: Config;
+export interface HealthCheck {
+    networkValidatorsHeartbeat: {
+        message: {
+            heartbeat: number;
+        }
+    };
+    timestamp: string;
+    duration: number;
+    contiguousFailures: number;
+    timeOfFirstFailure: number;
 }
 
 export interface User {
@@ -83,6 +60,8 @@ export interface User {
 
 export interface Metric {
     help: string;
+    //ToDo Type this properly
+    // eslint-disable-next-line @typescript-eslint/ban-types
     metrics: object[];
     name: string;
     type: string;
@@ -116,13 +95,6 @@ export interface Blockchain {
     subnetID: string;
     vmID: string;
     status: BlockchainStatus;
-}
-
-export interface Validator {
-    startTime: number;
-    endTime: number;
-    stakeAmount: number;
-    id: string;
 }
 
 export enum BlockchainStatus {
