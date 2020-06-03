@@ -16,7 +16,7 @@ const networkId = process.env.VUE_APP_SNWBRD_NODE_NETWORK_ID || '3';
 let nodeApi = new slopes.Slopes(nodeHost, parseInt(nodePort), protocol, parseInt(networkId), chainId);
 const bootstrapNodeApi = new slopes.Slopes(bootstrapNodeHost, parseInt(bootstrapNodePort), bootstrapProtocol, parseInt(bootstrapNetworkId), bootstrapChainId);
 
-export function updateSlopesApi(config: Config) {
+export function updateSlopesApi(config: Config): void {
     nodeApi = new slopes.Slopes(
         config.nodeUrl,
         parseInt(config.nodePort),

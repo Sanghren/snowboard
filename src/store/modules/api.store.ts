@@ -1,16 +1,17 @@
 // State object
-import {ApiState, Config} from "@/types";
-import {nodeApi, updateSlopesApi} from "@/AVA";
+import {Config} from "@/types";
+import {updateSlopesApi} from "@/AVA";
+import {Actions, Getters, Module, Mutations} from 'vuex-smart-module'
 
-const state: ApiState = {
-    bootstrapApi: {
+class ApiState {
+    bootstrapApi = {
         nodeUrl: process.env.VUE_APP_SNWBRD_BOOTSTRAP_HOST || 'bootstrap.ava.network',
         protocol: process.env.VUE_APP_SNWBRD_BOOTSTRAP_PROTOCOL || 'https',
         chainId: process.env.VUE_APP_SNWBRD_BOOTSTRAP_CHAIN_ID || 'X',
         nodePort: process.env.VUE_APP_SNWBRD_BOOTSTRAP_PORT || '21000',
         networkId: process.env.VUE_APP_SNWBRD_BOOTSTRAP_NETWORK_ID || '3',
-    },
-    nodeApi: {
+    }
+    nodeApi = {
         nodeUrl: process.env.VUE_APP_SNWBRD_NODE_HOST || 'bootstrap.ava.network',
         protocol: process.env.VUE_APP_SNWBRD_NODE_PROTOCOL || 'https',
         chainId: process.env.VUE_APP_SNWBRD_NODE_CHAIN_ID || 'X',
@@ -20,35 +21,35 @@ const state: ApiState = {
 }
 
 // Getter functions
-const getters = {
-    getNodeUrl: (state: ApiState) => {
-        return state.nodeApi.protocol + "://" + state.nodeApi.nodeUrl + ":" + state.nodeApi.nodePort
-    },
-}
-
-// Actions
-const actions = {
-    async changeNodeUrl(context: any, update: Config) {
-        context.commit('updateNodeApiConfig', update);
-
-        updateSlopesApi(context.state.nodeApi);
+class ApiGetters extends Getters<ApiState> {
+    get nodeUrl() {
+        return this.state.nodeApi.protocol + "://" + this.state.nodeApi.nodeUrl + ":" + this.state.nodeApi.nodePort
     }
 }
-// Mutations
-const mutations = {
-    updateNodeApiConfig(state: ApiState, update: Config) {
-        state.nodeApi.nodeUrl = update.nodeUrl;
-        state.nodeApi.protocol = update.protocol;
-        state.nodeApi.nodePort = update.nodePort;
-        state.nodeApi.chainId = update.chainId;
-        state.nodeApi.networkId = update.networkId;
-    },
+
+class ApiMutations extends Mutations<ApiState> {
+    updateNodeApiConfig(payload: Config) {
+        this.state.nodeApi.nodeUrl = payload.nodeUrl;
+        this.state.nodeApi.protocol = payload.protocol;
+        this.state.nodeApi.nodePort = payload.nodePort;
+        this.state.nodeApi.chainId = payload.chainId;
+        this.state.nodeApi.networkId = payload.networkId;
+    }
 }
 
-export default {
-    namespaced: true,
-    state,
-    getters,
-    actions,
-    mutations
+class ApiActions extends Actions<ApiState,
+    ApiGetters,
+    ApiMutations,
+    ApiActions> {
+    async changeNodeUrl(update: Config): Promise<void> {
+        this.commit('updateNodeApiConfig', update);
+        updateSlopesApi(this.state.nodeApi);
+    }
 }
+
+export const Api = new Module({
+    state: ApiState,
+    getters: ApiGetters,
+    mutations: ApiMutations,
+    actions: ApiActions
+})

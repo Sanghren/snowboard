@@ -35,7 +35,8 @@
     "vue-property-decorator": "^8.4.1",
     "vue-router": "^3.1.6",
     "vuetify": "^2.2.11",
-    "vuex": "^3.4.0"
+    "vuex": "^3.4.0",
+    "vuex-smart-module": "^0.3.4"
   },
   "devDependencies": {
     "@typescript-eslint/eslint-plugin": "^3.1.0",
@@ -48,7 +49,7 @@
     "@vue/cli-service": "~4.3.0",
     "@vue/eslint-config-typescript": "^5.0.2",
     "eslint": "^7.1.0",
-    "eslint-plugin-vue": "^6.2.2",
+    "eslint-plugin-vue": "^7.0.0-alpha.5",
     "sass": "^1.19.0",
     "sass-loader": "^8.0.0",
     "typescript": "~3.8.3",

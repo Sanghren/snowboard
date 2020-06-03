@@ -71,6 +71,28 @@ export interface DashboardState extends State {
     users: [];
 }
 
+export interface Validator {
+    startTime: number;
+    endTime: number;
+    stakeAmount: number;
+    address: string;
+    weight?: number;
+    stakeMount?: number;
+    id: string;
+}
+
+export interface HealthCheck {
+    networkValidatorsHeartbeat: {
+        message: {
+            heartbeat: number;
+        }
+    };
+    timestamp: string;
+    duration: number;
+    contiguousFailures: number;
+    timeOfFirstFailure: number;
+}
+
 export interface ApiState {
     bootstrapApi: Config;
     nodeApi: Config;
