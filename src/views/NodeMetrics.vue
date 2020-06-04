@@ -1,5 +1,5 @@
 <template>
-    <v-container class="theme--dark lighten-5">
+    <v-container fluid class="theme--dark lighten-5">
         <template v-for="(chunk, rowIndex) in productChunks">
             <v-row :key="rowIndex" dense>
                 <v-col
