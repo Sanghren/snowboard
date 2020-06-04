@@ -8,6 +8,10 @@ RUN yarn
 
 COPY . .
 
+RUN yarn build
+
+FROM nginx:stable-alpine as production-stage
+
 ARG VUE_APP_SNWBRD_BOOTSTRAP_HOST
 ARG VUE_APP_SNWBRD_BOOTSTRAP_PROTOCOL
 ARG VUE_APP_SNWBRD_BOOTSTRAP_CHAIN_ID
@@ -36,10 +40,6 @@ ENV VUE_APP_SNWBRD_NODE_CHAIN_ID $VUE_APP_SNWBRD_NODE_CHAIN_ID
 ENV VUE_APP_SNWBRD_NODE_PORT $VUE_APP_SNWBRD_NODE_PORT
 ENV VUE_APP_SNWBRD_NODE_NETWORK_ID $VUE_APP_SNWBRD_NODE_NETWORK_ID
 
-
-RUN yarn build
-
-FROM nginx:stable-alpine as production-stage
 COPY --from=build-stage /app/dist /usr/share/nginx/html
 EXPOSE 80
 CMD ["nginx", "-g", "daemon off;"]
