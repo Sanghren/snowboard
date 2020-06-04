@@ -37,10 +37,3 @@ jobs:
           repository: snowboard/dashboard
           tag_with_ref: true
           tag_with_sha: true
-
-      - uses: docker/build-push-action@v1
-        with:
-          username: ${{ secrets.DOCKER_HUB_USERNAME }}
-          password: ${{ secrets.DOCKER_HUB_TOKEN }}
-          repository: snowboard/dashboard
-          tags: latest
