@@ -91,7 +91,6 @@
                                     name="input-10-1"
                                     label="Node Id"
                                     counter
-                                    :rules="[rules.inputLength]"
                                     @input="reset"
                             ></v-text-field>
                         </v-row>
@@ -128,9 +127,6 @@
             return {
                 txId: "",
                 nodeId: "",
-                rules: {
-                    inputLength: (value: string) => value.length === 33 || 'Your node id seems off, please check.',
-                }
             }
         },
         computed:
