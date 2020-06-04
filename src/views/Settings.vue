@@ -101,7 +101,8 @@
             }
         },
         beforeMount() {
-            this.currentNodeUrl = this.$store.getters["Api/getNodeUrl"]
+            const apiCtx = Api.context(this.$store);apiCtx.getters.nodeUrl
+            this.currentNodeUrl = apiCtx.getters.nodeUrl
         },
         methods: {
             updateSettings() {
