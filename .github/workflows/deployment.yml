@@ -16,7 +16,7 @@ jobs:
       - name: Use Node.js 12
         uses: actions/setup-node@v1
         with:
-          node-version: 12
+          node-version: 12.18.0
 
       - name: Install dependencies
         run: |
@@ -29,3 +29,11 @@ jobs:
       - name: Build
         run: |
           yarn build
+
+      - uses: docker/build-push-action@v1
+        with:
+          username: ${{ secrets.DOCKER_HUB_USERNAME }}
+          password: ${{ secrets.DOCKER_HUB_TOKEN }}
+          repository: snowboard/dashboard
+          tag_with_ref: true
+          tag_with_sha: true
