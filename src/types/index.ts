@@ -41,6 +41,12 @@ export interface Validator {
     id: string;
 }
 
+export interface PlatformAccount {
+    address: string;
+    nonce: number;
+    balance: number;
+}
+
 export interface HealthCheck {
     networkValidatorsHeartbeat: {
         message: {
