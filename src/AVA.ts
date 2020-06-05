@@ -13,6 +13,12 @@ const chainId = process.env.VUE_APP_SNWBRD_NODE_CHAIN_ID || 'X';
 const nodePort = process.env.VUE_APP_SNWBRD_NODE_PORT || '21000';
 const networkId = process.env.VUE_APP_SNWBRD_NODE_NETWORK_ID || '3';
 
+console.log(process.env.VUE_APP_SNWBRD_NODE_HOST)
+console.log(process.env.VUE_APP_SNWBRD_NODE_PROTOCOL)
+console.log(process.env.VUE_APP_SNWBRD_NODE_CHAIN_ID)
+console.log(process.env.VUE_APP_SNWBRD_NODE_PORT)
+console.log(process.env.VUE_APP_SNWBRD_NODE_NETWORK_ID)
+
 let nodeApi = new slopes.Slopes(nodeHost, parseInt(nodePort), protocol, parseInt(networkId), chainId);
 const bootstrapNodeApi = new slopes.Slopes(bootstrapNodeHost, parseInt(bootstrapNodePort), bootstrapProtocol, parseInt(bootstrapNetworkId), bootstrapChainId);
 
