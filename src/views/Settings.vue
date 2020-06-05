@@ -45,7 +45,7 @@
                         <v-text-field
                                 v-model="networkId"
                                 :rules="[rules.required]"
-                                placeholder="2"
+                                placeholder="3"
                                 label="Network Id"
                                 outline
                         ></v-text-field>
