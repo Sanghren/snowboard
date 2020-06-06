@@ -1,26 +1,83 @@
 <template>
-    <div>
-        <h1 class="text-lg-center">Users</h1>
-        <v-simple-table dense class="ml-5 mr-5">
-            <thead>
-            <tr>
-                <th class="text-left">User</th>
-                <th class="text-left">Export Data</th>
-                <th class="text-right">Actions</th>
-            </tr>
-            </thead>
-            <tbody>
-            <tr v-for="(user, index) in this.$store.state.Keystore.users" :key="index" class="mb-4">
-                <td>{{user.name}}</td>
-                <td>{{user.exportData}}</td>
-                <td class="text-right">
-                    <v-dialog v-model="exportDialog[user.name]" persistent max-width="290">
-                        <template v-slot:activator="{ on }">
-                            <v-btn color="primary" dark small text v-on="on">Export</v-btn>
-                        </template>
-                        <v-card>
-                            <v-card-title class="headline">Export a user</v-card-title>
-                            <v-card-text>
+    <div class="usertable">
+        <v-container fluid class="theme--dark lighten-5">
+            <v-snackbar
+                    v-model="snackbar"
+                    :timeout="timeout"
+            >
+                {{ text }}
+                <v-btn
+                        color="blue"
+                        text
+                        @click="snackbar = false"
+                >
+                    Close
+                </v-btn>
+            </v-snackbar>
+            <h1 class="text-lg-center">Keystore Users</h1>
+            <v-simple-table dense class="ml-5 mr-5">
+                <thead>
+                <tr>
+                    <th class="text-left">User</th>
+                    <th class="text-left">Export Data</th>
+                    <th class="text-right">Actions</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr v-for="(user, index) in $store.state.Users.users" :key="index" class="mb-4">
+                    <td>{{user.name}}</td>
+                    <td class="truncate">
+                        <button v-if="user.exportData.length > 0" type="button"
+                                v-clipboard:copy="user.exportData"
+                                @click="snackbar = true">
+                            <span class="material-icons">
+                                file_copy
+                            </span>
+                        </button>
+                        {{user.exportData}}
+                    </td>
+                    <td class="text-right">
+                        <v-dialog v-model="exportDialog[user.name]" persistent max-width="290">
+                            <template v-slot:activator="{ on }">
+                                <v-btn color="primary" dark small text v-on="on">Export</v-btn>
+                            </template>
+                            <v-card>
+                                <v-card-title class="headline">Export a user</v-card-title>
+                                <v-card-text>
+                                    <v-form>
+                                        <v-container fluid>
+                                            <v-row>
+                                                <v-text-field
+                                                        v-model="password"
+                                                        :append-icon="show1 ? 'mdi-eye' : 'mdi-eye-off'"
+                                                        :type="show1 ? 'text' : 'password'"
+                                                        name="input-10-1"
+                                                        label="Password"
+                                                        :rules="[rules.required, rules.min, rules.complexity]"
+                                                        hint="At least 8 characters"
+                                                        counter
+                                                        @click:append="show1 = !show1"
+                                                ></v-text-field>
+                                            </v-row>
+                                        </v-container>
+                                    </v-form>
+                                </v-card-text>
+                                <v-card-actions>
+                                    <v-spacer></v-spacer>
+                                    <v-btn color="green darken-1" text @click="exportUser(user.name)">Export</v-btn>
+                                    <v-btn color="green darken-1" text @click="exportDialog = false">Close
+                                    </v-btn>
+                                </v-card-actions>
+                            </v-card>
+                        </v-dialog>
+                        <!--                        <v-btn color="primary" dark small text class="ml-1" @click="navigate(user.name)">Accounts-->
+                        <!--                        </v-btn>-->
+                        <v-dialog v-model="deleteDialog[user.name]" persistent max-width="290">
+                            <template v-slot:activator="{ on }">
+                                <v-btn color="primary" dark small text class="ml-1" v-on="on">Delete</v-btn>
+                            </template>
+                            <v-card>
+                                <v-card-title class="headline">Delete this user on the node ?</v-card-title>
                                 <v-form>
                                     <v-container fluid>
                                         <v-row>
@@ -38,148 +95,122 @@
                                         </v-row>
                                     </v-container>
                                 </v-form>
-                            </v-card-text>
-                            <v-card-actions>
-                                <v-spacer></v-spacer>
-                                <v-btn color="green darken-1" text @click="exportUser(user.name)">Export</v-btn>
-                                <v-btn color="green darken-1" text @click="$set(exportDialog, user.name, false)">Close
-                                </v-btn>
-                            </v-card-actions>
-                        </v-card>
-                    </v-dialog>
-                    <v-btn color="primary" dark small text class="ml-1" @click="navigate(user.name)">Accounts</v-btn>
-                    <v-dialog v-model="deleteDialog[user.name]" persistent max-width="290">
-                        <template v-slot:activator="{ on }">
-                            <v-btn color="primary" dark small text class="ml-1" v-on="on">Delete</v-btn>
-                        </template>
-                        <v-card>
-                            <v-card-title class="headline">Delete this user on the node ?</v-card-title>
-                            <v-form>
-                                <v-container fluid>
-                                    <v-row>
-                                        <v-text-field
-                                                v-model="password"
-                                                :append-icon="show1 ? 'mdi-eye' : 'mdi-eye-off'"
-                                                :type="show1 ? 'text' : 'password'"
-                                                name="input-10-1"
-                                                label="Password"
-                                                :rules="[rules.required, rules.min, rules.complexity]"
-                                                hint="At least 8 characters"
-                                                counter
-                                                @click:append="show1 = !show1"
-                                        ></v-text-field>
-                                    </v-row>
-                                </v-container>
-                            </v-form>
-                            <v-card-actions>
-                                <v-spacer></v-spacer>
-                                <v-btn color="green darken-1" text @click="deleteUser(user.name)">Delete</v-btn>
-                                <v-btn color="green darken-1" text @click="$set(deleteDialog, user.name, false)">Close
-                                </v-btn>
-                            </v-card-actions>
-                        </v-card>
-                    </v-dialog>
-                </td>
-            </tr>
-            </tbody>
-        </v-simple-table>
-        <div class="text-md-center mt-5">
-            <v-dialog v-model="createDialog" persistent max-width="290">
-                <template v-slot:activator="{ on }">
-                    <v-btn color="primary" dark small text v-on="on">Create user</v-btn>
-                </template>
-                <v-card>
-                    <v-card-title class="headline">Create a user</v-card-title>
-                    <v-form>
-                        <v-container fluid>
-                            <v-row>
-                                <v-text-field
-                                        v-model="username"
-                                        name="input-10-1"
-                                        label="User name"
-                                        counter
-                                        @click:append="show1 = !show1"
-                                ></v-text-field>
-                            </v-row>
-                            <v-row>
-                                <v-text-field
-                                        v-model="password"
-                                        :append-icon="show1 ? 'mdi-eye' : 'mdi-eye-off'"
-                                        :type="show1 ? 'text' : 'password'"
-                                        name="input-10-1"
-                                        :rules="[rules.required, rules.min, rules.complexity]"
-                                        label="Password"
-                                        hint="At least 8 characters. With upper,lower,numbers and symbols"
-                                        counter
-                                        @click:append="show1 = !show1"
-                                ></v-text-field>
-                            </v-row>
-                        </v-container>
-                    </v-form>
-                    <v-card-actions>
-                        <v-spacer></v-spacer>
-                        <v-btn color="green darken-1" text @click="createDialog = false">Cancel</v-btn>
-                        <v-btn color="green darken-1" text @click="createUser()">Create</v-btn>
-                    </v-card-actions>
-                </v-card>
-            </v-dialog>
-            <v-dialog v-model="importDialog" class="text-md-center" persistent max-width="290">
-                <template v-slot:activator="{ on }">
-                    <v-btn color="primary" dark small text v-on="on">Import a user</v-btn>
-                </template>
-                <v-card>
-                    <v-card-title class="headline">Import a user</v-card-title>
-                    <v-form>
-                        <v-container fluid>
-                            <v-row>
-                                <v-text-field
-                                        v-model="username"
-                                        name="input-10-1"
-                                        label="User name"
-                                        counter
-                                        @click:append="show1 = !show1"
-                                ></v-text-field>
-                            </v-row>
-                            <v-row>
-                                <v-text-field
-                                        v-model="userData"
-                                        name="input-10-1"
-                                        label="User data"
-                                        @click:append="show1 = !show1"
-                                ></v-text-field>
-                            </v-row>
-                            <v-row>
-                                <v-text-field
-                                        v-model="password"
-                                        :append-icon="show1 ? 'mdi-eye' : 'mdi-eye-off'"
-                                        :type="show1 ? 'text' : 'password'"
-                                        name="input-10-1"
-                                        label="Password"
-                                        :rules="[rules.required, rules.min, rules.complexity]"
-                                        hint="Must be the same as when you created this user !"
-                                        counter
-                                        @click:append="show1 = !show1"
-                                ></v-text-field>
-                            </v-row>
-                        </v-container>
-                    </v-form>
-                    <v-card-actions>
-                        <v-spacer></v-spacer>
-                        <v-btn color="green darken-1" text @click="importDialog = false">Cancel</v-btn>
-                        <v-btn color="green darken-1" text @click="importUser()">Import</v-btn>
-                    </v-card-actions>
-                </v-card>
-            </v-dialog>
-        </div>
+                                <v-card-actions>
+                                    <v-spacer></v-spacer>
+                                    <v-btn color="green darken-1" text @click="deleteUser(user.name)">Delete</v-btn>
+                                    <v-btn color="green darken-1" text @click="$set(deleteDialog, user.name, false)">
+                                        Close
+                                    </v-btn>
+                                </v-card-actions>
+                            </v-card>
+                        </v-dialog>
+                    </td>
+                </tr>
+                </tbody>
+            </v-simple-table>
+            <div class="text-md-center mt-5">
+                <v-dialog v-model="createDialog" persistent max-width="290">
+                    <template v-slot:activator="{ on }">
+                        <v-btn color="primary" dark small text v-on="on">Create user</v-btn>
+                    </template>
+                    <v-card>
+                        <v-card-title class="headline">Create a user</v-card-title>
+                        <v-form>
+                            <v-container fluid>
+                                <v-row>
+                                    <v-text-field
+                                            v-model="username"
+                                            name="input-10-1"
+                                            label="User name"
+                                            counter
+                                            @click:append="show1 = !show1"
+                                    ></v-text-field>
+                                </v-row>
+                                <v-row>
+                                    <v-text-field
+                                            v-model="password"
+                                            :append-icon="show1 ? 'mdi-eye' : 'mdi-eye-off'"
+                                            :type="show1 ? 'text' : 'password'"
+                                            name="input-10-1"
+                                            :rules="[rules.required, rules.min, rules.complexity]"
+                                            label="Password"
+                                            hint="At least 8 characters. With upper,lower,numbers and symbols"
+                                            counter
+                                            @click:append="show1 = !show1"
+                                    ></v-text-field>
+                                </v-row>
+                            </v-container>
+                        </v-form>
+                        <v-card-actions>
+                            <v-spacer></v-spacer>
+                            <v-btn color="green darken-1" text @click="createDialog = false">Cancel</v-btn>
+                            <v-btn color="green darken-1" text @click="createUser()">Create</v-btn>
+                        </v-card-actions>
+                    </v-card>
+                </v-dialog>
+                <v-dialog v-model="importDialog" class="text-md-center" persistent max-width="290">
+                    <template v-slot:activator="{ on }">
+                        <v-btn color="primary" dark small text v-on="on">Import a user</v-btn>
+                    </template>
+                    <v-card>
+                        <v-card-title class="headline">Import a user</v-card-title>
+                        <v-form>
+                            <v-container fluid>
+                                <v-row>
+                                    <v-text-field
+                                            v-model="username"
+                                            name="input-10-1"
+                                            label="User name"
+                                            counter
+                                            @click:append="show1 = !show1"
+                                    ></v-text-field>
+                                </v-row>
+                                <v-row>
+                                    <v-text-field
+                                            v-model="userData"
+                                            name="input-10-1"
+                                            label="User data"
+                                            @click:append="show1 = !show1"
+                                    ></v-text-field>
+                                </v-row>
+                                <v-row>
+                                    <v-text-field
+                                            v-model="password"
+                                            :append-icon="show1 ? 'mdi-eye' : 'mdi-eye-off'"
+                                            :type="show1 ? 'text' : 'password'"
+                                            name="input-10-1"
+                                            label="Password"
+                                            :rules="[rules.required, rules.min, rules.complexity]"
+                                            hint="Must be the same as when you created this user !"
+                                            counter
+                                            @click:append="show1 = !show1"
+                                    ></v-text-field>
+                                </v-row>
+                            </v-container>
+                        </v-form>
+                        <v-card-actions>
+                            <v-spacer></v-spacer>
+                            <v-btn color="green darken-1" text @click="importDialog = false">Cancel</v-btn>
+                            <v-btn color="green darken-1" text @click="importUser()">Import</v-btn>
+                        </v-card-actions>
+                    </v-card>
+                </v-dialog>
+            </div>
+        </v-container>
     </div>
 </template>
 
 <script lang="ts">
     import Vue from 'vue';
+    import {Users} from '@/store/modules/users.store';
+    import {User} from '@/types';
 
     export default Vue.extend({
         data() {
             return {
+                snackbar: false,
+                text: 'The exported data for your user has been copied to your clipboard !',
+                timeout: 5000,
                 createAccountDialog: {},
                 exportDialog: {},
                 deleteDialog: {},
@@ -202,47 +233,59 @@
                 this.$router.push({path: `/accounts/${user}`})
             },
             exportUser(user: string) {
+                const ctx = Users.context(this.$store)
                 this.$set(this.exportDialog, user, false)
-                this.$store.dispatch("Keystore/exportUser", {name: user, password: this.password});
+                ctx.actions.exportKeystoreUser({name: user, password: this.password} as User)
                 this.password = "";
             },
             deleteUser(user: string) {
+                const ctx = Users.context(this.$store)
                 this.$set(this.deleteDialog, user, false)
-                this.$store.dispatch("Keystore/deleteUser", {name: user, password: this.password});
+                ctx.actions.deleteKeystoreUser({name: user, password: this.password})
                 this.password = "";
             },
             createUser() {
                 this.createDialog = false;
-                this.$store.dispatch("Keystore/createUser", {name: this.username, password: this.password});
+                const ctx = Users.context(this.$store)
+                ctx.actions.createKeystoreUser({
+                    name: this.username,
+                    password: this.password,
+                })
                 this.password = "";
                 this.username = "";
             },
             createAccount() {
+                const ctx = Users.context(this.$store)
                 this.createAccountDialog = false;
-                console.log(this.username);
-                console.log(this.password);
-                this.$store.dispatch("PChain/createAccountForUser", {
-                    username: this.username,
+                ctx.actions.createKeystoreUser({
+                    name: this.username,
                     password: this.password,
-                    privateKey: ""
                 })
                 this.password = "";
                 this.username = "";
-                this.privateKey = "";
             },
             importUser() {
+                const ctx = Users.context(this.$store)
                 this.importDialog = false;
-                this.$store.dispatch("Keystore/importUser", {
+                ctx.actions.importKeystoreUser({
                     name: this.username,
                     password: this.password,
                     exportData: this.userData
                 });
                 this.password = "";
                 this.username = "";
+                this.userData = "";
+            },
+            onError() {
+                this.text = "BOUH"
+            },
+            onCopy() {
+                this.text = "YEAYYY"
             }
         },
         beforeMount() {
-            this.$store.dispatch('Keystore/fetchUsers');
+            const ctx = Users.context(this.$store);
+            ctx.actions.fetchKeystoreUsers();
         }
     })
 </script>
@@ -265,5 +308,16 @@
 
     a {
         color: #42b983;
+    }
+
+    .usertable {
+        max-width: 100%
+    }
+
+    .truncate {
+        max-width: 10px;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
     }
 </style>
