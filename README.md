@@ -35,7 +35,6 @@ yarn serve
 ### Docker
 
 I created a first version of a Docker container for Snowboard .
-It does not support yet ENV variable correctly (I have an issue open for this if someone want to take a look :)  )
 
 Docker compose way for a node running locally :
 ````shell script
