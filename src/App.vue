@@ -44,13 +44,15 @@
                     target="_blank"
                     text
             >
-                <span class="material-icons">
-                    code
-                </span>
+                <v-img src="./assets/GitHub-Mark-32px.png"/>
             </v-btn>
         </v-app-bar>
 
         <v-content>
+            <v-alert type="info" dismissible>
+                Snowboard is now available as a docker container ! Go check the github repo : )
+            </v-alert>
+
             <v-alert :value="!this.$store.state.Health.healthy" type="error" dismissible>Error connecting to your
                 node, check the url in settings !
             </v-alert>
@@ -64,7 +66,6 @@
 
     export default Vue.extend({
         name: 'App',
-
         components: {},
         beforeMount() {
             this.$store.dispatch('Health/fetchLiveness')
