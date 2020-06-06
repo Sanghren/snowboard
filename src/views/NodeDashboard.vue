@@ -2,9 +2,9 @@
     <v-container fluid class="theme--dark">
         <v-row dense>
             <v-col
-                    xs="2"
-                    sm="2"
-                    md="2"
+                    xs="1"
+                    sm="1"
+                    md="1"
                     class="ma-1 pa-0"
                     no-gutters
             >
@@ -13,6 +13,7 @@
                             :class="`d-flex justify-center align-center mb-6`"
                             >
                         <v-btn
+
                                 class="grid-center"
                                 :disabled="refreshDisabled"
                                 @click="refresh()"
