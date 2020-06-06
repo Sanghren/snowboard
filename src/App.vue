@@ -51,6 +51,7 @@
         <v-content>
             <v-alert type="info" dismissible>
                 Snowboard is now available as a docker container ! Go check the github repo : )
+                I would love to have some feedback, don't hesitate to open an issue in github or to contact me on Discord ! (Sanghren#7243)
             </v-alert>
 
             <v-alert :value="!this.$store.state.Health.healthy" type="error" dismissible>Error connecting to your
