@@ -139,7 +139,7 @@
                             <v-text-field
                                     v-model="pAddress"
                                     name="input-10-1"
-                                    label="Node Id"
+                                    label="P Address"
                                     counter
                                     @input="reset"
                             ></v-text-field>
