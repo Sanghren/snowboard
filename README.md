@@ -37,7 +37,7 @@ yarn serve
 I created a first version of a Docker container for Snowboard .
 It does not support yet ENV variable correctly (I have an issue open for this if someone want to take a look :)  )
 
-Docker compose way :
+Docker compose way for a node running locally :
 ````shell script
   snowboard:
     container_name: snowboard
@@ -47,11 +47,22 @@ Docker compose way :
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
     environment:
-      - VUE_APP_SNWBRD_NODE_HOST="YOURGECKONODEADDRESS"
-      - VUE_APP_SNWBRD_NODE_PROTOCOL="https"
-      - VUE_APP_SNWBRD_NODE_CHAIN_ID="X"
-      - VUE_APP_SNWBRD_NODE_PORT="GECKOPORT"
-      - VUE_APP_SNWBRD_NODE_NETWORK_ID="3"
+      - VUE_APP_SNWBRD_NODE_HOST=localhost
+      - VUE_APP_SNWBRD_NODE_PROTOCOL=http
+      - VUE_APP_SNWBRD_NODE_CHAIN_ID=X
+      - VUE_APP_SNWBRD_NODE_PORT=9650
+      - VUE_APP_SNWBRD_NODE_NETWORK_ID=3
+````
+
+Docker command for a node running locally :
+````shell script
+  docker run -p 5978:80 --rm --name snowboard  \
+      --env "VUE_APP_SNWBRD_NODE_HOST=localhost" \
+      --env "VUE_APP_SNWBRD_NODE_PROTOCOL=http" \
+      --env "VUE_APP_SNWBRD_NODE_CHAIN_ID=X" \
+      --env "VUE_APP_SNWBRD_NODE_PORT=9650" \
+      --env "VUE_APP_SNWBRD_NODE_NETWORK_ID=3" \
+      snowboard/dashboard
 ````
 
 ## Contributing
