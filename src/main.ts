@@ -7,6 +7,21 @@ import vuetify from './plugins/vuetify';
 import 'es6-promise/auto'
 import {ValidationProvider} from 'vee-validate';
 
+declare global {
+    interface Window {
+        VUE_APP_SNWBRD_BOOTSTRAP_HOST: string
+        VUE_APP_SNWBRD_BOOTSTRAP_PROTOCOL: string
+        VUE_APP_SNWBRD_BOOTSTRAP_CHAIN_ID: string
+        VUE_APP_SNWBRD_BOOTSTRAP_PORT: string
+        VUE_APP_SNWBRD_BOOTSTRAP_NETWORK_ID: string
+        VUE_APP_SNWBRD_NODE_HOST: string
+        VUE_APP_SNWBRD_NODE_PROTOCOL: string
+        VUE_APP_SNWBRD_NODE_CHAIN_ID: string
+        VUE_APP_SNWBRD_NODE_PORT: string
+        VUE_APP_SNWBRD_NODE_NETWORK_ID: string
+    }
+}
+
 Vue.prototype.$http = axios
 Vue.config.productionTip = false
 Vue.component('ValidationProvider', ValidationProvider);

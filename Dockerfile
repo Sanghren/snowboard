@@ -40,5 +40,8 @@ RUN yarn build
 FROM nginx:stable-alpine as production-stage
 
 COPY --from=build-stage /app/dist /usr/share/nginx/html
+COPY env2js.sh ./
+RUN ["chmod", "+x", "./env2js.sh"]
+
 EXPOSE 80
-CMD ["nginx", "-g", "daemon off;"]
+CMD sh -c './env2js.sh > /usr/share/nginx/html/config.js && nginx -g "daemon off;"'
