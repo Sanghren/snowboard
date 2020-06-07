@@ -51,6 +51,7 @@ Docker compose way for a node running locally :
       - VUE_APP_SNWBRD_NODE_CHAIN_ID=X
       - VUE_APP_SNWBRD_NODE_PORT=9650
       - VUE_APP_SNWBRD_NODE_NETWORK_ID=3
+      - VUE_APP_SNWBRD_DISABLED_KEYSTORE_CREATION=true
 ````
 
 Docker command for a node running locally :
@@ -61,6 +62,7 @@ Docker command for a node running locally :
       --env "VUE_APP_SNWBRD_NODE_CHAIN_ID=X" \
       --env "VUE_APP_SNWBRD_NODE_PORT=9650" \
       --env "VUE_APP_SNWBRD_NODE_NETWORK_ID=3" \
+      --env "VUE_APP_SNWBRD_DISABLED_KEYSTORE_CREATION=true" \
       snowboard/dashboard
 ````
 

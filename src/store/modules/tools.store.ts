@@ -39,13 +39,9 @@ class ToolsGetters extends Getters<ToolsState> {
     get getErrors(){
         const keys = this.state.error.keys();
         const errors = [];
-        console.log(`BOUH 1- ${JSON.stringify(keys)}`)
         for (const key of keys) {
-            console.log(`BOUH 2- ${key}`)
             errors.push(this.state.error.get(key));
         }
-        console.log(`BOUH 3- ${errors}`)
-
         return errors;
     }
 
@@ -138,7 +134,6 @@ class ToolsActions extends Actions<ToolsState,
 
         try {
             const account = await platformApi.getAccount(address) as PlatformAccount
-            console.log(account);
             this.mutations.setPAccount(account)
             this.mutations.setLoaded('getAccount')
         } catch (e) {

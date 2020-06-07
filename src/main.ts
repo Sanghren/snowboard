@@ -20,6 +20,7 @@ declare global {
         VUE_APP_SNWBRD_NODE_CHAIN_ID: string
         VUE_APP_SNWBRD_NODE_PORT: string
         VUE_APP_SNWBRD_NODE_NETWORK_ID: string
+        VUE_APP_SNWBRD_DISABLED_KEYSTORE_CREATION: string
     }
 }
 Vue.use(VueClipboard)

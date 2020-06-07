@@ -128,7 +128,6 @@ const actions = {
                     "id": 1
                 })
                 .then((response) => {
-                    console.log("BOUH")
                     context.commit('Keystore/setAccountsForUser', {
                             name: userInfo.username,
                             accounts: [response.data.result.address]
@@ -136,7 +135,6 @@ const actions = {
                     )
                 })
                 .catch((e) => {
-                    console.log("HERE ?")
                     context.commit(('error'));
                 })
         })
@@ -157,7 +155,6 @@ const mutations = {
 
     },
     error() {
-        console.log("ERROR")
     }
 }
 

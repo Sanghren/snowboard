@@ -100,7 +100,6 @@ const mutations = {
         state.txs = [];
     },
     error(state: XChainState) {
-        console.log("ERROR");
         state.balance.balance = 0;
     }
 }

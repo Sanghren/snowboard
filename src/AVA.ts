@@ -7,17 +7,13 @@ const bootstrapChainId = process.env.VUE_APP_SNWBRD_BOOTSTRAP_CHAIN_ID || window
 const bootstrapNodePort = process.env.VUE_APP_SNWBRD_BOOTSTRAP_PORT || window.VUE_APP_SNWBRD_BOOTSTRAP_PORT || '21000';
 const bootstrapNetworkId = process.env.VUE_APP_SNWBRD_BOOTSTRAP_NETWORK_ID || window.VUE_APP_SNWBRD_BOOTSTRAP_NETWORK_ID || '3';
 
+const keystoreCreation = process.env.VUE_APP_SNWBRD_DISABLED_KEYSTORE_CREATION || window.VUE_APP_SNWBRD_DISABLED_KEYSTORE_CREATION || "false";
+
 const nodeHost = process.env.VUE_APP_SNWBRD_NODE_HOST || window.VUE_APP_SNWBRD_NODE_HOST || 'bootstrap.ava.network';
 const protocol = process.env.VUE_APP_SNWBRD_NODE_PROTOCOL || window.VUE_APP_SNWBRD_NODE_PROTOCOL || 'https';
 const chainId = process.env.VUE_APP_SNWBRD_NODE_CHAIN_ID || window.VUE_APP_SNWBRD_NODE_CHAIN_ID || 'X';
 const nodePort = process.env.VUE_APP_SNWBRD_NODE_PORT || window.VUE_APP_SNWBRD_NODE_PORT || '21000';
 const networkId = process.env.VUE_APP_SNWBRD_NODE_NETWORK_ID || window.VUE_APP_SNWBRD_NODE_NETWORK_ID || '3';
-
-console.log(process.env.VUE_APP_SNWBRD_NODE_HOST)
-console.log(process.env.VUE_APP_SNWBRD_NODE_PROTOCOL)
-console.log(process.env.VUE_APP_SNWBRD_NODE_CHAIN_ID)
-console.log(process.env.VUE_APP_SNWBRD_NODE_PORT)
-console.log(process.env.VUE_APP_SNWBRD_NODE_NETWORK_ID)
 
 let nodeApi = new slopes.Slopes(nodeHost, parseInt(nodePort), protocol, parseInt(networkId), chainId);
 const bootstrapNodeApi = new slopes.Slopes(bootstrapNodeHost, parseInt(bootstrapNodePort), bootstrapProtocol, parseInt(bootstrapNetworkId), bootstrapChainId);
@@ -32,4 +28,4 @@ export function updateSlopesApi(config: Config): void {
     )
 }
 
-export {nodeApi, bootstrapNodeApi};
+export {nodeApi, bootstrapNodeApi, keystoreCreation};
