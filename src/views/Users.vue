@@ -85,7 +85,7 @@
                         <!--                        </v-btn>-->
                         <v-dialog v-model="deleteDialog[user.name]" persistent max-width="290">
                             <template v-slot:activator="{ on }">
-                                <v-btn color="primary" dark small text class="ml-1" v-on="on">Delete</v-btn>
+                                <v-btn color="primary" :disabled=keystoreCreationDisabled dark small text class="ml-1" v-on="on">Delete</v-btn>
                             </template>
                             <v-card>
                                 <v-card-title class="headline">Delete this user on the node ?</v-card-title>
@@ -120,7 +120,7 @@
                 </tbody>
             </v-simple-table>
             <div class="text-md-center mt-5">
-                <v-dialog v-model="createDialog" persistent max-width="290">
+                <v-dialog v-model="createDialog" :disabled=keystoreCreationDisabled persistent max-width="290">
                     <template v-slot:activator="{ on }">
                         <v-btn color="primary" dark small text v-on="on">Create user</v-btn>
                     </template>
@@ -159,7 +159,7 @@
                         </v-card-actions>
                     </v-card>
                 </v-dialog>
-                <v-dialog v-model="importDialog" class="text-md-center" persistent max-width="290">
+                <v-dialog v-model="importDialog" :disabled=keystoreCreationDisabled class="text-md-center" persistent max-width="290">
                     <template v-slot:activator="{ on }">
                         <v-btn color="primary" dark small text v-on="on">Import a user</v-btn>
                     </template>
@@ -215,6 +215,7 @@
     import Vue from 'vue';
     import {Users} from '@/store/modules/users.store';
     import {User} from '@/types';
+    import {keystoreCreation} from "@/AVA";
 
     export default Vue.extend({
         data() {
@@ -227,6 +228,7 @@
                 deleteDialog: {},
                 createDialog: false,
                 importDialog: false,
+                keystoreCreationDisabled: false,
                 password: "",
                 username: "",
                 privateKey: "",
@@ -254,7 +256,6 @@
             async deleteUser(user: string) {
                 const ctx = Users.context(this.$store)
                 this.$set(this.deleteDialog, user, false)
-                console.log(`DeleteUser - ${user}`)
                 await ctx.actions.deleteKeystoreUser({name: user, password: this.password})
                 this.password = "";
             },
@@ -310,6 +311,7 @@
         beforeMount() {
             const ctx = Users.context(this.$store);
             ctx.actions.fetchKeystoreUsers();
+            this.keystoreCreationDisabled = keystoreCreation.toLowerCase() === 'true'
         }
     })
 </script>
