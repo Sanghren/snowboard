@@ -1,6 +1,17 @@
 <template>
     <div class="usertable">
         <v-container fluid class="theme--dark lighten-5">
+            <div v-if="this.checkCreateUserError() || this.checkDeleteUserError() || this.checkExportUserError() || this.checkImportUserError()" width="100%"
+                 class="red--text" height="100%">
+                <v-alert
+                        dismissible
+                        border="bottom"
+                        color="pink darken-1"
+                        dark
+                >
+                    {{ this.checkCreateUserError() || this.checkDeleteUserError() || this.checkExportUserError() || this.checkImportUserError() }}
+                </v-alert>
+            </div>
             <v-snackbar
                     v-model="snackbar"
                     :timeout="timeout"
@@ -224,7 +235,9 @@
                 rules: {
                     required: (value: any) => !!value || 'Required.',
                     min: (v: any) => v.length >= 8 || 'Min 8 characters',
-                    complexity: (v: any) => new RegExp('^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[$@$!%*?&])[A-Za-z\\d$@$!%*?&]{8,}').test(v) || 'Must have Upper, Lower, Numbers and Symbols !',
+                    complexity: (v: any) => {
+                        return new RegExp('^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[$@$!%*?&])[A-Za-z\\d$@$!%*?&]{8,}').test(v) || 'Must have Upper, Lower, Numbers and Symbols !'
+                    },
                 }
             }
         },
@@ -232,42 +245,43 @@
             navigate(user: string) {
                 this.$router.push({path: `/accounts/${user}`})
             },
-            exportUser(user: string) {
+            async exportUser(user: string) {
                 const ctx = Users.context(this.$store)
                 this.$set(this.exportDialog, user, false)
-                ctx.actions.exportKeystoreUser({name: user, password: this.password} as User)
+                await ctx.actions.exportKeystoreUser({name: user, password: this.password} as User)
                 this.password = "";
             },
-            deleteUser(user: string) {
+            async deleteUser(user: string) {
                 const ctx = Users.context(this.$store)
                 this.$set(this.deleteDialog, user, false)
-                ctx.actions.deleteKeystoreUser({name: user, password: this.password})
+                console.log(`DeleteUser - ${user}`)
+                await ctx.actions.deleteKeystoreUser({name: user, password: this.password})
                 this.password = "";
             },
-            createUser() {
+            async createUser() {
                 this.createDialog = false;
                 const ctx = Users.context(this.$store)
-                ctx.actions.createKeystoreUser({
+                await ctx.actions.createKeystoreUser({
                     name: this.username,
                     password: this.password,
                 })
                 this.password = "";
                 this.username = "";
             },
-            createAccount() {
+            async createAccount() {
                 const ctx = Users.context(this.$store)
                 this.createAccountDialog = false;
-                ctx.actions.createKeystoreUser({
+                await ctx.actions.createKeystoreUser({
                     name: this.username,
                     password: this.password,
                 })
                 this.password = "";
                 this.username = "";
             },
-            importUser() {
+            async importUser() {
                 const ctx = Users.context(this.$store)
                 this.importDialog = false;
-                ctx.actions.importKeystoreUser({
+                await ctx.actions.importKeystoreUser({
                     name: this.username,
                     password: this.password,
                     exportData: this.userData
@@ -276,12 +290,22 @@
                 this.username = "";
                 this.userData = "";
             },
-            onError() {
-                this.text = "BOUH"
+            checkCreateUserError() {
+                const ctx = Users.context(this.$store);
+                return (ctx.state.error.has('createUser') && ctx.state.error.get('createUser'))
             },
-            onCopy() {
-                this.text = "YEAYYY"
-            }
+            checkDeleteUserError() {
+                const ctx = Users.context(this.$store);
+                return (ctx.state.error.has('deleteUser') && ctx.state.error.get('deleteUser'))
+            },
+            checkImportUserError() {
+                const ctx = Users.context(this.$store);
+                return (ctx.state.error.has('importUser') && ctx.state.error.get('importUser'))
+            },
+            checkExportUserError() {
+                const ctx = Users.context(this.$store);
+                return (ctx.state.error.has('exportUser') && ctx.state.error.get('exportUser'))
+            },
         },
         beforeMount() {
             const ctx = Users.context(this.$store);
