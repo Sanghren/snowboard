@@ -6,6 +6,7 @@ import axios from 'axios'
 import vuetify from './plugins/vuetify';
 import 'es6-promise/auto'
 import {ValidationProvider} from 'vee-validate';
+import VueClipboard from 'vue-clipboard2'
 
 declare global {
     interface Window {
@@ -21,6 +22,7 @@ declare global {
         VUE_APP_SNWBRD_NODE_NETWORK_ID: string
     }
 }
+Vue.use(VueClipboard)
 
 Vue.prototype.$http = axios
 Vue.config.productionTip = false

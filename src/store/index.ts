@@ -6,6 +6,7 @@ import {Health} from './modules/health.store';
 import {Api} from './modules/api.store';
 import {Dashboard} from './modules/dashboard.store';
 import {Tools} from './modules/tools.store';
+import {Users} from './modules/users.store';
 import {createStore, Module} from 'vuex-smart-module'
 
 Vue.use(Vuex);
@@ -19,6 +20,7 @@ const root = new Module({
         Health,
         Metrics,
         Tools,
+        Users
     }
 })
 

@@ -14,10 +14,6 @@ export interface XChainState {
     txs: TxStatusRes[];
 }
 
-export interface UsersState {
-    users: User[];
-}
-
 export interface Config {
     nodeUrl: string;
     protocol: string;
@@ -57,11 +53,6 @@ export interface HealthCheck {
     duration: number;
     contiguousFailures: number;
     timeOfFirstFailure: number;
-}
-
-export interface User {
-    name: string;
-    xAddress: string[];
 }
 
 export interface Metric {
