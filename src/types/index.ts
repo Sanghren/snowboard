@@ -109,8 +109,27 @@ export enum ValidatorStatus {
 
 export interface PChainAccount {
     address: string;
+    privateKey: string;
+    identicon: string;
     nonce: number;
     balance: number;
+}
+
+export interface XChainAddress {
+    address: string;
+    privateKey?: string;
+    identicon: string;
+    assets: AssetBalance[];
+}
+
+export interface AssetBalance {
+    asset: string;
+    balance: number;
+}
+
+export interface UpdateAssetBalance {
+    address: string;
+    balances: AssetBalance[]
 }
 
 export interface User {
@@ -118,4 +137,28 @@ export interface User {
     password?: string;
     exportData?: string;
     accounts?: PChainAccount[];
+}
+
+export interface PAddressExport {
+    name: string;
+    password: string;
+    address: string;
+}
+
+export interface PAddressImport {
+    name: string;
+    password: string;
+    privateKey: string;
+}
+
+export interface XAddressExport {
+    name: string;
+    password: string;
+    address: string;
+}
+
+export interface XAddressImport {
+    name: string;
+    password: string;
+    privateKey: string;
 }

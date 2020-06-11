@@ -3,7 +3,7 @@ import VueRouter, {RouteConfig} from 'vue-router'
 import NodeMetrics from "@/views/NodeMetrics.vue";
 import Settings from "@/views/Settings.vue";
 import Users from "@/views/Users.vue";
-import PChain from "@/views/PChain.vue";
+import Accounts from "@/views/Accounts.vue";
 import NodeDashboard from "@/views/NodeDashboard.vue";
 import Tools from "@/views/Tools.vue";
 
@@ -30,16 +30,11 @@ const routes: Array<RouteConfig> = [
         name: 'Users',
         component: Users
     },
-    // {
-    //     path: '/accounts/:id',
-    //     props: true,
-    //     name: 'Accounts',
-    //     component: Accounts
-    // },
     {
-        path: '/p-chain',
-        name: 'PChain',
-        component: PChain
+        path: '/accounts/:id',
+        props: true,
+        name: 'Accounts',
+        component: Accounts
     },
     {
         path: '/tools',

@@ -31,7 +31,6 @@
                     xs="1"
                     sm="1"
                     md="1"
-
                     class="ma-1 pa-0"
                     no-gutters
             >
