@@ -355,6 +355,7 @@
             const dashboardCtx = Dashboard.context(this.$store);
             dashboardCtx.actions.fetchNodeId();
             dashboardCtx.actions.fetchNetworkId();
+            dashboardCtx.actions.fetchNetworkName();
             dashboardCtx.actions.fetchPeers();
             dashboardCtx.actions.fetchUsers();
             dashboardCtx.actions.fetchCurrentValidators();
@@ -382,6 +383,7 @@
                 dashboardCtx.actions.fetchNodeId('Dashboard/fetchNodeId');
                 healthCtx.actions.fetchLiveness()
                 dashboardCtx.actions.fetchNetworkId();
+                dashboardCtx.actions.fetchNetworkName();
                 dashboardCtx.actions.fetchPeers();
                 dashboardCtx.actions.fetchUsers();
                 metricsCtx.actions.fetchMetrics()

@@ -7,6 +7,7 @@ import {Actions, Getters, Module, Mutations, createMapper} from "vuex-smart-modu
 class DashboardState {
     bootstrapped = false;
     networkId = -1;
+    networkName = "";
     nodeId = "";
     peers: string[] = [];
     status = "";
@@ -43,6 +44,10 @@ class DashboardMutations extends Mutations<DashboardState> {
 
     setNetworkId(networkId: number) {
         this.state.networkId = networkId;
+    }
+
+    setNetworkName(networkName: string) {
+        this.state.networkName = networkName;
     }
 
     setPeers(peers: string[]) {
@@ -90,6 +95,11 @@ class DashboardActions extends Actions<DashboardState,
     async fetchNetworkId() {
         const networkId = await nodeApi.Admin().getNetworkID();
         this.mutations.setNetworkId(networkId)
+    }
+
+    async fetchNetworkName() {
+        const networkName = await nodeApi.Admin().getNetworkName();
+        this.mutations.setNetworkName(networkName)
     }
 
     async fetchPeers() {
