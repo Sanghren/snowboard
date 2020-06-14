@@ -107,6 +107,31 @@
                     </v-list-item>
                 </v-card>
             </v-col>
+            <v-col
+                    xs="12"
+                    md="2"
+                    class="ma-1 pa-0"
+            >
+                <v-card
+                        class="mb-2"
+                        v-model="$store.getters['Dashboard/networkName']"
+                        tile
+                >
+                    <v-list-item>
+                        <v-list-item-content>
+                            <v-list-item-title class="headline">{{$store.state.Dashboard.networkName }}</v-list-item-title>
+                        </v-list-item-content>
+                        <v-tooltip top>
+                            <template v-slot:activator="{ on }">
+                                <span v-on="on" class="material-icons">
+                                    help_outline
+                                </span>
+                            </template>
+                            <span>Whether your node is present in the "current validator" list or in the "pending" list .'</span>
+                        </v-tooltip>
+                    </v-list-item>
+                </v-card>
+            </v-col>
         </v-row>
         <v-row dense>
             <v-col
