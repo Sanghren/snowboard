@@ -106,6 +106,56 @@
                     </v-list-item>
                 </v-card>
             </v-col>
+            <v-col
+                    xs="12"
+                    md="2"
+                    class="ma-1 pa-0"
+            >
+                <v-card
+                        class="mb-2"
+                        v-model="$store.getters['Dashboard/networkName']"
+                        tile
+                >
+                    <v-list-item>
+                        <v-list-item-content>
+                            <v-list-item-title class="headline">{{$store.state.Dashboard.networkName }}</v-list-item-title>
+                        </v-list-item-content>
+                        <v-tooltip top>
+                            <template v-slot:activator="{ on }">
+                                <span v-on="on" class="material-icons">
+                                    help_outline
+                                </span>
+                            </template>
+                            <span>Name of the network your node is currently running on .'</span>
+                        </v-tooltip>
+                    </v-list-item>
+                </v-card>
+            </v-col>
+            <v-col
+                    xs="12"
+                    md="2"
+                    class="ma-1 pa-0"
+            >
+                <v-card
+                        class="mb-2"
+                        v-model="$store.getters['Dashboard/nodeVersion']"
+                        tile
+                >
+                    <v-list-item>
+                        <v-list-item-content>
+                            <v-list-item-title class="headline">{{$store.state.Dashboard.nodeVersion }}</v-list-item-title>
+                        </v-list-item-content>
+                        <v-tooltip top>
+                            <template v-slot:activator="{ on }">
+                                <span v-on="on" class="material-icons">
+                                    help_outline
+                                </span>
+                            </template>
+                            <span>Version of Gecko your node is running .'</span>
+                        </v-tooltip>
+                    </v-list-item>
+                </v-card>
+            </v-col>
         </v-row>
         <v-row dense>
             <v-col
@@ -354,6 +404,8 @@
             const dashboardCtx = Dashboard.context(this.$store);
             dashboardCtx.actions.fetchNodeId();
             dashboardCtx.actions.fetchNetworkId();
+            dashboardCtx.actions.fetchNodeVersion();
+            dashboardCtx.actions.fetchNetworkName();
             dashboardCtx.actions.fetchPeers();
             dashboardCtx.actions.fetchUsers();
             dashboardCtx.actions.fetchCurrentValidators();
@@ -381,6 +433,7 @@
                 dashboardCtx.actions.fetchNodeId('Dashboard/fetchNodeId');
                 healthCtx.actions.fetchLiveness()
                 dashboardCtx.actions.fetchNetworkId();
+                dashboardCtx.actions.fetchNetworkName();
                 dashboardCtx.actions.fetchPeers();
                 dashboardCtx.actions.fetchUsers();
                 metricsCtx.actions.fetchMetrics()
