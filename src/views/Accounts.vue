@@ -1,5 +1,5 @@
 <template>
-    <v-container fill-height fluid>
+    <v-container fluid>
         <v-snackbar
                 v-model="snackbarCChainPrivateKey"
         >
@@ -39,6 +39,15 @@
                 Close
             </v-btn>
         </v-snackbar>
+        <v-alert
+                :value="checkVuexError"
+                dismissible
+                border="bottom"
+                color="pink darken-1"
+                dark
+        >
+            {{ displayError }}
+        </v-alert>
         <v-row dense>
             <v-col>
                 <h2 class="text-center">Managing XChain/PChain information for <span
@@ -94,12 +103,10 @@
             >
                 <v-sheet
                         height="100%"
-                        dark
                 >
                     <v-slide-group
                             v-model="xAddress"
                             center-active
-
                     >
                         <v-slide-item
                                 v-for="(cAddress, index) in $store.state.Account.xAddresses"
@@ -581,6 +588,7 @@
     } from "@/types";
     import DoughnutChart from "@/components/DoughnutChart.vue";
     import {Tools} from "@/store/modules/tools.store";
+
     export default Vue.extend({
         components: {DoughnutChart},
         props: ['id'],
@@ -619,6 +627,21 @@
                         return new RegExp('^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[$@$!%*?&])[A-Za-z\\d$@$!%*?&]{8,}').test(v) || 'Must have Upper, Lower, Numbers and Symbols !'
                     },
                 }
+            }
+        },
+        computed: {
+            checkVuexError() {
+                const ctx = Account.context(this.$store);
+                if(ctx.state.showError) {
+                    setTimeout(()=>{
+                        ctx.actions.markErrorAsShown()
+                    },5000)
+                }
+                return ctx.state.showError
+            },
+            displayError() {
+                const ctx = Account.context(this.$store);
+                return ctx.state.error
             }
         },
         methods: {

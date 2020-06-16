@@ -2,7 +2,6 @@
     <v-app>
         <v-app-bar
                 app
-                dark
         >
             <v-spacer></v-spacer>
             <div>

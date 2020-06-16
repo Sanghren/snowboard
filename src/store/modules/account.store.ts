@@ -22,7 +22,8 @@ class AccountState {
     txStatus = "";
     pAccounts: PChainAccount[] = [];
     loading = new Map();
-    error = new Map()
+    error: string[] = [];
+    showError = false;
 }
 
 class AccountGetters extends Getters<AccountState> {
@@ -33,6 +34,15 @@ class AccountGetters extends Getters<AccountState> {
     get getPAccounts() {
         return this.state.pAccounts;
     }
+
+    // get getErrors(){
+    //     const keys = this.state.error.keys();
+    //     const errors = [];
+    //     for (const key of keys) {
+    //         errors.push(this.state.error.get(key));
+    //     }
+    //     return errors;
+    // }
 }
 
 class AccountMutations extends Mutations<AccountState> {
@@ -86,7 +96,16 @@ class AccountMutations extends Mutations<AccountState> {
     }
 
     setError(errorContext: ErrorContext) {
-        this.state.error.set(errorContext.key, errorContext.error)
+        this.state.error.push(errorContext.error.message)
+        this.state.showError = true;
+    }
+
+    setShowError() {
+        this.state.showError = false;
+    }
+
+    resetError() {
+        this.state.error = []
     }
 }
 
@@ -95,6 +114,10 @@ class AccountActions extends Actions<AccountState,
     AccountMutations,
     Actions> {
 
+    async markErrorAsShown() {
+        this.mutations.setShowError();
+        this.mutations.resetError();
+    }
 
     async listXAddresses(user: User) {
         const api = nodeApi;
