@@ -139,6 +139,20 @@ export interface User {
     accounts?: PChainAccount[];
 }
 
+export interface ExportAvaPChain {
+    to: string;
+    amount: number;
+    username: string;
+    password: string;
+}
+
+export interface ImportAvaPChain {
+    to: string;
+    nonce: number;
+    username: string;
+    password: string;
+}
+
 export interface PAddressExport {
     name: string;
     password: string;

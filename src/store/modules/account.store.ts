@@ -1,7 +1,7 @@
 // State object
 import {
     AssetBalance,
-    ErrorContext,
+    ErrorContext, ExportAvaPChain, ImportAvaPChain,
     PAddressExport,
     PAddressImport,
     PChainAccount, UpdateAssetBalance,
@@ -10,13 +10,16 @@ import {
     XAddressImport,
     XChainAddress
 } from "@/types";
-import {nodeApi} from "@/AVA";
+import {bootstrapNodeApi, nodeApi} from "@/AVA";
 import {Actions, createMapper, Getters, Module, Mutations} from "vuex-smart-module";
 import jdenticon from 'jdenticon';
+import BN from 'bn.js';
 
 class AccountState {
     xAddressPKey = "";
-    xAddresses: XChainAddress[] = []
+    xAddresses: XChainAddress[] = [];
+    txId: string[] = [];
+    txStatus = "";
     pAccounts: PChainAccount[] = [];
     loading = new Map();
     error = new Map()
@@ -44,6 +47,14 @@ class AccountMutations extends Mutations<AccountState> {
 
     setXAddress(xChain: XChainAddress[]) {
         this.state.xAddresses = xChain;
+    }
+
+    pushTxId(txId: string) {
+        this.state.txId.push(txId)
+    }
+
+    setTxStatus(txStatus: string) {
+        this.state.txStatus = txStatus
     }
 
     pushAddress(address: XChainAddress) {
@@ -106,6 +117,9 @@ class AccountActions extends Actions<AccountState,
                 } as XChainAddress
             })
             this.mutations.setXAddress(xAddresses)
+            addresses.map(async a => {
+                await this.getBalances(a)
+            })
             this.mutations.setLoaded('listXAddresses')
         } catch (e) {
             this.mutations.setLoaded('listXAddresses');
@@ -134,18 +148,87 @@ class AccountActions extends Actions<AccountState,
         }
     }
 
-    async getBalances(address: string) {
+    async exportAvaToPChain(data: ExportAvaPChain) {
         const api = nodeApi;
+        console.log(JSON.stringify(data))
+        this.mutations.setLoading('exportAvaToPChain');
+        if (!data.username || !data.password || !data.to || data.amount < 0) {
+            this.mutations.setLoaded('exportAvaToPChain');
+            this.mutations.setError({key: 'exportAvaToPChain', error: new Error('Missing params')})
+            return false;
+        }
+        try {
+            const txId = await api.AVM().exportAVA(data.username, data.password, data.to, new BN(data.amount));
+            this.mutations.pushTxId(txId)
+            this.mutations.setLoaded('exportAvaToPChain')
+            return true
+        } catch (e) {
+            this.mutations.setLoaded('exportAvaToPChain');
+            this.mutations.setError({key: 'exportAvaToPChain', error: e})
+            return false
+        }
+    }
+
+    async importAvaFromXChain(data: ImportAvaPChain) {
+        const api = nodeApi;
+        this.mutations.setLoading('importAvaFromXChain');
+        if (!data.username || !data.password || !data.to || data.nonce <= 0) {
+            this.mutations.setLoaded('importAvaFromXChain');
+            this.mutations.setError({key: 'importAvaFromXChain', error: new Error('Missing params')})
+            return false;
+        }
+        try {
+            const rawTx = await api.Platform().importAVA(data.username, data.password, data.to, data.nonce)
+            const txId = await api.Platform().issueTx(rawTx);
+            this.mutations.pushTxId(txId)
+            this.mutations.setLoaded('importAvaFromXChain')
+            return true
+        } catch (e) {
+            this.mutations.setLoaded('importAvaFromXChain');
+            this.mutations.setError({key: 'importAvaFromXChain', error: e})
+            return false
+        }
+    }
+
+    async checkTxStatus(payload: { txId: string, timeout: NodeJS.Timeout }) {
+        const avmApi = await nodeApi.AVM()
+        this.mutations.setLoading('checkTxStatus')
+
+        try {
+            const txStatus = await avmApi.getTxStatus(payload.txId);
+            this.mutations.setTxStatus(txStatus)
+            if (txStatus.toUpperCase() === 'ACCEPTED') {
+                clearInterval(payload.timeout)
+            }
+            this.mutations.setLoaded('checkTxStatus')
+        } catch (e) {
+            this.mutations.setTxStatus("INVALID")
+            this.mutations.setLoaded('checkTxStatus')
+            this.mutations.setError({key: 'checkTxStatus', error: e})
+        }
+    }
+
+    async getBalances(address: string) {
+        const api = nodeApi
+        let updateBalances: AssetBalance[] = []
         this.mutations.setLoading('getBalances');
         try {
             const balances = await api.AVM().getAllBalances(address) as AssetBalance[]
-            const updateBalance = balances.map((balance: AssetBalance) => {
-                return {
-                    balance: balance.balance,
-                    asset: balance.asset,
-                } as AssetBalance
-            })
-            this.mutations.setXAddressBalance({address, balances: updateBalance} as UpdateAssetBalance)
+            if (balances.length > 0) {
+                updateBalances = balances.map((balance: AssetBalance) => {
+                    return {
+                        balance: balance.balance,
+                        asset: balance.asset,
+                    } as AssetBalance
+                })
+            } else {
+                updateBalances = [{
+                    balance: 0,
+                    asset: "AVA"
+                }] as AssetBalance[]
+            }
+
+            this.mutations.setXAddressBalance({address, balances: updateBalances} as UpdateAssetBalance)
             this.mutations.setLoaded('getBalances');
         } catch (e) {
             this.mutations.setLoaded('getBalances');
@@ -171,6 +254,8 @@ class AccountActions extends Actions<AccountState,
                     balance: -1
                 } as AssetBalance]
             } as XChainAddress
+
+            await this.getBalances(address)
 
             this.mutations.pushAddress(xChainAddress)
             this.mutations.setLoaded('createXAddresse');
@@ -198,6 +283,8 @@ class AccountActions extends Actions<AccountState,
                     balance: -1
                 } as AssetBalance]
             } as XChainAddress
+            await this.getBalances(address)
+            this.dispatch
             this.mutations.pushAddress(xChainAddress)
             this.mutations.setLoaded('importXAddress');
         } catch (e) {
