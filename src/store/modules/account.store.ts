@@ -8,7 +8,8 @@ import {
     User,
     XAddressExport,
     XAddressImport,
-    XChainAddress
+    XChainAddress,
+    ExportAvaXChain
 } from "@/types";
 import {bootstrapNodeApi, nodeApi} from "@/AVA";
 import {Actions, createMapper, Getters, Module, Mutations} from "vuex-smart-module";
@@ -107,6 +108,17 @@ class AccountMutations extends Mutations<AccountState> {
     resetError() {
         this.state.error = []
     }
+
+    resetState() {
+        this.state.xAddressPKey = "";
+        this.state.xAddresses = [];
+        this.state.txId = [];
+        this.state.txStatus = "";
+        this.state.pAccounts = [];
+        this.state.loading = new Map();
+        this.state.error = [];
+        this.state.showError = false;
+    }
 }
 
 class AccountActions extends Actions<AccountState,
@@ -129,7 +141,7 @@ class AccountActions extends Actions<AccountState,
         }
         try {
             const addresses = await api.AVM().listAddresses(user.name, user.password);
-            const xAddresses = addresses.map(a => {
+            const xAddresses = addresses.map((a: string) => {
                 return {
                     address: a,
                     identicon: jdenticon.toSvg(a, 60),
@@ -140,7 +152,7 @@ class AccountActions extends Actions<AccountState,
                 } as XChainAddress
             })
             this.mutations.setXAddress(xAddresses)
-            addresses.map(async a => {
+            addresses.map(async( a: string) => {
                 await this.getBalances(a)
             })
             this.mutations.setLoaded('listXAddresses')
@@ -181,6 +193,8 @@ class AccountActions extends Actions<AccountState,
             return false;
         }
         try {
+            console.log(data.amount);
+            console.log(new BN(data.amount, 10).toNumber())
             const txId = await api.AVM().exportAVA(data.username, data.password, data.to, new BN(data.amount));
             this.mutations.pushTxId(txId)
             this.mutations.setLoaded('exportAvaToPChain')
@@ -188,6 +202,30 @@ class AccountActions extends Actions<AccountState,
         } catch (e) {
             this.mutations.setLoaded('exportAvaToPChain');
             this.mutations.setError({key: 'exportAvaToPChain', error: e})
+            return false
+        }
+    }
+
+    async exportAvaToXChain(data: ExportAvaXChain) {
+        const api = nodeApi;
+        console.log(JSON.stringify(data))
+        this.mutations.setLoading('exportAvaToXChain');
+        if (data.amount < 1 || !data.to ||  data.nonce < 0) {
+            this.mutations.setLoaded('exportAvaToXChain');
+            this.mutations.setError({key: 'exportAvaToXChain', error: new Error('Missing params')})
+            return false;
+        }
+        try {
+            console.log(data.amount);
+            console.log(new BN(data.amount, 10).toNumber())
+            const txId = await api.Platform().exportAVA(new BN(data.amount), data.to.substring(2,data.to.length), data.nonce);
+
+            this.mutations.pushTxId(txId)
+            this.mutations.setLoaded('exportAvaToXChain')
+            return true
+        } catch (e) {
+            this.mutations.setLoaded('exportAvaToXChain');
+            this.mutations.setError({key: 'exportAvaToXChain', error: e})
             return false
         }
     }

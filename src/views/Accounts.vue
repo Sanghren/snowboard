@@ -50,21 +50,9 @@
         </v-alert>
         <v-row dense>
             <v-col>
-                <h2 class="text-center">Managing XChain/PChain information for <span
-                        class="font-weight-black text--secondary">{{ id }}</span>
-                    <v-tooltip top>
-                        <template
-                                v-slot:activator="{ on }">
-                                <span v-on="on" class="material-icons md14">
-                                    help_outline
-                                </span>
-                        </template>
-                        <span>Show the X Addresses and P Accounts associated to this user. You need to login first .</span>
-                    </v-tooltip>
-                </h2>
-                <v-dialog v-model="loginDialog" persistent max-width="290">
+                <v-dialog v-if="!loggedIn" v-model="loginDialog" persistent max-width="290">
                     <template v-slot:activator="{ on }">
-                        <v-btn color="primary" dark small text class="ml-1" v-on="on">Login</v-btn>
+                        <v-btn class="ml-1" rounded v-on="on">Login</v-btn>
                     </template>
                     <v-card>
                         <v-card-title class="headline">Enter your password for the Keystore's user {{ id }}
@@ -87,14 +75,28 @@
                         </v-form>
                         <v-card-actions>
                             <v-spacer></v-spacer>
-                            <v-btn color="green darken-1" text @click="fetchXChainInfo()">Login</v-btn>
+                            <v-btn color="green darken-1" text @click="login()">Login</v-btn>
                             <v-btn color="green darken-1" text @click="loginDialog = false">
                                 Close
                             </v-btn>
                         </v-card-actions>
                     </v-card>
                 </v-dialog>
-                <v-btn color="primary" dark small text @click="fetchXChainInfo()">Refresh</v-btn>
+                <v-btn v-if="loggedIn" rounded @click="logout()">Logout</v-btn>
+                <v-btn rounded class="ml-3" @click="fetchXChainInfo()">Refresh</v-btn>
+                <h2 class="text-center">Managing XChain/PChain information for <span
+                        class="font-weight-black text--secondary">{{ id }}</span>
+                    <v-tooltip top>
+                        <template
+                                v-slot:activator="{ on }">
+                                <span v-on="on" class="material-icons md14">
+                                    help_outline
+                                </span>
+                        </template>
+                        <span>Show the X Addresses and P Accounts associated to this user. You need to login first .</span>
+                    </v-tooltip>
+                </h2>
+
             </v-col>
         </v-row>
         <v-row dense>
@@ -136,7 +138,7 @@
                                 </v-list-item>
 
                                 <v-card-text>
-                                    <p class="display-1 text-center text--primary">
+                                    <p class="display-1 text-center text--secondary">
                                         Balance(s)
                                     </p>
                                     <div v-for="(item, index) in $store.state.Account.xAddresses">
@@ -148,7 +150,7 @@
                                                 <div v-if="asset.balance === -1" class="text-center">
                                                     You need to fetch the balance first .
                                                 </div>
-                                                <div v-else>
+                                                <div class="text-center text--primary" v-else>
                                                     {{ asset.asset }} || {{ asset.balance }}
                                                 </div>
                                             </div>
@@ -159,7 +161,7 @@
                                     <v-dialog v-model="exportXAddressDialog[cAddress.address]" persistent
                                               max-width="290">
                                         <template v-slot:activator="{ on }">
-                                            <v-btn color="primary" dark small text v-on="on"
+                                            <v-btn rounded v-on="on"
                                                    @click="cChainPrivateKey = true"
                                                    :disabled="!active"
                                             >
@@ -190,20 +192,16 @@
                                             </v-card-text>
                                             <v-card-actions>
                                                 <v-spacer></v-spacer>
-                                                <v-btn color="green darken-1" text
+                                                <v-btn rounded
                                                        @click="exportXAddress(cAddress.address)">Export
                                                 </v-btn>
-                                                <v-btn color="green darken-1" text
+                                                <v-btn rounded
                                                        @click="$set(exportXAddressDialog, cAddress.address, false)">
                                                     Close
                                                 </v-btn>
                                             </v-card-actions>
                                         </v-card>
                                     </v-dialog>
-                                    <v-btn color="primary" dark small text :disabled="!active"
-                                           @click="fetchBalances(cAddress.address)">
-                                        Balances
-                                    </v-btn>
                                 </v-card-actions>
                                 <v-row
                                         class="fill-height"
@@ -218,7 +216,7 @@
                 <v-row justify="center">
                     <v-dialog v-model="importXAddressDialog" persistent max-width="290">
                         <template v-slot:activator="{ on }">
-                            <v-btn color="primary" dark small text v-on="on">Import</v-btn>
+                            <v-btn rounded class="mt-1" v-on="on">Import</v-btn>
                         </template>
                         <v-card>
                             <v-card-title class="headline">Import an address by passing the private key
@@ -256,14 +254,14 @@
                             </v-card-text>
                             <v-card-actions>
                                 <v-spacer></v-spacer>
-                                <v-btn color="green darken-1" text @click="importXAddress()">Import</v-btn>
-                                <v-btn color="green darken-1" text @click="importXAddressDialog = false">
+                                <v-btn rounded class="mt-1" @click="importXAddress()">Import</v-btn>
+                                <v-btn rounded class="mt-1 ml-1" @click="importXAddressDialog = false">
                                     Close
                                 </v-btn>
                             </v-card-actions>
                         </v-card>
                     </v-dialog>
-                    <v-btn dark small text @click="createAddress()">Create new address</v-btn>
+                    <v-btn rounded class="mt-1 ml-1" @click="createAddress()">Create new address</v-btn>
                 </v-row>
             </v-col>
             <v-flex
@@ -271,7 +269,7 @@
             >
                 <v-col md="1">
                     <v-row dense align="center">
-                        <v-btn color="primary" dark small text @click="dialog = true">To PChain</v-btn>
+                        <v-btn rounded @click="dialog = true">To PChain</v-btn>
                     </v-row>
                 </v-col>
             </v-flex>
@@ -281,7 +279,7 @@
                 <v-col
                         md="1">
                     <v-row dense align="center">
-                        <v-btn color="primary" dark small text @click="printF(pAccount)">To XChain</v-btn>
+                        <v-btn rounded @click="pChainToXChainDialog = true">To XChain</v-btn>
                     </v-row>
                 </v-col>
             </v-flex>
@@ -323,14 +321,16 @@
                                     <p class="display-1 text-center text--primary">
                                         Balance
                                     </p>
+                                    <p class="text-center text--primary">
                                     Nonce : {{ pAccount.nonce }} <br/>
                                     Balance : {{ pAccount.balance }}
+                                    </p>
                                 </v-card-text>
                                 <v-card-actions>
                                     <v-dialog v-model="exportPAddressDialog[pAccount.address]" persistent
                                               max-width="290">
                                         <template v-slot:activator="{ on }">
-                                            <v-btn color="primary" dark small text v-on="on"
+                                            <v-btn rounded v-on="on"
                                                    @click="pChainPrivateKey = true"
                                                    :disabled="!active"
                                             >
@@ -361,10 +361,10 @@
                                             </v-card-text>
                                             <v-card-actions>
                                                 <v-spacer></v-spacer>
-                                                <v-btn color="green darken-1" text
+                                                <v-btn rounded
                                                        @click="exportPAddress(pAccount.address)">Export
                                                 </v-btn>
-                                                <v-btn color="green darken-1" text
+                                                <v-btn rounded
                                                        @click="$set(exportPAddressDialog, pAccount.address, false)">
                                                     Close
                                                 </v-btn>
@@ -377,8 +377,8 @@
                     </v-slide-group>
                 </v-sheet>
                 <v-row justify="center">
-                    <v-btn dark small text @click="importPAccountKey()">Import PKey</v-btn>
-                    <v-btn dark small text @click="createPAccount()">Create new account</v-btn>
+                    <v-btn rounded class="mt-1" @click="importPAccountKey()">Import PKey</v-btn>
+                    <v-btn rounded class="mt-1 ml-1" @click="createPAccount()">Create new account</v-btn>
                 </v-row>
             </v-col>
         </v-row>
@@ -522,7 +522,7 @@
                                 </v-col>
                             </v-row>
                             <v-row>
-                                Nonce : {{ $store.state.Account.pAccounts[pAccount].nonce + 1 }}
+                                Nonce : {{ $store.state.Account.pAccounts[pAccount].nonce }}
                             </v-row>
                             <v-row>
                                 Username : {{ id }}
@@ -546,14 +546,174 @@
                                 </v-btn>
                             </v-row>
                         </v-container>
-
-                        <v-btn
-                                color="primary"
-                                @click="stepper = 1"
-                        >
-                            Continue
+                        <v-btn text
+                               @click="importAvaFromXChain($store.state.Account.pAccounts[pAccount].address, $store.state.Account.pAccounts[pAccount].nonce)">
+                            >
+                            Cancel
                         </v-btn>
+                    </v-stepper-content>
+                    <v-stepper-content step="4">
+                        <v-row>
+                            YEAY YOU HAVE SUCCESSFULLY TRANSFERED AVA FROM XCHAONN TO PCHAIN
+                        </v-row>
+                    </v-stepper-content>
+                </v-stepper-items>
+            </v-stepper>
+            <v-container v-else>
+                YOU NEED TO SELECT A XADDRESS AND PACCOUNT BEFORE DOING THIS DOG
+            </v-container>
+        </v-dialog>
+        <v-dialog
+                v-model="pChainToXChainDialog"
+                fullscreen
+                hide-overlay
+                width="100%"
+                transition="dialog-bottom-transition"
+                scrollable
+        >
+            <v-stepper
+                    v-if="pAccount !== -1 && xAddress !== -1"
+                    v-model="stepper"
+            >
+                <v-stepper-header>
+                    <v-stepper-step step="1">Export AVA to XChain</v-stepper-step>
 
+                    <v-divider></v-divider>
+
+                    <v-stepper-step step="2">Import AVA from PChain</v-stepper-step>
+
+                    <v-divider></v-divider>
+
+                    <v-stepper-step step="3">Issue Tx</v-stepper-step>
+
+                    <v-divider></v-divider>
+
+                    <v-stepper-step step="4">Poll Tx Status</v-stepper-step>
+                </v-stepper-header>
+
+                <v-stepper-items>
+                    <v-stepper-content step="1">
+                        <v-container>
+                            <v-row>
+                                <v-col>
+                                    <v-row>
+                                        <v-col>
+                                            From {{ $store.state.Account.pAccounts[pAccount].address }}
+                                        </v-col>
+                                        <v-col>
+                                            <div v-html="$store.state.Account.pAccounts[pAccount].identicon"/>
+                                        </v-col>
+                                    </v-row>
+                                </v-col>
+                                <v-col>
+                                    <v-row>
+                                        <v-col>
+                                            <div v-html="$store.state.Account.xAddresses[xAddress].identicon"/>
+                                        </v-col>
+                                        <v-col>
+                                            To {{ $store.state.Account.xAddresses[xAddress].address }}
+                                        </v-col>
+                                    </v-row>
+                                </v-col>
+                            </v-row>
+                            <v-row>
+                                <v-slider
+                                        v-model="pExportSlider"
+                                        class="align-center"
+                                        :max="$store.state.Account.pAccounts[pAccount].balance"
+                                        :min="0"
+                                        hide-details
+                                >
+                                    <template v-slot:append>
+                                        <v-text-field
+                                                v-model="pExportSlider"
+                                                class="mt-0 pt-0"
+                                                hide-details
+                                                single-line
+                                                type="number"
+                                                style="width: 60px"
+                                        ></v-text-field>
+                                    </template>
+                                </v-slider>
+                            </v-row>
+                            <v-row>
+                                Nonce : {{ $store.state.Account.pAccounts[pAccount].nonce }}
+                            </v-row>
+                            <v-row>
+                                <v-btn text
+                                       @click="exportAvaToXChain($store.state.Account.xAddresses[xAddress].address,  $store.state.Account.pAccounts[pAccount].nonce)">
+                                    Export AVA
+                                </v-btn>
+                            </v-row>
+                        </v-container>
+                    </v-stepper-content>
+                    <v-stepper-content step="2">
+                        <v-row>
+                            {{ $store.state.Account.txId[0] }}
+                        </v-row>
+                        <v-row>
+                            {{ $store.state.Account.txStatus }}
+                        </v-row>
+                        <v-row>
+                            <v-btn
+                                    color="primary"
+                                    :disabled="$store.state.Account.txStatus !== 'Accepted'"
+                                    @click="stepper = 3"
+                            >
+                                Continue
+                            </v-btn>
+                        </v-row>
+                    </v-stepper-content>
+
+                    <v-stepper-content step="3">
+                        <v-container>
+                            <v-row>
+                                <v-col>
+                                    <v-row>
+                                        <v-col>
+                                            From {{ $store.state.Account.xAddresses[xAddress].address }}
+                                        </v-col>
+                                        <v-col>
+                                            <div v-html="$store.state.Account.xAddresses[xAddress].identicon"/>
+                                        </v-col>
+                                    </v-row>
+                                </v-col>
+                                <v-col>
+                                    <v-row>
+                                        <v-col>
+                                            <div v-html="$store.state.Account.pAccounts[pAccount].identicon"/>
+                                        </v-col>
+                                        <v-col>
+                                            To {{ $store.state.Account.pAccounts[pAccount].address }}
+                                        </v-col>
+                                    </v-row>
+                                </v-col>
+                            </v-row>
+                            <v-row>
+                                Nonce : {{ $store.state.Account.pAccounts[pAccount].nonce }}
+                            </v-row>
+                            <v-row>
+                                Username : {{ id }}
+                            </v-row>
+                            <v-row>
+                                <v-text-field
+                                        v-model="password"
+                                        :append-icon="show1 ? 'mdi-eye' : 'mdi-eye-off'"
+                                        :type="show1 ? 'text' : 'password'"
+                                        name="input-10-1"
+                                        label="Password"
+                                        hint="At least 8 characters"
+                                        counter
+                                        @click:append="show1 = !show1"
+                                ></v-text-field>
+                            </v-row>
+                            <v-row>
+                                <v-btn text
+                                       @click="importAvaFromXChain($store.state.Account.pAccounts[pAccount].address, $store.state.Account.pAccounts[pAccount].nonce)">
+                                    Export AVA
+                                </v-btn>
+                            </v-row>
+                        </v-container>
                         <v-btn text
                                @click="importAvaFromXChain($store.state.Account.pAccounts[pAccount].address, $store.state.Account.pAccounts[pAccount].nonce)">
                             >
@@ -578,7 +738,7 @@
     import Vue from 'vue';
     import {Account} from "@/store/modules/account.store";
     import {
-        ExportAvaPChain, ImportAvaPChain,
+        ExportAvaPChain, ExportAvaXChain, ImportAvaPChain,
         PAddressExport,
         PAddressImport,
         User,
@@ -596,6 +756,7 @@
             return {
                 password: "",
                 stepper: 1,
+                loggedIn: false,
                 exportPassword: "",
                 snackbarCChainPrivateKey: false,
                 snackbarPChainPrivateKey: false,
@@ -604,6 +765,7 @@
                 xAddressPKeyImport: "",
                 xAddress: -1,
                 dialog: false,
+                pChainToXChainDialog: false,
                 pAccount: -1,
                 intervalId: {} as NodeJS.Timeout,
                 xExportSlider: 0,
@@ -632,10 +794,10 @@
         computed: {
             checkVuexError() {
                 const ctx = Account.context(this.$store);
-                if(ctx.state.showError) {
-                    setTimeout(()=>{
+                if (ctx.state.showError) {
+                    setTimeout(() => {
                         ctx.actions.markErrorAsShown()
-                    },5000)
+                    }, 5000)
                 }
                 return ctx.state.showError
             },
@@ -645,9 +807,21 @@
             }
         },
         methods: {
-            async fetchXChainInfo() {
+            async login() {
                 const accountCtx = Account.context(this.$store)
                 this.loginDialog = false;
+                this.loggedIn = true;
+                await accountCtx.actions.listXAddresses({name: this.id, password: this.password} as User)
+                await accountCtx.actions.listPAccounts({name: this.id, password: this.password} as User)
+            },
+            async logout() {
+                const accountCtx = Account.context(this.$store)
+                this.loggedIn = false;
+                accountCtx.mutations.resetState();
+                //ToDo Clean some state
+            },
+            async fetchXChainInfo() {
+                const accountCtx = Account.context(this.$store)
                 await accountCtx.actions.listXAddresses({name: this.id, password: this.password} as User)
                 await accountCtx.actions.listPAccounts({name: this.id, password: this.password} as User)
             },
@@ -695,13 +869,31 @@
                 }
             },
             async importAvaFromXChain(to: string, nonce: number) {
+                nonce++
+                console.log(nonce);
                 const accountCtx = Account.context(this.$store)
                 const success = await accountCtx.actions.importAvaFromXChain({
                     username: this.id,
                     password: this.password,
-                    nonce: this.xExportSlider,
+                    nonce: nonce,
                     to
                 } as ImportAvaPChain)
+
+                if (success) {
+                    this.stepper = 4
+                } else {
+                    this.stepper = 10
+                }
+            },
+            async exportAvaToXChain(to: string, nonce: number) {
+                nonce++
+                console.log(nonce);
+                const accountCtx = Account.context(this.$store)
+                const success = await accountCtx.actions.exportAvaToXChain({
+                    amount: this.pExportSlider,
+                    nonce: nonce,
+                    to
+                } as ExportAvaXChain)
 
                 if (success) {
                     this.stepper = 4
@@ -751,12 +943,6 @@
                     privateKey
                 } as PAddressImport);
             },
-            async login() {
-                this.loginDialog = false;
-            },
-            printF(a: any) {
-                console.log(a)
-            }
         }
     })
 </script>

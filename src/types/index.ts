@@ -146,6 +146,12 @@ export interface ExportAvaPChain {
     password: string;
 }
 
+export interface ExportAvaXChain {
+    to: string;
+    amount: number;
+    nonce: number;
+}
+
 export interface ImportAvaPChain {
     to: string;
     nonce: number;
