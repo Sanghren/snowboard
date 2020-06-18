@@ -42,7 +42,7 @@
             </v-btn>
         </v-app-bar>
 
-        <v-content>
+        <v-main>
             <v-alert type="info" :value="infoMessage" dismissible>
                 <v-progress-circular
                         :rotate="-90"
@@ -62,7 +62,7 @@
                 node, check the url in settings !
             </v-alert>
             <router-view/>
-        </v-content>
+        </v-main>
     </v-app>
 </template>
 

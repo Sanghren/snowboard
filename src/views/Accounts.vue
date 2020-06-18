@@ -1,7 +1,7 @@
 <template>
     <v-container fluid>
         <v-snackbar
-                v-model="snackbarCChainPrivateKey"
+                v-model="snackbarXChainPrivateKey"
         >
             <v-btn
                     v-model="xAddressPKey"
@@ -15,7 +15,7 @@
                     color="blue"
                     text
                     v-clipboard:copy="xAddressPKey"
-                    @click="snackbarCChainPrivateKey = false"
+                    @click="snackbarXChainPrivateKey = false"
             >
                 Close
             </v-btn>
@@ -96,7 +96,6 @@
                         <span>Show the X Addresses and P Accounts associated to this user. You need to login first .</span>
                     </v-tooltip>
                 </h2>
-
             </v-col>
         </v-row>
         <v-row dense>
@@ -111,12 +110,13 @@
                             center-active
                     >
                         <v-slide-item
+                                v-if="$store.state.Account.loading.has('listXAddresses') && !$store.state.Account.loading.get('listXAddresses')"
                                 v-for="(cAddress, index) in $store.state.Account.xAddresses"
                                 :key="index"
                                 v-slot:default="{ active, toggle }"
                         >
                             <v-card
-                                    :color="active ? 'secondary' : 'grey lighten-1'"
+                                    color="secondary"
                                     class="ma-3"
                                     height="100%"
                                     @click="toggle"
@@ -130,13 +130,10 @@
                                     </v-list-item-content>
                                     <div v-for="(item, index) in $store.state.Account.xAddresses">
                                         <div v-if="item.address === cAddress.address">
-                                            <div v-for="(asset, assetIndex) in item.assets">
-                                            </div>
                                             <div v-html="item.identicon"/>
                                         </div>
                                     </div>
                                 </v-list-item>
-
                                 <v-card-text>
                                     <p class="display-1 text-center text--secondary">
                                         Balance(s)
@@ -151,7 +148,7 @@
                                                     You need to fetch the balance first .
                                                 </div>
                                                 <div class="text-center text--primary" v-else>
-                                                    {{ asset.asset }} || {{ asset.balance }}
+                                                    {{ asset.balance }} nAVA
                                                 </div>
                                             </div>
                                         </div>
@@ -211,6 +208,13 @@
                                 </v-row>
                             </v-card>
                         </v-slide-item>
+                        <div v-if="$store.state.Account.loading.has('listXAddresses') && $store.state.Account.loading.get('listXAddresses')"
+                        >
+                            <v-progress-circular
+                                    indeterminate
+                                    color="red"
+                            ></v-progress-circular>
+                        </div>
                     </v-slide-group>
                 </v-sheet>
                 <v-row justify="center">
@@ -295,12 +299,13 @@
                             center-active
                     >
                         <v-slide-item
+                                v-if="$store.state.Account.loading.has('listPAccounts') && !$store.state.Account.loading.get('listPAccounts')"
                                 v-for="(pAccount, index) in  $store.state.Account.pAccounts"
                                 :key="index"
                                 v-slot:default="{ active, toggle }"
                         >
                             <v-card
-                                    :color="active ? 'secondary' : 'grey lighten-1'"
+                                    color="secondary"
                                     class="ma-3"
                                     height="100%"
                                     @click="toggle"
@@ -322,8 +327,8 @@
                                         Balance
                                     </p>
                                     <p class="text-center text--primary">
-                                    Nonce : {{ pAccount.nonce }} <br/>
-                                    Balance : {{ pAccount.balance }}
+                                        Nonce : {{ pAccount.nonce }} <br/>
+                                        Balance : {{ pAccount.balance }}
                                     </p>
                                 </v-card-text>
                                 <v-card-actions>
@@ -374,6 +379,15 @@
                                 </v-card-actions>
                             </v-card>
                         </v-slide-item>
+                        <div
+                                v-if="$store.state.Account.loading.has('listPAccounts') && $store.state.Account.loading.get('listPAccounts')"
+                        >
+                            <v-progress-circular
+                                    indeterminate
+                                    color="red"
+                            ></v-progress-circular>
+
+                        </div>
                     </v-slide-group>
                 </v-sheet>
                 <v-row justify="center">
@@ -383,6 +397,7 @@
             </v-col>
         </v-row>
         <v-dialog
+                v-if="pAccount !== -1 && xAddress !== -1"
                 v-model="dialog"
                 fullscreen
                 hide-overlay
@@ -391,7 +406,6 @@
                 scrollable
         >
             <v-stepper
-                    v-if="pAccount !== -1 && xAddress !== -1"
                     v-model="stepper"
             >
                 <v-stepper-header>
@@ -418,7 +432,6 @@
                                     <v-row>
                                         <v-col>
                                             From {{ $store.state.Account.xAddresses[xAddress].address }}
-                                            <!--                                            {{ // $store.state.Account.xAddresses[xAddress].assets.find(e => e.asset === "AVA").balance }}-->
                                         </v-col>
                                         <v-col>
                                             <div v-html="$store.state.Account.xAddresses[xAddress].identicon"/>
@@ -472,29 +485,37 @@
                                 ></v-text-field>
                             </v-row>
                             <v-row>
-                                <v-btn text
-                                       @click="exportAvaToPChain($store.state.Account.pAccounts[pAccount].address)">
-                                    Export AVA
+                                <v-btn
+                                        @click="exportAvaToPChain($store.state.Account.pAccounts[pAccount].address)">
+                                    Next
                                 </v-btn>
                             </v-row>
                         </v-container>
                     </v-stepper-content>
                     <v-stepper-content step="2">
-                        <v-row>
-                            {{ $store.state.Account.txId[0] }}
-                        </v-row>
-                        <v-row>
-                            {{ $store.state.Account.txStatus }}
-                        </v-row>
-                        <v-row>
-                            <v-btn
-                                    color="primary"
-                                    :disabled="$store.state.Account.txStatus !== 'Accepted'"
-                                    @click="stepper = 3"
-                            >
-                                Continue
-                            </v-btn>
-                        </v-row>
+                        <v-container>
+                            <v-row>
+                                <v-col>
+                                    <span class="text-center">{{ $store.state.Account.txId[0] }}</span>
+                                </v-col>
+                            </v-row>
+                            <v-row>
+                                <v-col>
+                                    <v-progress-circular indeterminate
+                                                         v-if="$store.state.Account.txStatus !== 'Accepted'"></v-progress-circular>
+                                    <span class="text-center">{{ $store.state.Account.txStatus }}</span>
+                                </v-col>
+                            </v-row>
+                            <v-row>
+                                <v-btn
+                                        color="primary"
+                                        :disabled="$store.state.Account.txStatus !== 'Accepted'"
+                                        @click="stepper = 3"
+                                >
+                                    Next
+                                </v-btn>
+                            </v-row>
+                        </v-container>
                     </v-stepper-content>
 
                     <v-stepper-content step="3">
@@ -540,16 +561,14 @@
                                 ></v-text-field>
                             </v-row>
                             <v-row>
-                                <v-btn text
-                                       @click="importAvaFromXChain($store.state.Account.pAccounts[pAccount].address, $store.state.Account.pAccounts[pAccount].nonce)">
+                                <v-btn
+                                        @click="importAvaFromXChain($store.state.Account.pAccounts[pAccount].address, $store.state.Account.pAccounts[pAccount].nonce)">
                                     Export AVA
                                 </v-btn>
                             </v-row>
                         </v-container>
                         <v-btn text
                                @click="importAvaFromXChain($store.state.Account.pAccounts[pAccount].address, $store.state.Account.pAccounts[pAccount].nonce)">
-                            >
-                            Cancel
                         </v-btn>
                     </v-stepper-content>
                     <v-stepper-content step="4">
@@ -558,12 +577,11 @@
                         </v-row>
                     </v-stepper-content>
                 </v-stepper-items>
+                <v-btn @click="closeDialog()">Close</v-btn>
             </v-stepper>
-            <v-container v-else>
-                YOU NEED TO SELECT A XADDRESS AND PACCOUNT BEFORE DOING THIS DOG
-            </v-container>
         </v-dialog>
         <v-dialog
+                v-if="pAccount !== -1 && xAddress !== -1"
                 v-model="pChainToXChainDialog"
                 fullscreen
                 hide-overlay
@@ -572,7 +590,6 @@
                 scrollable
         >
             <v-stepper
-                    v-if="pAccount !== -1 && xAddress !== -1"
                     v-model="stepper"
             >
                 <v-stepper-header>
@@ -727,9 +744,6 @@
                     </v-stepper-content>
                 </v-stepper-items>
             </v-stepper>
-            <v-container v-else>
-                YOU NEED TO SELECT A XADDRESS AND PACCOUNT BEFORE DOING THIS DOG
-            </v-container>
         </v-dialog>
     </v-container>
 </template>
@@ -738,7 +752,9 @@
     import Vue from 'vue';
     import {Account} from "@/store/modules/account.store";
     import {
-        ExportAvaPChain, ExportAvaXChain, ImportAvaPChain,
+        ExportAvaPChain,
+        ExportAvaXChain,
+        ImportAvaPChain,
         PAddressExport,
         PAddressImport,
         User,
@@ -747,7 +763,6 @@
         XChainAddress
     } from "@/types";
     import DoughnutChart from "@/components/DoughnutChart.vue";
-    import {Tools} from "@/store/modules/tools.store";
 
     export default Vue.extend({
         components: {DoughnutChart},
@@ -758,7 +773,7 @@
                 stepper: 1,
                 loggedIn: false,
                 exportPassword: "",
-                snackbarCChainPrivateKey: false,
+                snackbarXChainPrivateKey: false,
                 snackbarPChainPrivateKey: false,
                 xAddressPKey: "",
                 pAddressPKey: "",
@@ -804,15 +819,20 @@
             displayError() {
                 const ctx = Account.context(this.$store);
                 return ctx.state.error
-            }
+            },
         },
         methods: {
+            closeDialog() {
+                this.dialog = false;
+                this.xExportSlider = 0;
+                this.password = "";
+            },
             async login() {
                 const accountCtx = Account.context(this.$store)
                 this.loginDialog = false;
                 this.loggedIn = true;
-                await accountCtx.actions.listXAddresses({name: this.id, password: this.password} as User)
-                await accountCtx.actions.listPAccounts({name: this.id, password: this.password} as User)
+                accountCtx.actions.listXAddresses({name: this.id, password: this.password} as User)
+                accountCtx.actions.listPAccounts({name: this.id, password: this.password} as User)
             },
             async logout() {
                 const accountCtx = Account.context(this.$store)
@@ -910,7 +930,7 @@
                     address
                 } as XAddressExport);
                 this.exportPassword = "";
-                this.snackbarCChainPrivateKey = true;
+                this.snackbarXChainPrivateKey = true;
             },
             async exportPAddress(address: string) {
                 const accountCtx = Account.context(this.$store)
