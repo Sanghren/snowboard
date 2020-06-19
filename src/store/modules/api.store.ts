@@ -1,6 +1,6 @@
 // State object
 import {Config} from "@/types";
-import {updateSlopesApi} from "@/AVA";
+import {updateAvalancheApi} from "@/AVA";
 import {Actions, Getters, Module, Mutations} from 'vuex-smart-module'
 
 export class ApiState {
@@ -43,7 +43,7 @@ class ApiActions extends Actions<ApiState,
     ApiActions> {
     async changeNodeUrl(update: Config): Promise<void> {
         this.mutations.updateNodeApiConfig(update);
-        updateSlopesApi(this.state.nodeApi);
+        updateAvalancheApi(this.state.nodeApi);
     }
 }
 
