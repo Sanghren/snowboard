@@ -139,6 +139,13 @@ export interface User {
     accounts?: PChainAccount[];
 }
 
+export interface SignTxPChain {
+    username: string;
+    password: string;
+    tx: string;
+    signer: string;
+}
+
 export interface ExportAvaPChain {
     to: string;
     amount: number;
@@ -150,6 +157,12 @@ export interface ExportAvaXChain {
     to: string;
     amount: number;
     nonce: number;
+}
+
+export interface ImportAvaXChain {
+    username: string;
+    password: string;
+    to: string;
 }
 
 export interface ImportAvaPChain {

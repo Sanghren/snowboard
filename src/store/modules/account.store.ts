@@ -9,7 +9,8 @@ import {
     XAddressExport,
     XAddressImport,
     XChainAddress,
-    ExportAvaXChain
+    ExportAvaXChain,
+    SignTxPChain, ImportAvaXChain
 } from "@/types";
 import {bootstrapNodeApi, nodeApi} from "@/AVA";
 import {Actions, createMapper, Getters, Module, Mutations} from "vuex-smart-module";
@@ -19,7 +20,7 @@ import BN from 'bn.js';
 class AccountState {
     xAddressPKey = "";
     xAddresses: XChainAddress[] = [];
-    txId: string[] = [];
+    txId = "";
     txStatus = "";
     pAccounts: PChainAccount[] = [];
     loading = new Map();
@@ -28,22 +29,6 @@ class AccountState {
 }
 
 class AccountGetters extends Getters<AccountState> {
-    get getXAddresses() {
-        return this.state.xAddresses;
-    }
-
-    get getPAccounts() {
-        return this.state.pAccounts;
-    }
-
-    // get getErrors(){
-    //     const keys = this.state.error.keys();
-    //     const errors = [];
-    //     for (const key of keys) {
-    //         errors.push(this.state.error.get(key));
-    //     }
-    //     return errors;
-    // }
 }
 
 class AccountMutations extends Mutations<AccountState> {
@@ -60,8 +45,8 @@ class AccountMutations extends Mutations<AccountState> {
         this.state.xAddresses = xChain;
     }
 
-    pushTxId(txId: string) {
-        this.state.txId.push(txId)
+    setTx(txId: string) {
+        this.state.txId = txId
     }
 
     setTxStatus(txStatus: string) {
@@ -112,7 +97,7 @@ class AccountMutations extends Mutations<AccountState> {
     resetState() {
         this.state.xAddressPKey = "";
         this.state.xAddresses = [];
-        this.state.txId = [];
+        this.state.txId = "";
         this.state.txStatus = "";
         this.state.pAccounts = [];
         this.state.loading = new Map();
@@ -129,6 +114,53 @@ class AccountActions extends Actions<AccountState,
     async markErrorAsShown() {
         this.mutations.setShowError();
         this.mutations.resetError();
+    }
+
+    async signTx(data: SignTxPChain) {
+        const api = nodeApi;
+        this.mutations.setLoading('signTx');
+        try {
+            const tx = await api.Platform().sign(data.username, data.password, data.tx, data.signer);
+            this.mutations.setTxStatus('')
+            this.mutations.setTx(tx)
+            this.mutations.setLoaded('signTx')
+            return true;
+        } catch (e) {
+            this.mutations.setLoaded('signTx');
+            this.mutations.setError({key: 'signTx', error: e})
+            return false;
+        }
+    }
+
+    async issueTx() {
+        const api = nodeApi;
+        this.mutations.setLoading('issueTx');
+        try {
+            const tx = await api.Platform().issueTx(this.state.txId);
+            this.mutations.setTxStatus('')
+            this.mutations.setTx(tx)
+            this.mutations.setLoaded('issueTx')
+            return true;
+        } catch (e) {
+            this.mutations.setLoaded('issueTx');
+            this.mutations.setError({key: 'issueTx', error: e})
+            return false;
+        }
+    }
+
+    async importAvaFromPChain(data: ImportAvaXChain) {
+        const api = nodeApi;
+        this.mutations.setLoading('importAvaFromPChain');
+        try {
+            const tx = await api.AVM().importAVA(data.username, data.password, data.to);
+            this.mutations.setTx(tx)
+            this.mutations.setLoaded('importAvaFromPChain')
+            return true;
+        } catch (e) {
+            this.mutations.setLoaded('importAvaFromPChain');
+            this.mutations.setError({key: 'importAvaFromPChain', error: e})
+            return false;
+        }
     }
 
     async listXAddresses(user: User) {
@@ -152,7 +184,7 @@ class AccountActions extends Actions<AccountState,
                 } as XChainAddress
             })
             this.mutations.setXAddress(xAddresses)
-            addresses.map(async( a: string) => {
+            addresses.map(async (a: string) => {
                 await this.getBalances(a)
             })
             this.mutations.setLoaded('listXAddresses')
@@ -193,10 +225,9 @@ class AccountActions extends Actions<AccountState,
             return false;
         }
         try {
-            console.log(data.amount);
-            console.log(new BN(data.amount, 10).toNumber())
             const txId = await api.AVM().exportAVA(data.username, data.password, data.to, new BN(data.amount));
-            this.mutations.pushTxId(txId)
+            this.mutations.setTxStatus('')
+            this.mutations.setTx(txId)
             this.mutations.setLoaded('exportAvaToPChain')
             return true
         } catch (e) {
@@ -210,7 +241,7 @@ class AccountActions extends Actions<AccountState,
         const api = nodeApi;
         console.log(JSON.stringify(data))
         this.mutations.setLoading('exportAvaToXChain');
-        if (data.amount < 1 || !data.to ||  data.nonce < 0) {
+        if (data.amount < 1 || !data.to || data.nonce < 0) {
             this.mutations.setLoaded('exportAvaToXChain');
             this.mutations.setError({key: 'exportAvaToXChain', error: new Error('Missing params')})
             return false;
@@ -218,9 +249,9 @@ class AccountActions extends Actions<AccountState,
         try {
             console.log(data.amount);
             console.log(new BN(data.amount, 10).toNumber())
-            const txId = await api.Platform().exportAVA(new BN(data.amount), data.to.substring(2,data.to.length), data.nonce);
-
-            this.mutations.pushTxId(txId)
+            const txId = await api.Platform().exportAVA(new BN(data.amount), data.to.substring(2, data.to.length), data.nonce);
+            this.mutations.setTxStatus('')
+            this.mutations.setTx(txId)
             this.mutations.setLoaded('exportAvaToXChain')
             return true
         } catch (e) {
@@ -240,8 +271,10 @@ class AccountActions extends Actions<AccountState,
         }
         try {
             const rawTx = await api.Platform().importAVA(data.username, data.password, data.to, data.nonce)
+            this.mutations.setTxStatus('')
             const txId = await api.Platform().issueTx(rawTx);
-            this.mutations.pushTxId(txId)
+            this.mutations.setTxStatus('')
+            this.mutations.setTx(txId)
             this.mutations.setLoaded('importAvaFromXChain')
             return true
         } catch (e) {
