@@ -106,7 +106,7 @@
                         height="100%"
                 >
                     <v-slide-group
-                            v-model="xAddress"
+                            v-model="xAddressIndex"
                             center-active
                     >
                         <v-slide-item
@@ -295,7 +295,7 @@
                         height="100%"
                 >
                     <v-slide-group
-                            v-model="pAccount"
+                            v-model="pAccountIndex"
                             center-active
                     >
                         <v-slide-item
@@ -396,7 +396,7 @@
             </v-col>
         </v-row>
         <v-dialog
-                v-if="pAccount !== -1 && xAddress !== -1"
+                v-if="pAccountIndex > -1 && xAddressIndex > -1"
                 v-model="dialog"
                 hide-overlay
                 width="100%"
@@ -428,20 +428,20 @@
                                 <v-col>
                                     <v-row>
                                         <v-col>
-                                            From {{ $store.state.Account.xAddresses[xAddress].address }}
+                                            From {{ $store.state.Account.xAddresses[xAddressIndex].address }}
                                         </v-col>
                                         <v-col>
-                                            <div v-html="$store.state.Account.xAddresses[xAddress].identicon"/>
+                                            <div v-html="$store.state.Account.xAddresses[xAddressIndex].identicon"/>
                                         </v-col>
                                     </v-row>
                                 </v-col>
                                 <v-col>
                                     <v-row>
                                         <v-col>
-                                            <div v-html="$store.state.Account.pAccounts[pAccount].identicon"/>
+                                            <div v-html="$store.state.Account.pAccounts[pAccountIndex].identicon"/>
                                         </v-col>
                                         <v-col>
-                                            To {{ $store.state.Account.pAccounts[pAccount].address }}
+                                            To {{ $store.state.Account.pAccounts[pAccountIndex].address }}
                                         </v-col>
                                     </v-row>
                                 </v-col>
@@ -450,7 +450,7 @@
                                 <v-slider
                                         v-model="xExportSlider"
                                         class="align-center"
-                                        :max="$store.state.Account.xAddresses[xAddress].assets.find(e => e.asset === 'AVA').balance"
+                                        :max="$store.state.Account.xAddresses[xAddressIndex].assets.find(e => e.asset === 'AVA').balance"
                                         :min="0"
                                         hide-details
                                 >
@@ -483,7 +483,7 @@
                             </v-row>
                             <v-row>
                                 <v-btn
-                                        @click="exportAvaToPChain($store.state.Account.pAccounts[pAccount].address)">
+                                        @click="exportAvaToPChain($store.state.Account.pAccounts[pAccountIndex].address)">
                                     Next
                                 </v-btn>
                             </v-row>
@@ -520,26 +520,26 @@
                                 <v-col>
                                     <v-row>
                                         <v-col>
-                                            From {{ $store.state.Account.xAddresses[xAddress].address }}
+                                            From {{ $store.state.Account.xAddresses[xAddressIndex].address }}
                                         </v-col>
                                         <v-col>
-                                            <div v-html="$store.state.Account.xAddresses[xAddress].identicon"/>
+                                            <div v-html="$store.state.Account.xAddresses[xAddressIndex].identicon"/>
                                         </v-col>
                                     </v-row>
                                 </v-col>
                                 <v-col>
                                     <v-row>
                                         <v-col>
-                                            <div v-html="$store.state.Account.pAccounts[pAccount].identicon"/>
+                                            <div v-html="$store.state.Account.pAccounts[pAccountIndex].identicon"/>
                                         </v-col>
                                         <v-col>
-                                            To {{ $store.state.Account.pAccounts[pAccount].address }}
+                                            To {{ $store.state.Account.pAccounts[pAccountIndex].address }}
                                         </v-col>
                                     </v-row>
                                 </v-col>
                             </v-row>
                             <v-row>
-                                Nonce : {{ $store.state.Account.pAccounts[pAccount].nonce }}
+                                Nonce : {{ $store.state.Account.pAccounts[pAccountIndex].nonce }}
                             </v-row>
                             <v-row>
                                 Username : {{ id }}
@@ -558,13 +558,13 @@
                             </v-row>
                             <v-row>
                                 <v-btn
-                                        @click="importAvaFromXChain($store.state.Account.pAccounts[pAccount].address, $store.state.Account.pAccounts[pAccount].nonce)">
+                                        @click="importAvaFromXChain($store.state.Account.pAccounts[pAccountIndex].address, $store.state.Account.pAccounts[pAccountIndex].nonce)">
                                     Export AVA
                                 </v-btn>
                             </v-row>
                         </v-container>
                         <v-btn text
-                               @click="importAvaFromXChain($store.state.Account.pAccounts[pAccount].address, $store.state.Account.pAccounts[pAccount].nonce)">
+                               @click="importAvaFromXChain($store.state.Account.pAccounts[pAccountIndex].address, $store.state.Account.pAccounts[pAccountIndex].nonce)">
                         </v-btn>
                     </v-stepper-content>
                     <v-stepper-content step="4">
@@ -579,7 +579,7 @@
             </v-stepper>
         </v-dialog>
         <v-dialog
-                v-if="pAccount !== -1 && xAddress !== -1"
+                v-if="pAccountIndex > -1 && xAddressIndex > -1"
                 v-model="pChainToXChainDialog"
                 hide-overlay
                 width="100%"
@@ -615,20 +615,20 @@
                                 <v-col>
                                     <v-row>
                                         <v-col>
-                                            From {{ $store.state.Account.pAccounts[pAccount].address }}
+                                            From {{ $store.state.Account.pAccounts[pAccountIndex].address }}
                                         </v-col>
                                         <v-col>
-                                            <div v-html="$store.state.Account.pAccounts[pAccount].identicon"/>
+                                            <div v-html="$store.state.Account.pAccounts[pAccountIndex].identicon"/>
                                         </v-col>
                                     </v-row>
                                 </v-col>
                                 <v-col>
                                     <v-row>
                                         <v-col>
-                                            <div v-html="$store.state.Account.xAddresses[xAddress].identicon"/>
+                                            <div v-html="$store.state.Account.xAddresses[xAddressIndex].identicon"/>
                                         </v-col>
                                         <v-col>
-                                            To {{ $store.state.Account.xAddresses[xAddress].address }}
+                                            To {{ $store.state.Account.xAddresses[xAddressIndex].address }}
                                         </v-col>
                                     </v-row>
                                 </v-col>
@@ -637,7 +637,7 @@
                                 <v-slider
                                         v-model="pExportSlider"
                                         class="align-center"
-                                        :max="$store.state.Account.pAccounts[pAccount].balance"
+                                        :max="$store.state.Account.pAccounts[pAccountIndex].balance"
                                         :min="0"
                                         hide-details
                                 >
@@ -654,11 +654,11 @@
                                 </v-slider>
                             </v-row>
                             <v-row>
-                                Nonce : {{ $store.state.Account.pAccounts[pAccount].nonce }}
+                                Nonce : {{ $store.state.Account.pAccounts[pAccountIndex].nonce }}
                             </v-row>
                             <v-row>
                                 <v-btn text
-                                       @click="exportAvaToXChain($store.state.Account.xAddresses[xAddress].address,  $store.state.Account.pAccounts[pAccount].nonce)">
+                                       @click="exportAvaToXChain($store.state.Account.xAddresses[xAddressIndex].address,  $store.state.Account.pAccounts[pAccountIndex].nonce)">
                                     Export AVA
                                 </v-btn>
                             </v-row>
@@ -674,7 +674,7 @@
                         <v-row>
                             <v-btn
                                     color="primary"
-                                    @click="signTx($store.state.Account.txId , $store.state.Account.pAccounts[pAccount].address)"
+                                    @click="signTx($store.state.Account.txId , $store.state.Account.pAccounts[pAccountIndex].address)"
                             >
                                 Sign Tx
                             </v-btn>
@@ -712,13 +712,13 @@
                             </v-row>
                             <v-row>
                                 <v-btn text
-                                       @click="importAvaFromPChain($store.state.Account.xAddresses[xAddress].address)">
+                                       @click="importAvaFromPChain($store.state.Account.xAddresses[xAddressIndex].address)">
                                     Import AVA From P Chain
                                 </v-btn>
                             </v-row>
                         </v-container>
                         <v-btn text
-                               @click="importAvaFromPChain($store.state.Account.xAddresses[xAddress].address)">
+                               @click="importAvaFromPChain($store.state.Account.xAddresses[xAddressIndex].address)">
 
                             Cancel
                         </v-btn>
@@ -790,10 +790,10 @@
                 xAddressPKey: "",
                 pAddressPKey: "",
                 xAddressPKeyImport: "",
-                xAddress: -1,
+                xAddressIndex: -1,
                 dialog: false,
                 pChainToXChainDialog: false,
-                pAccount: -1,
+                pAccountIndex: -1,
                 intervalId: {} as NodeJS.Timeout,
                 xExportSlider: 0,
                 pExportSlider: 0,
