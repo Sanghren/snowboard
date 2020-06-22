@@ -27,7 +27,7 @@
     "material-design-icons-iconfont": "^5.0.1",
     "parse-prometheus-text-format": "^1.1.1",
     "slopes": "^1.7.5",
-    "vee-validate": "^3.3.4",
+    "vee-validate": "^3.3.5",
     "vue": "^2.6.11",
     "vue-chartjs": "^3.5.0",
     "vue-class-component": "^7.2.3",
