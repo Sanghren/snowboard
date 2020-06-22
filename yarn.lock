@@ -8447,10 +8447,10 @@ vuetify@^2.3.1:
   resolved "https://registry.yarnpkg.com/vuetify/-/vuetify-2.3.1.tgz#8c5bdcb15ad7ca9ba2a206a26a65b34ec0ca6c0d"
   integrity sha512-UdWcoM3MzTD/+o/uH745i5EyK8CluAEQclB41iegHQZmklQQMyBPrIF6BcED9rjV9iFjqeUaIh616T5NqoYr+Q==
 
-vuex-smart-module@^0.3.4:
-  version "0.3.4"
-  resolved "https://registry.yarnpkg.com/vuex-smart-module/-/vuex-smart-module-0.3.4.tgz#630b6ed18027c872d2046ca326c9e386ee6b4809"
-  integrity sha512-eAcj6BDqpKDBq5TZa2o2HlN5Ql4JNQ2OOl6QocGGciYNsmJIIit8U/zy0gMBRef5jBd6MeBL+gRCkUmhs5JdvQ==
+vuex-smart-module@^0.4.0:
+  version "0.4.0"
+  resolved "https://registry.yarnpkg.com/vuex-smart-module/-/vuex-smart-module-0.4.0.tgz#9e9cb39b72777dcfa702abdede8a00098b999f59"
+  integrity sha512-DZa+HwzUnYL1QmzCe6WAKSkDV6yHMDw3/fO3cpl98qYKEVX+6Q8TQkdhcL10CsdWluX4Ij6RpUa75NQIQxwRqQ==
 
 vuex@^3.4.0:
   version "3.4.0"
