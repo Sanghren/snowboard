@@ -184,6 +184,12 @@ export interface PAddressImport {
     privateKey: string;
 }
 
+export interface Subnet {
+    id: string;
+    controlKeys: string[];
+    threshold: number;
+}
+
 export interface XAddressExport {
     name: string;
     password: string;

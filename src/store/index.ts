@@ -8,6 +8,7 @@ import {Dashboard} from './modules/dashboard.store';
 import {Tools} from './modules/tools.store';
 import {Users} from './modules/users.store';
 import {Account} from './modules/account.store';
+import {Subnets} from './modules/subnets.store';
 import {createStore, Module} from 'vuex-smart-module'
 
 Vue.use(Vuex);
@@ -22,7 +23,8 @@ const root = new Module({
         Metrics,
         Tools,
         Users,
-        Account
+        Account,
+        Subnets
     }
 })
 
@@ -35,19 +37,3 @@ export const store = createStore(
         plugins: debug ? [createLogger()] : [],
     }
 )
-
-
-// export default new Vuex.Store({
-//     modules: {
-//         Keystore,
-//         Metrics,
-//         PChain,
-//         XChain,
-//         Health,
-//         Api,
-//         Tools,
-//         Dashboard,
-//     },
-//     strict: debug,
-//     plugins: debug ? [createLogger()] : [],
-// })

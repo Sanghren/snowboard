@@ -4,7 +4,7 @@ import BN from "bn.js";
 import {nodeApi} from "@/AVA";
 import {Actions, Getters, Module, Mutations, createMapper} from "vuex-smart-module";
 
-class DashboardState {
+export class DashboardState {
     bootstrapped = false;
     networkId = -1;
     networkName = "";

@@ -26,7 +26,7 @@
     "lodash": "^4.17.15",
     "material-design-icons-iconfont": "^5.0.1",
     "parse-prometheus-text-format": "^1.1.1",
-    "slopes": "^1.7.5",
+    "avalanche": "^2.0.2",
     "vee-validate": "^3.3.5",
     "vue": "^2.6.11",
     "vue-chartjs": "^3.5.0",

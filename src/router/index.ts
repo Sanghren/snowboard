@@ -6,6 +6,8 @@ import Users from "@/views/Users.vue";
 import Accounts from "@/views/Accounts.vue";
 import NodeDashboard from "@/views/NodeDashboard.vue";
 import Tools from "@/views/Tools.vue";
+import Staking from "@/views/Subnets.vue";
+import Subnets from "@/views/Subnets.vue";
 
 Vue.use(VueRouter)
 
@@ -40,6 +42,11 @@ const routes: Array<RouteConfig> = [
         path: '/tools',
         name: 'Tools',
         component: Tools
+    },
+    {
+        path: '/subnets',
+        name: 'Subnets',
+        component: Subnets
     }
 ]
 
