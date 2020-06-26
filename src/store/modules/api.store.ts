@@ -5,14 +5,14 @@ import {Actions, Getters, Module, Mutations} from 'vuex-smart-module'
 
 export class ApiState {
     bootstrapApi = {
-        nodeUrl: process.env.VUE_APP_SNWBRD_BOOTSTRAP_HOST || 'bootstrap.ava.network',
+        nodeUrl: process.env.VUE_APP_SNWBRD_BOOTSTRAP_HOST || 'bootstrap.avax.network',
         protocol: process.env.VUE_APP_SNWBRD_BOOTSTRAP_PROTOCOL || 'https',
         chainId: process.env.VUE_APP_SNWBRD_BOOTSTRAP_CHAIN_ID || 'X',
         nodePort: process.env.VUE_APP_SNWBRD_BOOTSTRAP_PORT || '21000',
         networkId: process.env.VUE_APP_SNWBRD_BOOTSTRAP_NETWORK_ID || '3',
     }
     nodeApi = {
-        nodeUrl: process.env.VUE_APP_SNWBRD_NODE_HOST || 'bootstrap.ava.network',
+        nodeUrl: process.env.VUE_APP_SNWBRD_NODE_HOST || 'bootstrap.avax.network',
         protocol: process.env.VUE_APP_SNWBRD_NODE_PROTOCOL || 'https',
         chainId: process.env.VUE_APP_SNWBRD_NODE_CHAIN_ID || 'X',
         nodePort: process.env.VUE_APP_SNWBRD_NODE_PORT || '21000',
