@@ -16,7 +16,7 @@
     "@types/chart.js": "^2.9.22",
     "@types/elliptic": "^6.4.12",
     "@types/libsodium-wrappers": "^0.7.7",
-    "@types/lodash": "^4.14.155",
+    "@types/lodash": "^4.14.157",
     "axios": "^0.19.2",
     "bn.js": "^5.1.2",
     "buffer": "^5.6.0",
