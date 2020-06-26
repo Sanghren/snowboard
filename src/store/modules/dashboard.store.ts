@@ -36,7 +36,12 @@ class DashboardGetters extends Getters<DashboardState> {
         }
         return ValidatorStatus.UNKNOWN;
     }
+
+    get nodeId(){
+    return this.state.nodeId;
+    }
 }
+
 
 class DashboardMutations extends Mutations<DashboardState> {
     setNodeId(nodeId: string) {

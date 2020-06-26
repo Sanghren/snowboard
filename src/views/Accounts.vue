@@ -749,7 +749,7 @@
                     <v-stepper-content step="6">
                         <v-row>
                            <v-col>
-                               You have successfully transferred some AVA from your  PChain account to your XAddress
+                               You have successfully transferred some AVA from your  PChain account to your XAddress .
                            </v-col>
                         </v-row>
                     </v-stepper-content>
@@ -837,6 +837,8 @@
             closeDialog() {
                 this.dialog = false;
                 this.pChainToXChainDialog = false;
+                this.toPStepper = 1;
+                this.toXStepper = 1;
                 this.xExportSlider = 0;
                 this.pExportSlider = 0;
             },

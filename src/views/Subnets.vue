@@ -1,33 +1,73 @@
 <template>
     <v-container>
         <v-row>
-            <v-col>
-                There are {{ subnetsId.length }} subnets
+            <v-col class="text-center headline">
+                {{ subnetsId.length }} Subnets
             </v-col>
         </v-row>
         <v-row>
-            <v-col>
+            <v-col
+                    xs="12"
+                    md="6"
+            >
                 <v-select
                         v-model="selectedSubnet"
                         :items="subnetsId"
                         label="Subnet"
                         @change="fetchInfo()"
                         dense
+                        class="text-center"
                 ></v-select>
             </v-col>
-        </v-row>
-        <v-row>
             <v-col
                     xs="12"
                     md="6"
+                    class="text-center"
             >
-                Validators : {{ subnetValidators.length }}
+                Validators :<br/> {{ subnetValidators.length }}
+
+            </v-col>
+        </v-row>
+        <v-row v-if="fetchCurrentSubnetValidatingStatus() !== undefined">
+            <v-col
+                    xs="12"
+                    md="6"
+                    class="text-center"
+            >
+                Your are currently validating this subnet !
             </v-col>
             <v-col
                     xs="12"
                     md="6"
+                    class="text-center"
             >
-                End Date
+                Start : <br/> {{ new Date(fetchCurrentSubnetValidatingStatus().startTime * 1000) }}
+            </v-col>
+            <v-col
+                    xs="12"
+                    md="6"
+                    class="text-center"
+            >
+                End : <br/> {{ new Date(fetchCurrentSubnetValidatingStatus().endTime * 1000) }}
+            </v-col>
+            <v-col
+                    xs="12"
+                    md="6"
+                    class="text-center"
+            >
+                Address : <br/> P-{{ fetchCurrentSubnetValidatingStatus().address }}
+            </v-col>
+            <v-col
+                    xs="12"
+                    md="6"
+                    class="text-center"
+            >
+                Stake : <br/> {{ fetchCurrentSubnetValidatingStatus().stakeAmount }} nAVAX
+            </v-col>
+        </v-row>
+        <v-row v-else>
+            <v-col class="text-center">
+                <v-btn>Start staking</v-btn>
             </v-col>
         </v-row>
     </v-container>
@@ -36,6 +76,7 @@
 <script lang="ts">
     import Vue from 'vue';
     import {Subnets, SubnetsMapper} from "@/store/modules/subnets.store";
+    import {Validator} from '@/types';
 
     export default Vue.extend({
         data() {
@@ -46,19 +87,25 @@
         computed:
             SubnetsMapper.mapGetters([
                 'subnetsId',
-                'subnetValidators'
+                'subnetValidators',
             ])
         ,
-        beforeMount() {
+        async beforeMount() {
             const ctx = Subnets.context(this.$store);
-            ctx.actions.listSubnets()
+            await ctx.actions.listSubnets()
+            await ctx.actions.fetchSubnetCurrentValidators(this.selectedSubnet)
+            await ctx.getters.subnetValidatingInfo(this.selectedSubnet)
         },
         methods: {
-            async fetchInfo(){
-                console.log(this.selectedSubnet)
-                const ctx = Subnets.context(this.$store);
-                ctx.getters.isValidator
-                await ctx.actions.fetchSubnetCurrentValidators(this.selectedSubnet)
+            async fetchInfo() {
+                const subnetCtx = Subnets.context(this.$store);
+                await subnetCtx.actions.fetchSubnetCurrentValidators(this.selectedSubnet)
+            },
+            fetchCurrentSubnetValidatingStatus(): Validator | undefined {
+                const subnetCtx = Subnets.context(this.$store);
+                const test = subnetCtx.getters.subnetValidatingInfo(this.selectedSubnet)
+                console.log(test);
+                return test;
             }
         }
     })

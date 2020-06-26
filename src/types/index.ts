@@ -201,3 +201,8 @@ export interface XAddressImport {
     password: string;
     privateKey: string;
 }
+
+export interface SubnetCurrentNodeValidating {
+    subnetId: string;
+    validatorInfo: Validator;
+}
