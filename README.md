@@ -21,9 +21,9 @@ If you want to test, it's [here](https://snowboard-ava.herokuapp.com/)
 ### Gecko
 Since Snowboard is a dashboard for Gecko ... well you'll need a Gecko node in a way or another .
 
-You can follow [this guide](https://docs.ava.network/v1.0/en/quickstart/ava-getting-started/) to have one running .
+You can follow [this guide](https://docs.avax.network/v1.0/en/quickstart/ava-getting-started/) to have one running .
 
-Or you can use [avash](https://docs.ava.network/v1.0/en/tools/avash/) (Check this out, pretty awesome :) )
+Or you can use [avash](https://docs.avax.network/v1.0/en/tools/avash/) (Check this out, pretty awesome :) )
 
 ### Snowboard 
 

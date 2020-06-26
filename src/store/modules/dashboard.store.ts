@@ -93,27 +93,27 @@ class DashboardActions extends Actions<DashboardState,
     DashboardMutations,
     DashboardActions> {
     async fetchNodeId() {
-        const nodeId = await nodeApi.Admin().getNodeID();
+        const nodeId = await nodeApi.Info().getNodeID();
         this.mutations.setNodeId(nodeId);
     }
 
     async fetchNetworkId() {
-        const networkId = await nodeApi.Admin().getNetworkID();
+        const networkId = await nodeApi.Info().getNetworkID();
         this.mutations.setNetworkId(networkId)
     }
 
     async fetchNodeVersion() {
-        const nodeVersion = await nodeApi.Admin().getNodeVersion();
+        const nodeVersion = await nodeApi.Info().getNodeVersion();
         this.mutations.setNodeVersion(nodeVersion)
     }
 
     async fetchNetworkName() {
-        const networkName = await nodeApi.Admin().getNetworkName();
+        const networkName = await nodeApi.Info().getNetworkName();
         this.mutations.setNetworkName(networkName)
     }
 
     async fetchPeers() {
-        const peers = await nodeApi.Admin().peers();
+        const peers = await nodeApi.Info().peers();
         this.mutations.setPeers(peers)
     }
 
