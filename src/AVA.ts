@@ -1,4 +1,4 @@
-import * as slopes from "slopes";
+import * as avalanche from "avalanche";
 import {Config} from "@/types";
 
 const bootstrapNodeHost = process.env.VUE_APP_SNWBRD_BOOTSTRAP_HOST || window.VUE_APP_SNWBRD_BOOTSTRAP_HOST || 'bootstrap.ava.network';
@@ -15,11 +15,11 @@ const chainId = process.env.VUE_APP_SNWBRD_NODE_CHAIN_ID || window.VUE_APP_SNWBR
 const nodePort = process.env.VUE_APP_SNWBRD_NODE_PORT || window.VUE_APP_SNWBRD_NODE_PORT || '21000';
 const networkId = process.env.VUE_APP_SNWBRD_NODE_NETWORK_ID || window.VUE_APP_SNWBRD_NODE_NETWORK_ID || '3';
 
-let nodeApi = new slopes.Slopes(nodeHost, parseInt(nodePort), protocol, parseInt(networkId), chainId);
-const bootstrapNodeApi = new slopes.Slopes(bootstrapNodeHost, parseInt(bootstrapNodePort), bootstrapProtocol, parseInt(bootstrapNetworkId), bootstrapChainId);
+let nodeApi = new avalanche.Avalanche(nodeHost, parseInt(nodePort), protocol, parseInt(networkId), chainId);
+const bootstrapNodeApi = new avalanche.Avalanche(bootstrapNodeHost, parseInt(bootstrapNodePort), bootstrapProtocol, parseInt(bootstrapNetworkId), bootstrapChainId);
 
 export function updateSlopesApi(config: Config): void {
-    nodeApi = new slopes.Slopes(
+    nodeApi = new avalanche.Avalanche(
         config.nodeUrl,
         parseInt(config.nodePort),
         config.protocol,
