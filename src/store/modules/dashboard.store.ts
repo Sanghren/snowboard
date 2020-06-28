@@ -1,5 +1,5 @@
 // State object
-import {ErrorContext, Validator, ValidatorStatus} from "@/types";
+import {ErrorContext, Subnet, Validator, ValidatorStatus} from "@/types";
 import BN from "bn.js";
 import {nodeApi} from "@/AVA";
 import {Actions, Getters, Module, Mutations, createMapper} from "vuex-smart-module";
@@ -10,6 +10,7 @@ export class DashboardState {
     networkName = "";
     nodeVersion = "";
     nodeId = "";
+    subnets :Subnet[] = [];
     peers: string[] = [];
     status = "";
     validatingNodes: Validator[] = [];
@@ -74,6 +75,10 @@ class DashboardMutations extends Mutations<DashboardState> {
 
     setValidators(validators: Validator[]) {
         this.state.validatingNodes = validators;
+    }
+
+    setSubnets(data: Subnet[]) {
+        this.state.subnets = data;
     }
 
     setPendingValidators(pendingValidators: Validator[]) {
@@ -157,6 +162,21 @@ class DashboardActions extends Actions<DashboardState,
             }).catch((e) => {
             this.mutations.setError({key: "validators", error: e});
         })
+    }
+
+    async listSubnets() {
+        const api = nodeApi;
+        this.mutations.setLoading('listSubnets');
+        try {
+            const subnets = await api.Platform().getSubnets() as Subnet[];
+            this.mutations.setSubnets(subnets)
+            this.mutations.setLoaded('listSubnets')
+            return true;
+        } catch (e) {
+            this.mutations.setLoaded('listSubnets');
+            this.mutations.setError({key: 'listSubnets', error: e})
+            return false;
+        }
     }
 }
 

@@ -10,7 +10,7 @@ import {
     XAddressImport,
     XChainAddress,
     ExportAvaXChain,
-    SignTxPChain, ImportAvaXChain
+    SignTxPChain, ImportAvaXChain, Subnet
 } from "@/types";
 import {bootstrapNodeApi, nodeApi} from "@/AVA";
 import {Actions, createMapper, Getters, Module, Mutations} from "vuex-smart-module";
@@ -26,6 +26,7 @@ class AccountState {
     loading = new Map();
     error: string[] = [];
     showError = false;
+    subnets :Subnet[] = [];
 }
 
 class AccountGetters extends Getters<AccountState> {
@@ -79,6 +80,10 @@ class AccountMutations extends Mutations<AccountState> {
 
     setLoaded(key: string) {
         this.state.loading.set(key, false);
+    }
+
+    setSubnets(data: Subnet[]) {
+        this.state.subnets = data;
     }
 
     setError(errorContext: ErrorContext) {
@@ -462,6 +467,21 @@ class AccountActions extends Actions<AccountState,
         } catch (e) {
             this.mutations.setLoaded('importPAccountKey');
             this.mutations.setError({key: 'importPAccountKey', error: e})
+        }
+    }
+
+    async listSubnets() {
+        const api = nodeApi;
+        this.mutations.setLoading('listSubnets');
+        try {
+            const subnets = await api.Platform().getSubnets() as Subnet[];
+            this.mutations.setSubnets(subnets)
+            this.mutations.setLoaded('listSubnets')
+            return true;
+        } catch (e) {
+            this.mutations.setLoaded('listSubnets');
+            this.mutations.setError({key: 'listSubnets', error: e})
+            return false;
         }
     }
 }

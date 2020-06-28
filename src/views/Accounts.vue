@@ -148,7 +148,7 @@
                                                     You need to fetch the balance first .
                                                 </div>
                                                 <div class="text-center text--primary" v-else>
-                                                    {{ asset.balance }} nAVA
+                                                    {{ asset.balance }} nAVAX
                                                 </div>
                                             </div>
                                         </div>
@@ -328,7 +328,7 @@
                                     </p>
                                     <p class="text-center text--primary">
                                         Nonce : {{ pAccount.nonce }} <br/>
-                                        Balance : {{ pAccount.balance }}
+                                        {{ pAccount.balance }} nAVAX
                                     </p>
                                 </v-card-text>
                                 <v-card-actions>
@@ -395,368 +395,439 @@
                 </v-row>
             </v-col>
         </v-row>
-        <v-dialog
-                v-if="pAccountIndex > -1 && xAddressIndex > -1"
-                v-model="dialog"
-                hide-overlay
-                width="100%"
-                transition="dialog-bottom-transition"
-                scrollable
-        >
-            <v-stepper
-                    v-model="toPStepper"
-            >
-                <v-stepper-header>
-                    <v-stepper-step step="1">Export AVA to PChain</v-stepper-step>
+        <v-row>
+            <v-col>
+                <v-dialog
+                        v-if="pAccountIndex > -1 && xAddressIndex > -1"
+                        v-model="dialog"
+                        hide-overlay
+                        width="100%"
+                        transition="dialog-bottom-transition"
+                        scrollable
+                >
+                    <v-stepper
+                            v-model="toPStepper"
+                    >
+                        <v-stepper-header>
+                            <v-stepper-step step="1">Export AVA to PChain</v-stepper-step>
 
-                    <v-divider></v-divider>
+                            <v-divider></v-divider>
 
-                    <v-stepper-step step="2">Import AVA from XChain</v-stepper-step>
+                            <v-stepper-step step="2">Import AVA from XChain</v-stepper-step>
 
-                    <v-divider></v-divider>
+                            <v-divider></v-divider>
 
-                    <v-stepper-step step="3">Issue Tx</v-stepper-step>
+                            <v-stepper-step step="3">Issue Tx</v-stepper-step>
 
-                    <v-divider></v-divider>
+                            <v-divider></v-divider>
 
-                    <v-stepper-step step="4">Poll Tx Status</v-stepper-step>
-                </v-stepper-header>
-                <v-stepper-items>
-                    <v-stepper-content step="1">
-                        <v-container>
-                            <v-row>
-                                <v-col>
+                            <v-stepper-step step="4">Poll Tx Status</v-stepper-step>
+                        </v-stepper-header>
+                        <v-stepper-items>
+                            <v-stepper-content step="1">
+                                <v-container>
                                     <v-row>
                                         <v-col>
-                                            From {{ $store.state.Account.xAddresses[xAddressIndex].address }}
+                                            <v-row>
+                                                <v-col>
+                                                    From {{ $store.state.Account.xAddresses[xAddressIndex].address }}
+                                                </v-col>
+                                                <v-col>
+                                                    <div v-html="$store.state.Account.xAddresses[xAddressIndex].identicon"/>
+                                                </v-col>
+                                            </v-row>
                                         </v-col>
                                         <v-col>
-                                            <div v-html="$store.state.Account.xAddresses[xAddressIndex].identicon"/>
+                                            <v-row>
+                                                <v-col>
+                                                    <div v-html="$store.state.Account.pAccounts[pAccountIndex].identicon"/>
+                                                </v-col>
+                                                <v-col>
+                                                    To {{ $store.state.Account.pAccounts[pAccountIndex].address }}
+                                                </v-col>
+                                            </v-row>
                                         </v-col>
                                     </v-row>
-                                </v-col>
-                                <v-col>
                                     <v-row>
-                                        <v-col>
-                                            <div v-html="$store.state.Account.pAccounts[pAccountIndex].identicon"/>
-                                        </v-col>
-                                        <v-col>
-                                            To {{ $store.state.Account.pAccounts[pAccountIndex].address }}
-                                        </v-col>
-                                    </v-row>
-                                </v-col>
-                            </v-row>
-                            <v-row>
-                                <v-slider
-                                        v-model="xExportSlider"
-                                        class="align-center"
-                                        :max="$store.state.Account.xAddresses[xAddressIndex].assets.find(e => e.asset === 'AVA').balance"
-                                        :min="0"
-                                        hide-details
-                                >
-                                    <template v-slot:append>
-                                        <v-text-field
+                                        <v-slider
                                                 v-model="xExportSlider"
-                                                class="mt-0 pt-0"
+                                                class="align-center"
+                                                :max="$store.state.Account.xAddresses[xAddressIndex].assets.find(e => e.asset === 'AVA').balance"
+                                                :min="0"
                                                 hide-details
-                                                single-line
-                                                type="number"
-                                                style="width: 60px"
-                                        ></v-text-field>
-                                    </template>
-                                </v-slider>
-                            </v-row>
-                            <v-row>
-                                Username : {{ id }}
-                            </v-row>
-                            <v-row>
-                                <v-text-field
-                                        v-model="password"
-                                        :append-icon="show1 ? 'mdi-eye' : 'mdi-eye-off'"
-                                        :type="show1 ? 'text' : 'password'"
-                                        name="input-10-1"
-                                        label="Password"
-                                        hint="At least 8 characters"
-                                        counter
-                                        @click:append="show1 = !show1"
-                                ></v-text-field>
-                            </v-row>
-                            <v-row>
-                                <v-btn
-                                        @click="exportAvaToPChain($store.state.Account.pAccounts[pAccountIndex].address)">
-                                    Next
-                                </v-btn>
-                            </v-row>
-                        </v-container>
-                    </v-stepper-content>
-                    <v-stepper-content step="2">
-                        <v-container>
-                            <v-row>
-                                <v-col>
-                                    <span class="text-center">{{ $store.state.Account.txId }}</span>
-                                </v-col>
-                            </v-row>
-                            <v-row>
-                                <v-col>
-                                    <v-progress-circular indeterminate
-                                                         v-if="$store.state.Account.txStatus !== 'Accepted'"></v-progress-circular>
-                                    <span class="text-center">{{ $store.state.Account.txStatus }}</span>
-                                </v-col>
-                            </v-row>
-                            <v-row>
-                                <v-btn
-                                        color="primary"
-                                        :disabled="$store.state.Account.txStatus !== 'Accepted'"
-                                        @click="toPStepper = 3"
-                                >
-                                    Next
-                                </v-btn>
-                            </v-row>
-                        </v-container>
-                    </v-stepper-content>
-                    <v-stepper-content step="3">
-                        <v-container>
-                            <v-row>
-                                <v-col>
-                                    <v-row>
-                                        <v-col>
-                                            From {{ $store.state.Account.xAddresses[xAddressIndex].address }}
-                                        </v-col>
-                                        <v-col>
-                                            <div v-html="$store.state.Account.xAddresses[xAddressIndex].identicon"/>
-                                        </v-col>
+                                        >
+                                            <template v-slot:append>
+                                                <v-text-field
+                                                        v-model="xExportSlider"
+                                                        class="mt-0 pt-0"
+                                                        hide-details
+                                                        single-line
+                                                        type="number"
+                                                        style="width: 60px"
+                                                ></v-text-field>
+                                            </template>
+                                        </v-slider>
                                     </v-row>
-                                </v-col>
-                                <v-col>
                                     <v-row>
-                                        <v-col>
-                                            <div v-html="$store.state.Account.pAccounts[pAccountIndex].identicon"/>
-                                        </v-col>
-                                        <v-col>
-                                            To {{ $store.state.Account.pAccounts[pAccountIndex].address }}
-                                        </v-col>
+                                        Username : {{ id }}
                                     </v-row>
-                                </v-col>
-                            </v-row>
-                            <v-row>
-                                Nonce : {{ $store.state.Account.pAccounts[pAccountIndex].nonce }}
-                            </v-row>
-                            <v-row>
-                                Username : {{ id }}
-                            </v-row>
-                            <v-row>
-                                <v-text-field
-                                        v-model="password"
-                                        :append-icon="show1 ? 'mdi-eye' : 'mdi-eye-off'"
-                                        :type="show1 ? 'text' : 'password'"
-                                        name="input-10-1"
-                                        label="Password"
-                                        hint="At least 8 characters"
-                                        counter
-                                        @click:append="show1 = !show1"
-                                ></v-text-field>
-                            </v-row>
-                            <v-row>
-                                <v-btn
-                                        @click="importAvaFromXChain($store.state.Account.pAccounts[pAccountIndex].address, $store.state.Account.pAccounts[pAccountIndex].nonce)">
-                                    Export AVA
-                                </v-btn>
-                            </v-row>
-                        </v-container>
-                        <v-btn text
-                               @click="importAvaFromXChain($store.state.Account.pAccounts[pAccountIndex].address, $store.state.Account.pAccounts[pAccountIndex].nonce)">
-                        </v-btn>
-                    </v-stepper-content>
-                    <v-stepper-content step="4">
-                        <v-row>
-                            <v-col>
-                                The transfer from your XChain account to your PChain account is done.
-                            </v-col>
-                        </v-row>
-                    </v-stepper-content>
-                </v-stepper-items>
-                <v-btn @click="closeDialog()">Close</v-btn>
-            </v-stepper>
-        </v-dialog>
-        <v-dialog
-                v-if="pAccountIndex > -1 && xAddressIndex > -1"
-                v-model="pChainToXChainDialog"
-                hide-overlay
-                width="100%"
-                transition="dialog-bottom-transition"
-                scrollable
-        >
-            <v-stepper
-                    v-model="toXStepper"
-            >
-                <v-stepper-header>
-                    <v-stepper-step step="1">Export AVA to XChain</v-stepper-step>
-
-                    <v-divider></v-divider>
-
-                    <v-stepper-step step="2">Sign Tx</v-stepper-step>
-
-                    <v-divider></v-divider>
-
-                    <v-stepper-step step="3">Issue Tx</v-stepper-step>
-
-                    <v-divider></v-divider>
-
-                    <v-stepper-step step="4">Poll Tx Status</v-stepper-step>
-                    <v-divider></v-divider>
-
-                    <v-stepper-step step="5">Poll Tx Status</v-stepper-step>
-                </v-stepper-header>
-
-                <v-stepper-items>
-                    <v-stepper-content step="1">
-                        <v-container>
-                            <v-row>
-                                <v-col>
                                     <v-row>
-                                        <v-col>
-                                            From {{ $store.state.Account.pAccounts[pAccountIndex].address }}
-                                        </v-col>
-                                        <v-col>
-                                            <div v-html="$store.state.Account.pAccounts[pAccountIndex].identicon"/>
-                                        </v-col>
-                                    </v-row>
-                                </v-col>
-                                <v-col>
-                                    <v-row>
-                                        <v-col>
-                                            <div v-html="$store.state.Account.xAddresses[xAddressIndex].identicon"/>
-                                        </v-col>
-                                        <v-col>
-                                            To {{ $store.state.Account.xAddresses[xAddressIndex].address }}
-                                        </v-col>
-                                    </v-row>
-                                </v-col>
-                            </v-row>
-                            <v-row>
-                                <v-slider
-                                        v-model="pExportSlider"
-                                        class="align-center"
-                                        :max="$store.state.Account.pAccounts[pAccountIndex].balance"
-                                        :min="0"
-                                        hide-details
-                                >
-                                    <template v-slot:append>
                                         <v-text-field
-                                                v-model="pExportSlider"
-                                                class="mt-0 pt-0"
-                                                hide-details
-                                                single-line
-                                                type="number"
-                                                style="width: 60px"
+                                                v-model="password"
+                                                :append-icon="show1 ? 'mdi-eye' : 'mdi-eye-off'"
+                                                :type="show1 ? 'text' : 'password'"
+                                                name="input-10-1"
+                                                label="Password"
+                                                hint="At least 8 characters"
+                                                counter
+                                                @click:append="show1 = !show1"
                                         ></v-text-field>
-                                    </template>
-                                </v-slider>
-                            </v-row>
-                            <v-row>
-                                Nonce : {{ $store.state.Account.pAccounts[pAccountIndex].nonce }}
-                            </v-row>
-                            <v-row>
-                                <v-btn text
-                                       @click="exportAvaToXChain($store.state.Account.xAddresses[xAddressIndex].address,  $store.state.Account.pAccounts[pAccountIndex].nonce)">
-                                    Export AVA
-                                </v-btn>
-                            </v-row>
-                        </v-container>
-                    </v-stepper-content>
-                    <v-stepper-content step="2">
-                        <v-row>
-                            {{ $store.state.Account.txId }}
-                        </v-row>
-                        <v-row>
-                            {{ $store.state.Account.txStatus }}
-                        </v-row>
-                        <v-row>
-                            <v-btn
-                                    color="primary"
-                                    @click="signTx($store.state.Account.txId , $store.state.Account.pAccounts[pAccountIndex].address)"
-                            >
-                                Sign Tx
-                            </v-btn>
-                        </v-row>
-                    </v-stepper-content>
-                    <v-stepper-content step="3">
-                        <v-container>
-                            <v-row>
-                                <v-col>
+                                    </v-row>
+                                    <v-row>
+                                        <v-btn
+                                                @click="exportAvaToPChain($store.state.Account.pAccounts[pAccountIndex].address)">
+                                            Next
+                                        </v-btn>
+                                    </v-row>
+                                </v-container>
+                            </v-stepper-content>
+                            <v-stepper-content step="2">
+                                <v-container>
                                     <v-row>
                                         <v-col>
-                                            We will now issue the Transaction .
+                                            <span class="text-center">{{ $store.state.Account.txId }}</span>
                                         </v-col>
                                     </v-row>
-                                </v-col>
-                            </v-row>
-                            <v-row>
-                                <v-btn text
-                                       @click="issueTx()">
-                                    Issue Tx
-                                </v-btn>
-                            </v-row>
-                        </v-container>
-                    </v-stepper-content>
-                    <v-stepper-content step="4">
-                        <v-container>
-                            <v-row>
-                                <v-col>
                                     <v-row>
                                         <v-col>
+                                            <v-progress-circular indeterminate
+                                                                 v-if="$store.state.Account.txStatus !== 'Accepted'"></v-progress-circular>
+                                            <span class="text-center">{{ $store.state.Account.txStatus }}</span>
+                                        </v-col>
+                                    </v-row>
+                                    <v-row>
+                                        <v-btn
+                                                color="primary"
+                                                :disabled="$store.state.Account.txStatus !== 'Accepted'"
+                                                @click="toPStepper = 3"
+                                        >
+                                            Next
+                                        </v-btn>
+                                    </v-row>
+                                </v-container>
+                            </v-stepper-content>
+                            <v-stepper-content step="3">
+                                <v-container>
+                                    <v-row>
+                                        <v-col>
+                                            <v-row>
+                                                <v-col>
+                                                    From {{ $store.state.Account.xAddresses[xAddressIndex].address }}
+                                                </v-col>
+                                                <v-col>
+                                                    <div v-html="$store.state.Account.xAddresses[xAddressIndex].identicon"/>
+                                                </v-col>
+                                            </v-row>
+                                        </v-col>
+                                        <v-col>
+                                            <v-row>
+                                                <v-col>
+                                                    <div v-html="$store.state.Account.pAccounts[pAccountIndex].identicon"/>
+                                                </v-col>
+                                                <v-col>
+                                                    To {{ $store.state.Account.pAccounts[pAccountIndex].address }}
+                                                </v-col>
+                                            </v-row>
+                                        </v-col>
+                                    </v-row>
+                                    <v-row>
+                                        Nonce : {{ $store.state.Account.pAccounts[pAccountIndex].nonce }}
+                                    </v-row>
+                                    <v-row>
+                                        Username : {{ id }}
+                                    </v-row>
+                                    <v-row>
+                                        <v-text-field
+                                                v-model="password"
+                                                :append-icon="show1 ? 'mdi-eye' : 'mdi-eye-off'"
+                                                :type="show1 ? 'text' : 'password'"
+                                                name="input-10-1"
+                                                label="Password"
+                                                hint="At least 8 characters"
+                                                counter
+                                                @click:append="show1 = !show1"
+                                        ></v-text-field>
+                                    </v-row>
+                                    <v-row>
+                                        <v-btn
+                                                @click="importAvaFromXChain($store.state.Account.pAccounts[pAccountIndex].address, $store.state.Account.pAccounts[pAccountIndex].nonce)">
+                                            Export AVA
+                                        </v-btn>
+                                    </v-row>
+                                </v-container>
+                                <v-btn text
+                                       @click="importAvaFromXChain($store.state.Account.pAccounts[pAccountIndex].address, $store.state.Account.pAccounts[pAccountIndex].nonce)">
+                                </v-btn>
+                            </v-stepper-content>
+                            <v-stepper-content step="4">
+                                <v-row>
+                                    <v-col>
+                                        The transfer from your XChain account to your PChain account is done.
+                                    </v-col>
+                                </v-row>
+                            </v-stepper-content>
+                        </v-stepper-items>
+                        <v-btn @click="closeDialog()">Close</v-btn>
+                    </v-stepper>
+                </v-dialog>
+                <v-dialog
+                        v-if="pAccountIndex > -1 && xAddressIndex > -1"
+                        v-model="pChainToXChainDialog"
+                        hide-overlay
+                        width="100%"
+                        transition="dialog-bottom-transition"
+                        scrollable
+                >
+                    <v-stepper
+                            v-model="toXStepper"
+                    >
+                        <v-stepper-header>
+                            <v-stepper-step step="1">Export AVA to XChain</v-stepper-step>
+
+                            <v-divider></v-divider>
+
+                            <v-stepper-step step="2">Sign Tx</v-stepper-step>
+
+                            <v-divider></v-divider>
+
+                            <v-stepper-step step="3">Issue Tx</v-stepper-step>
+
+                            <v-divider></v-divider>
+
+                            <v-stepper-step step="4">Poll Tx Status</v-stepper-step>
+                            <v-divider></v-divider>
+
+                            <v-stepper-step step="5">Poll Tx Status</v-stepper-step>
+                        </v-stepper-header>
+
+                        <v-stepper-items>
+                            <v-stepper-content step="1">
+                                <v-container>
+                                    <v-row>
+                                        <v-col>
+                                            <v-row>
+                                                <v-col>
+                                                    From {{ $store.state.Account.pAccounts[pAccountIndex].address }}
+                                                </v-col>
+                                                <v-col>
+                                                    <div v-html="$store.state.Account.pAccounts[pAccountIndex].identicon"/>
+                                                </v-col>
+                                            </v-row>
+                                        </v-col>
+                                        <v-col>
+                                            <v-row>
+                                                <v-col>
+                                                    <div v-html="$store.state.Account.xAddresses[xAddressIndex].identicon"/>
+                                                </v-col>
+                                                <v-col>
+                                                    To {{ $store.state.Account.xAddresses[xAddressIndex].address }}
+                                                </v-col>
+                                            </v-row>
+                                        </v-col>
+                                    </v-row>
+                                    <v-row>
+                                        <v-slider
+                                                v-model="pExportSlider"
+                                                class="align-center"
+                                                :max="$store.state.Account.pAccounts[pAccountIndex].balance"
+                                                :min="0"
+                                                hide-details
+                                        >
+                                            <template v-slot:append>
+                                                <v-text-field
+                                                        v-model="pExportSlider"
+                                                        class="mt-0 pt-0"
+                                                        hide-details
+                                                        single-line
+                                                        type="number"
+                                                        style="width: 60px"
+                                                ></v-text-field>
+                                            </template>
+                                        </v-slider>
+                                    </v-row>
+                                    <v-row>
+                                        Nonce : {{ $store.state.Account.pAccounts[pAccountIndex].nonce }}
+                                    </v-row>
+                                    <v-row>
+                                        <v-btn text
+                                               @click="exportAvaToXChain($store.state.Account.xAddresses[xAddressIndex].address,  $store.state.Account.pAccounts[pAccountIndex].nonce)">
+                                            Export AVA
+                                        </v-btn>
+                                    </v-row>
+                                </v-container>
+                            </v-stepper-content>
+                            <v-stepper-content step="2">
+                                <v-row>
+                                    {{ $store.state.Account.txId }}
+                                </v-row>
+                                <v-row>
+                                    {{ $store.state.Account.txStatus }}
+                                </v-row>
+                                <v-row>
+                                    <v-btn
+                                            color="primary"
+                                            @click="signTx($store.state.Account.txId , $store.state.Account.pAccounts[pAccountIndex].address)"
+                                    >
+                                        Sign Tx
+                                    </v-btn>
+                                </v-row>
+                            </v-stepper-content>
+                            <v-stepper-content step="3">
+                                <v-container>
+                                    <v-row>
+                                        <v-col>
+                                            <v-row>
+                                                <v-col>
+                                                    We will now issue the Transaction .
+                                                </v-col>
+                                            </v-row>
+                                        </v-col>
+                                    </v-row>
+                                    <v-row>
+                                        <v-btn text
+                                               @click="issueTx()">
                                             Issue Tx
+                                        </v-btn>
+                                    </v-row>
+                                </v-container>
+                            </v-stepper-content>
+                            <v-stepper-content step="4">
+                                <v-container>
+                                    <v-row>
+                                        <v-col>
+                                            <v-row>
+                                                <v-col>
+                                                    Issue Tx
+                                                </v-col>
+                                            </v-row>
                                         </v-col>
                                     </v-row>
-                                </v-col>
-                            </v-row>
-                            <v-row>
+                                    <v-row>
+                                        <v-btn text
+                                               @click="importAvaFromPChain($store.state.Account.xAddresses[xAddressIndex].address)">
+                                            Import AVA From P Chain
+                                        </v-btn>
+                                    </v-row>
+                                </v-container>
                                 <v-btn text
                                        @click="importAvaFromPChain($store.state.Account.xAddresses[xAddressIndex].address)">
-                                    Import AVA From P Chain
-                                </v-btn>
-                            </v-row>
-                        </v-container>
-                        <v-btn text
-                               @click="importAvaFromPChain($store.state.Account.xAddresses[xAddressIndex].address)">
 
-                            Cancel
-                        </v-btn>
-                    </v-stepper-content>
-                    <v-stepper-content step="5">
-                        <v-row>
-                            <v-col>
-                                <span class="text-center">{{ $store.state.Account.txId }}</span>
-                            </v-col>
-                        </v-row>
-                        <v-row>
-                            <v-col>
-                                <v-progress-circular indeterminate
-                                                     v-if="$store.state.Account.txStatus !== 'Accepted'"></v-progress-circular>
-                                <span class="text-center">{{ $store.state.Account.txStatus }}</span>
-                            </v-col>
-                        </v-row>
-                        <v-row>
-                            <v-btn
-                                    color="primary"
-                                    :disabled="$store.state.Account.txStatus !== 'Accepted'"
-                                    @click="toPStepper = 6"
-                            >
-                                Next
-                            </v-btn>
-                        </v-row>
-                    </v-stepper-content>
-                    <v-stepper-content step="6">
-                        <v-row>
-                           <v-col>
-                               You have successfully transferred some AVA from your  PChain account to your XAddress .
-                           </v-col>
-                        </v-row>
-                    </v-stepper-content>
-                </v-stepper-items>
-                <v-btn @click="closeDialog()">Close</v-btn>
-            </v-stepper>
-        </v-dialog>
+                                    Cancel
+                                </v-btn>
+                            </v-stepper-content>
+                            <v-stepper-content step="5">
+                                <v-row>
+                                    <v-col>
+                                        <span class="text-center">{{ $store.state.Account.txId }}</span>
+                                    </v-col>
+                                </v-row>
+                                <v-row>
+                                    <v-col>
+                                        <v-progress-circular indeterminate
+                                                             v-if="$store.state.Account.txStatus !== 'Accepted'"></v-progress-circular>
+                                        <span class="text-center">{{ $store.state.Account.txStatus }}</span>
+                                    </v-col>
+                                </v-row>
+                                <v-row>
+                                    <v-btn
+                                            color="primary"
+                                            :disabled="$store.state.Account.txStatus !== 'Accepted'"
+                                            @click="toPStepper = 6"
+                                    >
+                                        Next
+                                    </v-btn>
+                                </v-row>
+                            </v-stepper-content>
+                            <v-stepper-content step="6">
+                                <v-row>
+                                    <v-col>
+                                        You have successfully transferred some AVA from your PChain account to your
+                                        XAddress
+                                        .
+                                    </v-col>
+                                </v-row>
+                            </v-stepper-content>
+                        </v-stepper-items>
+                        <v-btn @click="closeDialog()">Close</v-btn>
+                    </v-stepper>
+                </v-dialog>
+            </v-col>
+        </v-row>
+        <v-row class="mt-10">
+            <v-col class="text-center subtitle-2">
+                Staking
+            </v-col>
+        </v-row>
+        <v-row>
+            <v-col v-if="loggedIn">
+                <v-row>
+                    <v-col
+                            sm="12"
+                            md="3"
+                    >
+                        <v-select
+                                v-model="selectedSubnet"
+                                :items="subnetIds"
+                                label="Subnet"
+                                @change="fetchInfo()"
+                                dense
+                                class="text-center"
+                        ></v-select>
+                    </v-col>
+                </v-row>
+                <v-row v-if="fetchCurrentSubnetValidatingStatus() !== undefined">
+                    <v-col
+                            xs="12"
+                            md="6"
+                            class="text-center"
+                    >
+                        <span v-if="isOwnAddress()">Your are currently validating this subnet !</span>
+                        <span v-else>This node is currently validating this subnet .</span>
+                    </v-col>
+                    <v-col
+                            xs="12"
+                            md="6"
+                            class="text-center"
+                    >
+                        Start : <br/> {{ new Date(fetchCurrentSubnetValidatingStatus().startTime * 1000) }}
+                    </v-col>
+                    <v-col
+                            xs="12"
+                            md="6"
+                            class="text-center"
+                    >
+                        End : <br/> {{ new Date(fetchCurrentSubnetValidatingStatus().endTime * 1000) }}
+                    </v-col>
+                    <v-col
+                            xs="12"
+                            md="6"
+                            class="text-center"
+                    >
+                        Address : <br/> P-{{ fetchCurrentSubnetValidatingStatus().address }}
+                    </v-col>
+                    <v-col
+                            xs="12"
+                            md="6"
+                            class="text-center"
+                    >
+                        Stake : <br/> {{ fetchCurrentSubnetValidatingStatus().stakeAmount }} nAVAX
+                    </v-col>
+                </v-row>
+            </v-col>
+            <v-col v-else>
+                Please log in .
+            </v-col>
+        </v-row>
     </v-container>
 </template>
 
@@ -768,12 +839,13 @@
         ExportAvaXChain,
         ImportAvaPChain,
         PAddressExport,
-        PAddressImport,
-        User,
+        PAddressImport, PChainAccount,
+        User, Validator,
         XAddressExport,
         XAddressImport
     } from "@/types";
     import DoughnutChart from "@/components/DoughnutChart.vue";
+    import {Subnets} from "@/store/modules/subnets.store";
 
     export default Vue.extend({
         components: {DoughnutChart},
@@ -783,6 +855,7 @@
                 password: "",
                 toPStepper: 1,
                 toXStepper: 1,
+                selectedSubnet: "11111111111111111111111111111111LpoYY",
                 loggedIn: false,
                 exportPassword: "",
                 snackbarXChainPrivateKey: false,
@@ -832,6 +905,10 @@
                 const ctx = Account.context(this.$store);
                 return ctx.state.error
             },
+            subnetIds() {
+                const ctx = Account.context(this.$store);
+                return ctx.state.subnets.map(subnet => subnet.id);
+            }
         },
         methods: {
             closeDialog() {
@@ -842,12 +919,34 @@
                 this.xExportSlider = 0;
                 this.pExportSlider = 0;
             },
+            async fetchInfo() {
+                const subnetCtx = Subnets.context(this.$store);
+                await subnetCtx.actions.fetchSubnetCurrentValidators(this.selectedSubnet)
+            },
             async login() {
                 const accountCtx = Account.context(this.$store)
+                const subnetCtx = Subnets.context(this.$store);
                 this.loginDialog = false;
                 this.loggedIn = true;
                 accountCtx.actions.listXAddresses({name: this.id, password: this.password} as User)
                 accountCtx.actions.listPAccounts({name: this.id, password: this.password} as User)
+                subnetCtx.actions.listSubnets()
+            },
+            fetchCurrentSubnetValidatingStatus(): Validator | undefined {
+                const subnetCtx = Subnets.context(this.$store);
+                return subnetCtx.getters.subnetValidatingInfo(this.selectedSubnet)
+            },
+            isOwnAddress() {
+                const subnetCtx = Subnets.context(this.$store);
+                const accountCtx = Account.context(this.$store)
+                const info: Validator = subnetCtx.getters.subnetValidatingInfo(this.selectedSubnet)
+                let ownAddressValidating = false;
+                accountCtx.state.pAccounts.forEach((p: PChainAccount) => {
+                    if(p.address === info.address){
+                        ownAddressValidating = true;
+                    }
+                })
+                return ownAddressValidating;
             },
             signTx(unsignedTx: string, pAccount: string) {
                 const accountCtx = Account.context(this.$store)
@@ -863,6 +962,7 @@
                     this.toXStepper = 10
                 }
             },
+
             async issueTx() {
                 const accountCtx = Account.context(this.$store)
                 await accountCtx.actions.issueTx()
