@@ -39,7 +39,7 @@
     "vuex-smart-module": "^0.4.0"
   },
   "devDependencies": {
-    "@typescript-eslint/eslint-plugin": "^3.4.0",
+    "@typescript-eslint/eslint-plugin": "^3.5.0",
     "@typescript-eslint/parser": "^3.3.0",
     "@vue/cli-plugin-babel": "~4.4.6",
     "@vue/cli-plugin-eslint": "~4.4.4",
