@@ -241,7 +241,7 @@
                 </v-stepper-content>
                 <v-stepper-content step="4">
                     <v-row>
-                        <v-col>
+                        <v-col class="text-center">
                             Success ! (Normally go check ! :p)
                         </v-col>
                     </v-row>
@@ -315,12 +315,6 @@
                 const accountCtx = Account.context(this.$store)
                 const success = await accountCtx.actions.issueTx()
                 if (success) {
-                    this.intervalId = setInterval(() => {
-                        accountCtx.actions.checkTxStatus({
-                            txId: accountCtx.state.txId,
-                            timeout: this.intervalId
-                        })
-                    }, 1000);
                     this.stakingStepper = 4
                 } else {
                     this.stakingStepper = 10
