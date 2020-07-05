@@ -1,9 +1,9 @@
 // State object
-import axios from "axios";
 import {ErrorContext, HealthCheck} from "@/types";
 import {Actions, Context, Getters, Module, Mutations} from "vuex-smart-module";
 import {Api, ApiState} from "@/store/modules/api.store";
 import {Store} from "vuex";
+import {nodeApi} from "@/AVA";
 
 class HealthState {
     healthy = false;
@@ -47,18 +47,21 @@ class HealthActions extends Actions<HealthState,
         this.api = Api.context(store)
     }
 
-    fetchLiveness() {
-        axios
-            .post(this.api.getters.nodeUrl + '/ext/health', {
-                "jsonrpc": "2.0",
-                "id": 1,
-                "method": "health.getLiveness"
-            })
-            //ToDo We can do more with the response of that call .
-            .then((response) => this.mutations.setHealthy(response.data.result))
-            .catch((e) => {
-                this.mutations.setError({key: 'helatCheck' ,error: e});
-            })
+    async fetchLiveness() {
+        const api = nodeApi;
+        await api.Health().getLiveness();
+        this.mutations.setHealthy(true)
+        // axios
+        //     .post(this.api.getters.nodeUrl + '/ext/health', {
+        //         "jsonrpc": "2.0",
+        //         "id": 1,
+        //         "method": "health.getLiveness"
+        //     })
+        //     //ToDo We can do more with the response of that call .
+        //     .then((response) => this.mutations.setHealthy(response.data.result))
+        //     .catch((e) => {
+        //         this.mutations.setError({key: 'helatCheck' ,error: e});
+        //     })
     }
 }
 

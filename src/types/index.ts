@@ -109,8 +109,27 @@ export enum ValidatorStatus {
 
 export interface PChainAccount {
     address: string;
+    privateKey: string;
+    identicon: string;
     nonce: number;
     balance: number;
+}
+
+export interface XChainAddress {
+    address: string;
+    privateKey?: string;
+    identicon: string;
+    assets: AssetBalance[];
+}
+
+export interface AssetBalance {
+    asset: string;
+    balance: number;
+}
+
+export interface UpdateAssetBalance {
+    address: string;
+    balances: AssetBalance[]
 }
 
 export interface User {
@@ -118,4 +137,72 @@ export interface User {
     password?: string;
     exportData?: string;
     accounts?: PChainAccount[];
+}
+
+export interface SignTxPChain {
+    username: string;
+    password: string;
+    tx: string;
+    signer: string;
+}
+
+export interface ExportAvaPChain {
+    to: string;
+    amount: number;
+    username: string;
+    password: string;
+}
+
+export interface ExportAvaXChain {
+    to: string;
+    amount: number;
+    nonce: number;
+}
+
+export interface ImportAvaXChain {
+    username: string;
+    password: string;
+    to: string;
+}
+
+export interface ImportAvaPChain {
+    to: string;
+    nonce: number;
+    username: string;
+    password: string;
+}
+
+export interface PAddressExport {
+    name: string;
+    password: string;
+    address: string;
+}
+
+export interface PAddressImport {
+    name: string;
+    password: string;
+    privateKey: string;
+}
+
+export interface Subnet {
+    id: string;
+    controlKeys: string[];
+    threshold: number;
+}
+
+export interface XAddressExport {
+    name: string;
+    password: string;
+    address: string;
+}
+
+export interface XAddressImport {
+    name: string;
+    password: string;
+    privateKey: string;
+}
+
+export interface SubnetCurrentNodeValidating {
+    subnetId: string;
+    validatorInfo: Validator;
 }

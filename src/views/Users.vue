@@ -81,8 +81,8 @@
                                 </v-card-actions>
                             </v-card>
                         </v-dialog>
-                        <!--                        <v-btn color="primary" dark small text class="ml-1" @click="navigate(user.name)">Accounts-->
-                        <!--                        </v-btn>-->
+                        <v-btn color="primary" dark small text class="ml-1" @click="navigate(user.name)">Accounts
+                        </v-btn>
                         <v-dialog v-model="deleteDialog[user.name]" persistent max-width="290">
                             <template v-slot:activator="{ on }">
                                 <v-btn color="primary" :disabled=keystoreCreationDisabled dark small text class="ml-1" v-on="on">Delete</v-btn>

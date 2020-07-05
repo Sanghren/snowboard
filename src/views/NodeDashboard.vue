@@ -31,7 +31,6 @@
                     xs="1"
                     sm="1"
                     md="1"
-
                     class="ma-1 pa-0"
                     no-gutters
             >
@@ -418,7 +417,10 @@
             async fetchInterestingMetrics() {
                 await new Promise(r => setTimeout(r, 2000));
                 this.$store.state.Metrics.metrics.filter((m: Metric) => {
-                    if (['gecko_P_accepted', 'gecko_P_sm_blk_requests', 'gecko_X_av_blocked_vts', 'gecko_X_tx_accepted'].includes(m.name)) {
+                    if (this.$store.state.Dashboard.bootstrapped && ['gecko_P_accepted', 'gecko_P_sm_blk_requests', 'gecko_X_av_blocked_vts', 'gecko_X_tx_accepted'].includes(m.name)) {
+                        this.metricToDisplay.push(m);
+                        this.initialMetricLoad = true;
+                    } else if(!this.$store.state.Dashboard.bootstrapped &&['gecko_C_sm_bs_blocked', 'gecko_X_av_bs_blocked_txs', 'gecko_X_av_bs_blocked_vts', 'gecko_P_sm_bs_blocked'].includes(m.name)) {
                         this.metricToDisplay.push(m);
                         this.initialMetricLoad = true;
                     }
@@ -428,7 +430,6 @@
                 const dashboardCtx = Dashboard.context(this.$store);
                 const healthCtx = Health.context(this.$store);
                 const metricsCtx = Metrics.context(this.$store);
-
                 this.refreshDisabled = true;
                 this.metricToDisplay = [];
                 dashboardCtx.actions.fetchNodeId('Dashboard/fetchNodeId');
