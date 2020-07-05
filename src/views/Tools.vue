@@ -18,7 +18,7 @@
             >
                 <v-list-item>
                     <v-list-item-content>
-                        <v-list-item-title class="headline text--secondary text-center">Tx Status check
+                        <v-list-item-title class="headline text--secondary text-center">Tx Status check on C Chain
                         </v-list-item-title>
                     </v-list-item-content>
                     <v-tooltip top>
@@ -27,7 +27,7 @@
                                     help_outline
                                 </span>
                         </template>
-                        <span>Here you will be able to check the status of a Tx. The check will be done both on your node and on the bootstrap node.</span>
+                        <span>Here you will be able to check the status of a Tx. Only work for the C Chain as there are no ways to check a Tx on the P Chain (yet) . The check will be done both on your node and on the bootstrap node.</span>
                     </v-tooltip>
                 </v-list-item>
                 <v-divider></v-divider>

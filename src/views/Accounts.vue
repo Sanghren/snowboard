@@ -279,7 +279,7 @@
                                         </div>
                                     </div>
                                     <v-list-item-content>
-                                        <div class="overline text-right mb-4">P-Address</div>
+                                        <div class="overline text-right mb-4">P-Account</div>
                                         <v-list-item-subtitle class="text-right">{{ pAccount.address }}
                                         </v-list-item-subtitle>
                                     </v-list-item-content>
