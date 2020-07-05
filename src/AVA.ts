@@ -9,11 +9,11 @@ const bootstrapNetworkId = process.env.VUE_APP_SNWBRD_BOOTSTRAP_NETWORK_ID || wi
 
 const keystoreCreation = process.env.VUE_APP_SNWBRD_DISABLED_KEYSTORE_CREATION || window.VUE_APP_SNWBRD_DISABLED_KEYSTORE_CREATION || "false";
 
-const nodeHost = process.env.VUE_APP_SNWBRD_NODE_HOST || window.VUE_APP_SNWBRD_NODE_HOST || 'bootstrap.avax.network';
-const protocol = process.env.VUE_APP_SNWBRD_NODE_PROTOCOL || window.VUE_APP_SNWBRD_NODE_PROTOCOL || 'https';
-const chainId = process.env.VUE_APP_SNWBRD_NODE_CHAIN_ID || window.VUE_APP_SNWBRD_NODE_CHAIN_ID || 'X';
-const nodePort = process.env.VUE_APP_SNWBRD_NODE_PORT || window.VUE_APP_SNWBRD_NODE_PORT || '21000';
-const networkId = process.env.VUE_APP_SNWBRD_NODE_NETWORK_ID || window.VUE_APP_SNWBRD_NODE_NETWORK_ID || '3';
+export const nodeHost = process.env.VUE_APP_SNWBRD_NODE_HOST || window.VUE_APP_SNWBRD_NODE_HOST || 'bootstrap.avax.network';
+export const protocol = process.env.VUE_APP_SNWBRD_NODE_PROTOCOL || window.VUE_APP_SNWBRD_NODE_PROTOCOL || 'https';
+export const chainId = process.env.VUE_APP_SNWBRD_NODE_CHAIN_ID || window.VUE_APP_SNWBRD_NODE_CHAIN_ID || 'X';
+export const nodePort = process.env.VUE_APP_SNWBRD_NODE_PORT || window.VUE_APP_SNWBRD_NODE_PORT || '21000';
+export const networkId = process.env.VUE_APP_SNWBRD_NODE_NETWORK_ID || window.VUE_APP_SNWBRD_NODE_NETWORK_ID || '3';
 
 let nodeApi = new Avalanche(nodeHost, parseInt(nodePort), protocol, parseInt(networkId), chainId);
 const bootstrapNodeApi = new Avalanche(bootstrapNodeHost, parseInt(bootstrapNodePort), bootstrapProtocol, parseInt(bootstrapNetworkId), bootstrapChainId);

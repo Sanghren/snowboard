@@ -1,6 +1,6 @@
 // State object
 import {Config} from "@/types";
-import {updateAvalancheApi} from "@/AVA";
+import {chainId, networkId, nodeHost, nodePort, protocol, updateAvalancheApi} from "@/AVA";
 import {Actions, Getters, Module, Mutations} from 'vuex-smart-module'
 
 export class ApiState {
@@ -12,11 +12,11 @@ export class ApiState {
         networkId: process.env.VUE_APP_SNWBRD_BOOTSTRAP_NETWORK_ID || '3',
     }
     nodeApi = {
-        nodeUrl: process.env.VUE_APP_SNWBRD_NODE_HOST || 'bootstrap.avax.network',
-        protocol: process.env.VUE_APP_SNWBRD_NODE_PROTOCOL || 'https',
-        chainId: process.env.VUE_APP_SNWBRD_NODE_CHAIN_ID || 'X',
-        nodePort: process.env.VUE_APP_SNWBRD_NODE_PORT || '21000',
-        networkId: process.env.VUE_APP_SNWBRD_NODE_NETWORK_ID || '3',
+        nodeUrl: nodeHost,
+        protocol: protocol,
+        chainId: chainId,
+        nodePort: nodePort,
+        networkId: networkId
     }
 }
 
