@@ -108,7 +108,7 @@
                                             </div>
                                             <div v-else v-for="(asset) in item.assets">
                                                 <div v-if="asset.balance === -1" class="text-center">
-                                                    You need to fetch the balance first .
+                                                    0 nAVAX
                                                 </div>
                                                 <div class="text-center text--primary" v-else>
                                                     {{ asset.balance }} nAVAX
@@ -844,8 +844,7 @@
                 </v-row>
                 <v-row v-else>
                     <v-col class="text-center">
-                        You need to select an account on the p chain in order to be able to stake .
-                        Or create one and found it .
+                        If you want to become a validator, please create a P-Account first !
                     </v-col>
                 </v-row>
             </v-col>
