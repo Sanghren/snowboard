@@ -222,7 +222,6 @@ class AccountActions extends Actions<AccountState,
 
     async exportAvaToPChain(data: ExportAvaPChain) {
         const api = nodeApi;
-        console.log(JSON.stringify(data))
         this.mutations.setLoading('exportAvaToPChain');
         if (!data.username || !data.password || !data.to || data.amount < 0) {
             this.mutations.setLoaded('exportAvaToPChain');
@@ -244,7 +243,6 @@ class AccountActions extends Actions<AccountState,
 
     async exportAvaToXChain(data: ExportAvaXChain) {
         const api = nodeApi;
-        console.log(JSON.stringify(data))
         this.mutations.setLoading('exportAvaToXChain');
         if (data.amount < 1 || !data.to || data.nonce < 0) {
             this.mutations.setLoaded('exportAvaToXChain');
@@ -252,8 +250,6 @@ class AccountActions extends Actions<AccountState,
             return false;
         }
         try {
-            console.log(data.amount);
-            console.log(new BN(data.amount, 10).toNumber())
             const txId = await api.Platform().exportAVA(new BN(data.amount), data.to.substring(2, data.to.length), data.nonce);
             this.mutations.setTxStatus('')
             this.mutations.setTx(txId)
@@ -304,6 +300,34 @@ class AccountActions extends Actions<AccountState,
             this.mutations.setTxStatus("INVALID")
             this.mutations.setLoaded('checkTxStatus')
             this.mutations.setError({key: 'checkTxStatus', error: e})
+        }
+    }
+
+    async addDefaultSubnetValidator(data: { id:string, startTime:Date, endTime:Date, stakeAmount:BN, payerNonce:number, destination:string, delegationFeeRate:BN }) {
+        const api = await nodeApi.Platform()
+        this.mutations.setLoading('addDefaultSubnetValidator')
+        try {
+            const unsignedTx = await api.addDefaultSubnetValidator(data.id, data.startTime, data.endTime, data.stakeAmount, ++data.payerNonce, data.destination, data.delegationFeeRate);
+            this.mutations.setLoaded('addDefaultSubnetValidator')
+            return unsignedTx
+        } catch (e) {
+            this.mutations.setLoaded('addDefaultSubnetValidator')
+            this.mutations.setError({key: 'addDefaultSubnetValidator', error: e})
+            return undefined;
+        }
+    }
+
+    async addNonDefaultSubnetValidator(data: { nodeId:string, subnetId: string, startTime:Date, endTime:Date, stakeAmount:BN, payerNonce:number,weight: number}) {
+        const api = await nodeApi.Platform()
+        this.mutations.setLoading('addNonDefaultSubnetValidator')
+        try {
+            const unsignedTx = await api.addNonDefaultSubnetValidator(data.nodeId, data.subnetId, data.startTime, data.endTime, data.weight, ++data.payerNonce );
+            this.mutations.setLoaded('addNonDefaultSubnetValidator')
+            return unsignedTx
+        } catch (e) {
+            this.mutations.setLoaded('addNonDefaultSubnetValidator')
+            this.mutations.setError({key: 'addNonDefaultSubnetValidator', error: e})
+            return undefined;
         }
     }
 

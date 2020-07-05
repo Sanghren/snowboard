@@ -4,7 +4,6 @@
                 v-model="snackbarXChainPrivateKey"
         >
             <v-btn
-                    v-model="xAddressPKey"
                     color="blue"
                     text
                     v-clipboard:copy="xAddressPKey"
@@ -14,8 +13,6 @@
             <v-btn
                     color="blue"
                     text
-                    v-clipboard:copy="xAddressPKey"
-                    @click="snackbarXChainPrivateKey = false"
             >
                 Close
             </v-btn>
@@ -24,7 +21,6 @@
                 v-model="snackbarPChainPrivateKey"
         >
             <v-btn
-                    v-model="pAddressPKey"
                     color="blue"
                     text
                     v-clipboard:copy="pAddressPKey"
@@ -49,41 +45,9 @@
             {{ displayError }}
         </v-alert>
         <v-row dense>
-            <v-col>
-                <v-dialog v-if="!loggedIn" v-model="loginDialog" persistent max-width="290">
-                    <template v-slot:activator="{ on }">
-                        <v-btn class="ml-1" rounded v-on="on">Login</v-btn>
-                    </template>
-                    <v-card>
-                        <v-card-title class="headline">Enter your password for the Keystore's user {{ id }}
-                        </v-card-title>
-                        <v-form>
-                            <v-container fluid>
-                                <v-row>
-                                    <v-text-field
-                                            v-model="password"
-                                            :append-icon="show1 ? 'mdi-eye' : 'mdi-eye-off'"
-                                            :type="show1 ? 'text' : 'password'"
-                                            name="input-10-1"
-                                            label="Password"
-                                            hint="At least 8 characters"
-                                            counter
-                                            @click:append="show1 = !show1"
-                                    ></v-text-field>
-                                </v-row>
-                            </v-container>
-                        </v-form>
-                        <v-card-actions>
-                            <v-spacer></v-spacer>
-                            <v-btn color="green darken-1" text @click="login()">Login</v-btn>
-                            <v-btn color="green darken-1" text @click="loginDialog = false">
-                                Close
-                            </v-btn>
-                        </v-card-actions>
-                    </v-card>
-                </v-dialog>
+            <v-col >
                 <v-btn v-if="loggedIn" rounded @click="logout()">Logout</v-btn>
-                <v-btn rounded class="ml-3" @click="fetchXChainInfo()">Refresh</v-btn>
+                <v-btn v-if="loggedIn" rounded class="ml-3" @click="fetchXChainInfo()">Refresh</v-btn>
                 <h2 class="text-center">Managing XChain/PChain information for <span
                         class="font-weight-black text--secondary">{{ id }}</span>
                     <v-tooltip top>
@@ -98,12 +62,11 @@
                 </h2>
             </v-col>
         </v-row>
-        <v-row dense>
+        <v-row v-if="loggedIn" dense class="fill-height">
             <v-col
                     md="5"
             >
                 <v-sheet
-                        height="100%"
                 >
                     <v-slide-group
                             v-model="xAddressIndex"
@@ -216,57 +179,57 @@
                             ></v-progress-circular>
                         </div>
                     </v-slide-group>
+                    <v-row justify="center">
+                        <v-dialog v-model="importXAddressDialog" persistent max-width="290">
+                            <template v-slot:activator="{ on }">
+                                <v-btn rounded class="mt-1" v-on="on">Import</v-btn>
+                            </template>
+                            <v-card>
+                                <v-card-title class="headline">Import an address by passing the private key
+                                    controlling this
+                                    address
+                                </v-card-title>
+                                <v-card-text>
+                                    <v-form>
+                                        <v-container fluid>
+                                            <v-row>
+                                                <v-text-field
+                                                        v-model="exportPassword"
+                                                        :append-icon="show1 ? 'mdi-eye' : 'mdi-eye-off'"
+                                                        :type="show1 ? 'text' : 'password'"
+                                                        name="input-10-1"
+                                                        label="Password"
+                                                        hint="At least 8 characters"
+                                                        counter
+                                                        @click:append="show1 = !show1"
+                                                ></v-text-field>
+                                            </v-row>
+                                            <v-row>
+                                                <v-text-field
+                                                        v-model="xAddressPKeyImport"
+                                                        :append-icon="show1 ? 'mdi-eye' : 'mdi-eye-off'"
+                                                        :type="show1 ? 'text' : 'password'"
+                                                        name="input-10-1"
+                                                        label="Private key"
+                                                        counter
+                                                        @click:append="show1 = !show1"
+                                                ></v-text-field>
+                                            </v-row>
+                                        </v-container>
+                                    </v-form>
+                                </v-card-text>
+                                <v-card-actions>
+                                    <v-spacer></v-spacer>
+                                    <v-btn rounded class="mt-1" @click="importXAddress()">Import</v-btn>
+                                    <v-btn rounded class="mt-1 ml-1" @click="importXAddressDialog = false">
+                                        Close
+                                    </v-btn>
+                                </v-card-actions>
+                            </v-card>
+                        </v-dialog>
+                        <v-btn rounded class="mt-1 ml-1" @click="createAddress()">Create new address</v-btn>
+                    </v-row>
                 </v-sheet>
-                <v-row justify="center">
-                    <v-dialog v-model="importXAddressDialog" persistent max-width="290">
-                        <template v-slot:activator="{ on }">
-                            <v-btn rounded class="mt-1" v-on="on">Import</v-btn>
-                        </template>
-                        <v-card>
-                            <v-card-title class="headline">Import an address by passing the private key
-                                controlling this
-                                address
-                            </v-card-title>
-                            <v-card-text>
-                                <v-form>
-                                    <v-container fluid>
-                                        <v-row>
-                                            <v-text-field
-                                                    v-model="exportPassword"
-                                                    :append-icon="show1 ? 'mdi-eye' : 'mdi-eye-off'"
-                                                    :type="show1 ? 'text' : 'password'"
-                                                    name="input-10-1"
-                                                    label="Password"
-                                                    hint="At least 8 characters"
-                                                    counter
-                                                    @click:append="show1 = !show1"
-                                            ></v-text-field>
-                                        </v-row>
-                                        <v-row>
-                                            <v-text-field
-                                                    v-model="xAddressPKeyImport"
-                                                    :append-icon="show1 ? 'mdi-eye' : 'mdi-eye-off'"
-                                                    :type="show1 ? 'text' : 'password'"
-                                                    name="input-10-1"
-                                                    label="Private key"
-                                                    counter
-                                                    @click:append="show1 = !show1"
-                                            ></v-text-field>
-                                        </v-row>
-                                    </v-container>
-                                </v-form>
-                            </v-card-text>
-                            <v-card-actions>
-                                <v-spacer></v-spacer>
-                                <v-btn rounded class="mt-1" @click="importXAddress()">Import</v-btn>
-                                <v-btn rounded class="mt-1 ml-1" @click="importXAddressDialog = false">
-                                    Close
-                                </v-btn>
-                            </v-card-actions>
-                        </v-card>
-                    </v-dialog>
-                    <v-btn rounded class="mt-1 ml-1" @click="createAddress()">Create new address</v-btn>
-                </v-row>
             </v-col>
             <v-flex
                     :class="`d-flex align-center mb-6`"
@@ -292,7 +255,6 @@
                     no-gutters
             >
                 <v-sheet
-                        height="100%"
                 >
                     <v-slide-group
                             v-model="pAccountIndex"
@@ -388,14 +350,59 @@
                             ></v-progress-circular>
                         </div>
                     </v-slide-group>
+                    <v-row justify="center">
+                        <v-dialog v-model="importPAddressDialog" persistent max-width="290">
+                            <template v-slot:activator="{ on }">
+                                <v-btn rounded class="mt-1" v-on="on">Import</v-btn>
+                            </template>
+                            <v-card>
+                                <v-card-title class="headline">Import a P Account by passing the private key
+                                    controlling this
+                                    account
+                                </v-card-title>
+                                <v-card-text>
+                                    <v-form>
+                                        <v-container fluid>
+                                            <v-row>
+                                                <v-text-field
+                                                        v-model="importPassword"
+                                                        :append-icon="show1 ? 'mdi-eye' : 'mdi-eye-off'"
+                                                        :type="show1 ? 'text' : 'password'"
+                                                        name="input-10-1"
+                                                        label="Password"
+                                                        hint="At least 8 characters"
+                                                        counter
+                                                        @click:append="show1 = !show1"
+                                                ></v-text-field>
+                                            </v-row>
+                                            <v-row>
+                                                <v-text-field
+                                                        v-model="PKeyImport"
+                                                        :append-icon="show1 ? 'mdi-eye' : 'mdi-eye-off'"
+                                                        :type="show1 ? 'text' : 'password'"
+                                                        name="input-10-1"
+                                                        label="Private key"
+                                                        counter
+                                                        @click:append="show1 = !show1"
+                                                ></v-text-field>
+                                            </v-row>
+                                        </v-container>
+                                    </v-form>
+                                </v-card-text>
+                                <v-card-actions>
+                                    <v-spacer></v-spacer>
+                                    <v-btn rounded class="mt-1" @click="importPAccountKey()">Import</v-btn>
+                                    <v-btn rounded class="mt-1 ml-1" @click="importPAddressDialog = false">
+                                        Close
+                                    </v-btn>
+                                </v-card-actions>
+                            </v-card>
+                        </v-dialog>                        <v-btn rounded class="mt-1 ml-1" @click="createPAccount()">Create new account</v-btn>
+                    </v-row>
                 </v-sheet>
-                <v-row justify="center">
-                    <v-btn rounded class="mt-1" @click="importPAccountKey()">Import PKey</v-btn>
-                    <v-btn rounded class="mt-1 ml-1" @click="createPAccount()">Create new account</v-btn>
-                </v-row>
             </v-col>
         </v-row>
-        <v-row>
+        <v-row v-if="loggedIn">
             <v-col>
                 <v-dialog
                         v-if="pAccountIndex > -1 && xAddressIndex > -1"
@@ -721,7 +728,6 @@
                                 </v-container>
                                 <v-btn text
                                        @click="importAvaFromPChain($store.state.Account.xAddresses[xAddressIndex].address)">
-
                                     Cancel
                                 </v-btn>
                             </v-stepper-content>
@@ -763,35 +769,33 @@
                 </v-dialog>
             </v-col>
         </v-row>
-        <v-row class="mt-10">
-            <v-col class="text-center subtitle-2">
-                Staking
+        <v-row v-if="loggedIn" class="mt-10">
+            <v-col class="text-center headline">
+                Staking on subnet :
             </v-col>
         </v-row>
-        <v-row>
-            <v-col v-if="loggedIn">
-                <v-row>
-                    <v-col
-                            sm="12"
-                            md="3"
-                    >
-                        <v-select
-                                v-model="selectedSubnet"
-                                :items="subnetIds"
-                                label="Subnet"
-                                @change="fetchInfo()"
-                                dense
-                                class="text-center"
-                        ></v-select>
-                    </v-col>
-                </v-row>
+        <v-row v-if="loggedIn">
+            <v-col
+                    sm="12"
+                    md="3"
+            >
+                <v-select
+                        v-model="selectedSubnet"
+                        :items="subnetIds"
+                        label="Subnet"
+                        @change="fetchInfo()"
+                        dense
+                        class="text-center"
+                ></v-select>
+            </v-col>
+            <v-col>
                 <v-row v-if="fetchCurrentSubnetValidatingStatus() !== undefined">
                     <v-col
                             xs="12"
                             md="6"
                             class="text-center"
                     >
-                        <span v-if="isOwnAddress()">Your are currently validating this subnet !</span>
+                        <span v-if="isOwnAddress()">Your node is validating this subnet</span>
                         <span v-else>This node is currently validating this subnet .</span>
                     </v-col>
                     <v-col
@@ -823,9 +827,64 @@
                         Stake : <br/> {{ fetchCurrentSubnetValidatingStatus().stakeAmount }} nAVAX
                     </v-col>
                 </v-row>
+                <v-row v-else-if="$store.state.Account.pAccounts.length > 0 && pAccountIndex > -1">
+                    <v-col class="text-center">
+                        This node is currently not a validator on the default subnet .
+                        <v-btn @click="showStakingDialog = true">Stake !</v-btn>
+                        <StakingDialog @stakingClose="showStakingDialog = false"
+                                       :show-staking-dialog="showStakingDialog"
+                                       :subnet-id="selectedSubnet"
+                                       :max-stake-amount="$store.state.Account.pAccounts[pAccountIndex].balance"
+                                       :destination="$store.state.Account.pAccounts[pAccountIndex].address"
+                                       :payer-nonce="$store.state.Account.pAccounts[pAccountIndex].nonce"
+                                       :jdenticon="$store.state.Account.pAccounts[pAccountIndex].identicon"
+                                       :username="this.id"
+                        />
+                    </v-col>
+                </v-row>
+                <v-row v-else>
+                    <v-col class="text-center">
+                        You need to select an account on the p chain in order to be able to stake .
+                        Or create one and found it .
+                    </v-col>
+                </v-row>
             </v-col>
-            <v-col v-else>
-                Please log in .
+        </v-row>
+        <v-row v-else>
+            <v-col class="text-center">
+                Please Log In !
+                <v-dialog v-if="!loggedIn" v-model="loginDialog" persistent max-width="290">
+                    <template v-slot:activator="{ on }">
+                        <v-btn class="ml-1" rounded v-on="on">Login</v-btn>
+                    </template>
+                    <v-card>
+                        <v-card-title class="headline">Enter your password for the Keystore's user {{ id }}
+                        </v-card-title>
+                        <v-form>
+                            <v-container fluid>
+                                <v-row>
+                                    <v-text-field
+                                            v-model="password"
+                                            :append-icon="show1 ? 'mdi-eye' : 'mdi-eye-off'"
+                                            :type="show1 ? 'text' : 'password'"
+                                            name="input-10-1"
+                                            label="Password"
+                                            hint="At least 8 characters"
+                                            counter
+                                            @click:append="show1 = !show1"
+                                    ></v-text-field>
+                                </v-row>
+                            </v-container>
+                        </v-form>
+                        <v-card-actions>
+                            <v-spacer></v-spacer>
+                            <v-btn color="green darken-1" text @click="login()">Login</v-btn>
+                            <v-btn color="green darken-1" text @click="loginDialog = false">
+                                Close
+                            </v-btn>
+                        </v-card-actions>
+                    </v-card>
+                </v-dialog>
             </v-col>
         </v-row>
     </v-container>
@@ -845,15 +904,17 @@
         XAddressImport
     } from "@/types";
     import DoughnutChart from "@/components/DoughnutChart.vue";
-    import {Subnets} from "@/store/modules/subnets.store";
+    import StakingDialog from "@/components/StakingDialog.vue";
+    import {Subnets, SubnetsMapper} from "@/store/modules/subnets.store";
 
     export default Vue.extend({
-        components: {DoughnutChart},
+        components: {DoughnutChart, StakingDialog},
         props: ['id'],
         data() {
             return {
                 password: "",
                 toPStepper: 1,
+                showStakingDialog: false,
                 toXStepper: 1,
                 selectedSubnet: "11111111111111111111111111111111LpoYY",
                 loggedIn: false,
@@ -863,6 +924,8 @@
                 xAddressPKey: "",
                 pAddressPKey: "",
                 xAddressPKeyImport: "",
+                PKeyImport: "",
+                importPassword: "",
                 xAddressIndex: -1,
                 dialog: false,
                 pChainToXChainDialog: false,
@@ -906,9 +969,20 @@
                 return ctx.state.error
             },
             subnetIds() {
-                const ctx = Account.context(this.$store);
-                return ctx.state.subnets.map(subnet => subnet.id);
+                const ctx = Subnets.context(this.$store);
+                return ctx.getters.subnetsId
             }
+        },
+        async beforeMount() {
+            const ctx = Subnets.context(this.$store);
+            await ctx.actions.listSubnets()
+            await ctx.actions.fetchSubnetCurrentValidators(this.selectedSubnet)
+            await ctx.getters.subnetValidatingInfo(this.selectedSubnet)
+        },
+        beforeRouteLeave (to, from, next) {
+            const accountCtx = Account.context(this.$store)
+            accountCtx.mutations.resetState()
+            next()
         },
         methods: {
             closeDialog() {
@@ -930,7 +1004,7 @@
                 this.loggedIn = true;
                 accountCtx.actions.listXAddresses({name: this.id, password: this.password} as User)
                 accountCtx.actions.listPAccounts({name: this.id, password: this.password} as User)
-                subnetCtx.actions.listSubnets()
+                await subnetCtx.actions.listSubnets()
             },
             fetchCurrentSubnetValidatingStatus(): Validator | undefined {
                 const subnetCtx = Subnets.context(this.$store);
@@ -942,7 +1016,7 @@
                 const info: Validator = subnetCtx.getters.subnetValidatingInfo(this.selectedSubnet)
                 let ownAddressValidating = false;
                 accountCtx.state.pAccounts.forEach((p: PChainAccount) => {
-                    if(p.address === info.address){
+                    if (p.address === info.address) {
                         ownAddressValidating = true;
                     }
                 })
@@ -1035,7 +1109,6 @@
             },
             async importAvaFromXChain(to: string, nonce: number) {
                 nonce++
-                console.log(nonce);
                 const accountCtx = Account.context(this.$store)
                 const success = await accountCtx.actions.importAvaFromXChain({
                     username: this.id,
@@ -1052,7 +1125,6 @@
             },
             async exportAvaToXChain(to: string, nonce: number) {
                 nonce++
-                console.log(nonce);
                 const accountCtx = Account.context(this.$store)
                 const success = await accountCtx.actions.exportAvaToXChain({
                     amount: this.pExportSlider,
@@ -1100,12 +1172,12 @@
                     address
                 } as PAddressExport);
             },
-            async importPAccountKey(privateKey: string) {
+            async importPAccountKey() {
                 const accountCtx = Account.context(this.$store)
                 await accountCtx.actions.importPAccountKey({
                     name: this.id,
                     password: this.password,
-                    privateKey
+                    privateKey: this.PKeyImport
                 } as PAddressImport);
             },
         }

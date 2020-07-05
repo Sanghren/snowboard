@@ -57,7 +57,7 @@ class MetricsActions extends Actions<MetricsState,
         this.commit('setLoading', 'metrics')
         axios
             .get(this.api.getters.nodeUrl + '/ext/metrics')
-            .then((response) => {
+            .then((response: any) => {
                 this.mutations.setMetrics(parsePrometheusTextFormat(response.data))
                 this.mutations.setLoaded('metrics')
             })

@@ -7,6 +7,7 @@ import vuetify from './plugins/vuetify';
 import 'es6-promise/auto'
 import {ValidationProvider} from 'vee-validate';
 import VueClipboard from 'vue-clipboard2'
+import DatetimePicker from 'vuetify-datetime-picker'
 
 declare global {
     interface Window {
@@ -24,6 +25,7 @@ declare global {
     }
 }
 Vue.use(VueClipboard)
+Vue.use(DatetimePicker)
 
 Vue.prototype.$http = axios
 Vue.config.productionTip = false

@@ -39,7 +39,6 @@ class SubnetsGetters extends Getters<SubnetsState> {
     }
 
     subnetValidatingInfo(subnetId: string) {
-        console.log(`BAAH - ${this.state.subnetCurrentNodeValidating.has(subnetId)}`)
         return this.state.subnetCurrentNodeValidating.has(subnetId) ? this.state.subnetCurrentNodeValidating.get(subnetId) : undefined
     }
 }

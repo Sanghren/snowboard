@@ -65,11 +65,11 @@
                 Stake : <br/> {{ fetchCurrentSubnetValidatingStatus().stakeAmount }} nAVAX
             </v-col>
         </v-row>
-        <v-row v-else>
-            <v-col class="text-center">
-                <v-btn>Start staking</v-btn>
-            </v-col>
-        </v-row>
+<!--        <v-row v-else>-->
+<!--            <v-col class="text-center">-->
+<!--                <v-btn>Start staking</v-btn>-->
+<!--            </v-col>-->
+<!--        </v-row>-->
     </v-container>
 </template>
 
@@ -104,7 +104,6 @@
             fetchCurrentSubnetValidatingStatus(): Validator | undefined {
                 const subnetCtx = Subnets.context(this.$store);
                 const test = subnetCtx.getters.subnetValidatingInfo(this.selectedSubnet)
-                console.log(test);
                 return test;
             }
         }
