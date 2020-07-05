@@ -1,7 +1,7 @@
 import {Avalanche} from "avalanche";
 import {Config} from "@/types";
 
-const bootstrapNodeHost = process.env.VUE_APP_SNWBRD_BOOTSTRAP_HOST || window.VUE_APP_SNWBRD_BOOTSTRAP_HOST || 'bootstrap.ava.network';
+const bootstrapNodeHost = process.env.VUE_APP_SNWBRD_BOOTSTRAP_HOST || window.VUE_APP_SNWBRD_BOOTSTRAP_HOST || 'bootstrap.avax.network';
 const bootstrapProtocol = process.env.VUE_APP_SNWBRD_BOOTSTRAP_PROTOCOL || window.VUE_APP_SNWBRD_BOOTSTRAP_PROTOCOL || 'https';
 const bootstrapChainId = process.env.VUE_APP_SNWBRD_BOOTSTRAP_CHAIN_ID || window.VUE_APP_SNWBRD_BOOTSTRAP_CHAIN_ID || 'X';
 const bootstrapNodePort = process.env.VUE_APP_SNWBRD_BOOTSTRAP_PORT || window.VUE_APP_SNWBRD_BOOTSTRAP_PORT || '21000';
@@ -9,7 +9,7 @@ const bootstrapNetworkId = process.env.VUE_APP_SNWBRD_BOOTSTRAP_NETWORK_ID || wi
 
 const keystoreCreation = process.env.VUE_APP_SNWBRD_DISABLED_KEYSTORE_CREATION || window.VUE_APP_SNWBRD_DISABLED_KEYSTORE_CREATION || "false";
 
-const nodeHost = process.env.VUE_APP_SNWBRD_NODE_HOST || window.VUE_APP_SNWBRD_NODE_HOST || 'bootstrap.ava.network';
+const nodeHost = process.env.VUE_APP_SNWBRD_NODE_HOST || window.VUE_APP_SNWBRD_NODE_HOST || 'bootstrap.avax.network';
 const protocol = process.env.VUE_APP_SNWBRD_NODE_PROTOCOL || window.VUE_APP_SNWBRD_NODE_PROTOCOL || 'https';
 const chainId = process.env.VUE_APP_SNWBRD_NODE_CHAIN_ID || window.VUE_APP_SNWBRD_NODE_CHAIN_ID || 'X';
 const nodePort = process.env.VUE_APP_SNWBRD_NODE_PORT || window.VUE_APP_SNWBRD_NODE_PORT || '21000';
