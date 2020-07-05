@@ -970,6 +970,13 @@
   resolved "https://registry.yarnpkg.com/@types/q/-/q-1.5.4.tgz#15925414e0ad2cd765bfef58842f7e26a7accb24"
   integrity sha512-1HcDas8SEj4z1Wc696tH56G8OlRaH/sqZOynNNB+HF0WOeXPaxTtbYzJY2oEfiUxjSKjhCKr+MvR7dCHcEelug==
 
+"@types/semver@^7.2.0":
+  version "7.3.1"
+  resolved "https://registry.yarnpkg.com/@types/semver/-/semver-7.3.1.tgz#7a9a5d595b6d873f338c867dcef64df289468cfa"
+  integrity sha512-ooD/FJ8EuwlDKOI6D9HWxgIgJjMg2cuziXm/42npDC8y4NjxplBUn9loewZiBNCt44450lHAU0OSb51/UqXeag==
+  dependencies:
+    "@types/node" "*"
+
 "@types/webpack-env@^1.15.2":
   version "1.15.2"
   resolved "https://registry.yarnpkg.com/@types/webpack-env/-/webpack-env-1.15.2.tgz#927997342bb9f4a5185a86e6579a0a18afc33b0a"
@@ -3394,11 +3401,12 @@ eslint-loader@^2.2.1:
     object-hash "^1.1.4"
     rimraf "^2.6.1"
 
-eslint-plugin-vue@^7.0.0-alpha.6:
-  version "7.0.0-alpha.6"
-  resolved "https://registry.yarnpkg.com/eslint-plugin-vue/-/eslint-plugin-vue-7.0.0-alpha.6.tgz#a6ad485f0bae2df73870f66b7fe46dcac764480f"
-  integrity sha512-gxRMxp3njmTez+aKGvVTUauAvt4Pd9WlU2wHW/sOzwHln1JTa7vV86iETRXBVxhqf0nDBsSfuDS7k6HLefvSPg==
+eslint-plugin-vue@^7.0.0-alpha.8:
+  version "7.0.0-alpha.8"
+  resolved "https://registry.yarnpkg.com/eslint-plugin-vue/-/eslint-plugin-vue-7.0.0-alpha.8.tgz#1465e05c6c074415ef3144722d6828d1ece933a6"
+  integrity sha512-wCQs9aCZJ/rOkcn5ZMn0GogpYf8lYl4cuB1uMLHNLsUOliqNuFXOu8wVwdseAMYqUMPWXuNvCUC6h1g6XM7mYw==
   dependencies:
+    "@types/semver" "^7.2.0"
     eslint-utils "^2.0.0"
     natural-compare "^1.4.0"
     semver "^7.3.2"
