@@ -2,15 +2,21 @@
 import {ErrorContext, Subnet, Validator, ValidatorStatus} from "@/types";
 import BN from "bn.js";
 import {nodeApi} from "@/AVA";
-import {Actions, Getters, Module, Mutations, createMapper} from "vuex-smart-module";
+import {Actions, Getters, Module, Mutations, createMapper, Context} from "vuex-smart-module";
+import axios from "axios";
+import parsePrometheusTextFormat from "parse-prometheus-text-format";
+import {Api, ApiState} from "@/store/modules/api.store";
+import {Store} from "vuex";
 
 export class DashboardState {
-    bootstrapped = false;
+    xBootstrapped = false;
+    cBootstrapped = false;
+    pBootstrapped = false;
     networkId = -1;
     networkName = "";
     nodeVersion = "";
     nodeId = "";
-    subnets :Subnet[] = [];
+    subnets: Subnet[] = [];
     peers: string[] = [];
     status = "";
     validatingNodes: Validator[] = [];
@@ -38,8 +44,8 @@ class DashboardGetters extends Getters<DashboardState> {
         return ValidatorStatus.UNKNOWN;
     }
 
-    get nodeId(){
-    return this.state.nodeId;
+    get nodeId() {
+        return this.state.nodeId;
     }
 }
 
@@ -69,8 +75,16 @@ class DashboardMutations extends Mutations<DashboardState> {
         this.state.users = users;
     }
 
-    setBootstrapStatus(bootstrapped: boolean) {
-        this.state.bootstrapped = bootstrapped;
+    setCBootstrapStatus(bootstrapped: boolean) {
+        this.state.cBootstrapped = bootstrapped
+    }
+
+    setXBootstrapStatus(bootstrapped: boolean) {
+        this.state.xBootstrapped = bootstrapped
+    }
+
+    setPBootstrapStatus(bootstrapped: boolean) {
+        this.state.pBootstrapped = bootstrapped
     }
 
     setValidators(validators: Validator[]) {
@@ -102,6 +116,17 @@ class DashboardActions extends Actions<DashboardState,
     DashboardGetters,
     DashboardMutations,
     DashboardActions> {
+
+    // ToDo Figure this one out
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-ignore
+    api: Context<typeof Api>;
+
+    $init(store: Store<ApiState>): void {
+        // Create and retain foo module context
+        this.api = Api.context(store)
+    }
+
     async fetchNodeId() {
         const nodeId = await nodeApi.Info().getNodeID();
         this.mutations.setNodeId(nodeId);
@@ -132,21 +157,97 @@ class DashboardActions extends Actions<DashboardState,
         this.mutations.setUsers(users)
     }
 
-    async fetchBootstrapStatus(intervalId: NodeJS.Timeout) {
-        this.mutations.setLoading('bootstrap');
-        const api = nodeApi;
+    async fetchBootstrapStatusXChain(intervalId: NodeJS.Timeout) {
+        this.mutations.setLoading('xBootstrap');
         // We fetch the balance of the faucet in order to check the bootstrap status .
         // if it return a balance of '0' or a 404, then we are not yet done with the bootstrap .
-        let faucetBalance = new BN(0);
-        try {
-            faucetBalance = await api.AVM().getBalance("X-6cesTteH62Y5mLoDBUASaBvCXuL2AthL", "AVA");
-            this.mutations.setBootstrapStatus(faucetBalance.gt(new BN(0)))
-            this.mutations.setLoaded('bootstrap');
-            clearInterval(intervalId);
-        } catch (e) {
-            this.mutations.setLoaded('bootstrap');
-            this.mutations.setError({key: "bootstrap", error: e});
-        }
+        axios
+            .post(
+                this.api.getters.nodeUrl + '/ext/info',
+                {
+                    "jsonrpc": "2.0",
+                    "id": 1,
+                    "method": "info.isBootstrapped",
+                    "params": {
+                        "chain": "X"
+                    }
+                },
+                {
+                    headers:{
+                        'Content-Type': 'application/json'
+                    }
+                })
+            .then((response: any) => {
+                this.mutations.setXBootstrapStatus(response.data.result.isBootstrapped)
+                this.mutations.setLoaded('xBootstrap');
+            })
+            .catch((e: Error) => {
+                this.mutations.setLoaded('xBootstrap');
+                this.mutations.setXBootstrapStatus(false)
+                this.mutations.setError({key: "xBootstrap", error: e});
+            });
+    }
+
+    async fetchBootstrapStatusPChain(intervalId: NodeJS.Timeout) {
+        this.mutations.setLoading('pBootstrap');
+        // We fetch the balance of the faucet in order to check the bootstrap status .
+        // if it return a balance of '0' or a 404, then we are not yet done with the bootstrap .
+        axios
+            .post(
+                this.api.getters.nodeUrl + '/ext/info',
+                {
+                    "jsonrpc": "2.0",
+                    "id": 1,
+                    "method": "info.isBootstrapped",
+                    "params": {
+                        "chain": "P"
+                    }
+                },
+                {
+                    headers:{
+                        'Content-Type': 'application/json'
+                    }
+                })
+            .then((response: any) => {
+                this.mutations.setPBootstrapStatus(response.data.result.isBootstrapped)
+                this.mutations.setLoaded('pBootstrap');
+            })
+            .catch((e: Error) => {
+                this.mutations.setLoaded('pBootstrap');
+                this.mutations.setPBootstrapStatus(false)
+                this.mutations.setError({key: "pBootstrap", error: e});
+            });
+    }
+
+    async fetchBootstrapStatusCChain(intervalId: NodeJS.Timeout) {
+        this.mutations.setLoading('cBootstrap');
+        // We fetch the balance of the faucet in order to check the bootstrap status .
+        // if it return a balance of '0' or a 404, then we are not yet done with the bootstrap .
+        axios
+            .post(
+                this.api.getters.nodeUrl + '/ext/info',
+                {
+                    "jsonrpc": "2.0",
+                    "id": 1,
+                    "method": "info.isBootstrapped",
+                    "params": {
+                        "chain": "C"
+                    }
+                },
+                {
+                    headers:{
+                        'Content-Type': 'application/json'
+                    }
+                })
+            .then((response: any) => {
+                this.mutations.setCBootstrapStatus(response.data.result.isBootstrapped)
+                this.mutations.setLoaded('cBootstrap');
+            })
+            .catch((e: Error) => {
+                this.mutations.setLoaded('cBootstrap');
+                this.mutations.setCBootstrapStatus(false)
+                this.mutations.setError({key: "cBootstrap", error: e});
+            });
     }
 
     async fetchCurrentValidators() {
@@ -156,7 +257,7 @@ class DashboardActions extends Actions<DashboardState,
         promises.push(api.Platform().getPendingValidators() as Promise<Validator[]>);
 
         Promise.all(promises)
-            .then((values: Validator[][] ) => {
+            .then((values: Validator[][]) => {
                 this.mutations.setValidators(values[0]);
                 this.mutations.setPendingValidators(values[1]);
             }).catch((e) => {

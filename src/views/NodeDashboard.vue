@@ -55,18 +55,18 @@
             </v-col>
             <v-col
                     xs="1"
-                    sm="4"
-                    md="2"
+                    sm="1"
+                    md="1"
                     class="ma-1 pa-0"
             >
                 <v-card
-                        :loading="$store.state.Dashboard.loading.get('bootstrap')"
-                        :class="$store.state.Dashboard.bootstrapped ? 'node-status-green-background' : $store.state.Dashboard.loading.get('bootstrap') ? 'node-status-orange-background' : 'node-status-red-background'"
+                        :loading="$store.state.Dashboard.loading.get('xBootstrap')"
+                        :class="$store.state.Dashboard.xBootstrapped ? 'node-status-green-background' : $store.state.Dashboard.loading.get('xBootstrapped') ? 'node-status-orange-background' : 'node-status-red-background'"
                         tile
                 >
                     <v-list-item>
                         <v-list-item-content>
-                            <v-list-item-title class="headline">Bootstrapped</v-list-item-title>
+                            <v-list-item-title class="headline">X</v-list-item-title>
                         </v-list-item-content>
                         <v-tooltip top>
                             <template v-slot:activator="{ on }">
@@ -74,8 +74,59 @@
                                     help_outline
                                 </span>
                             </template>
-                            <span>We check the balance of the faucet to see whether the node is bootstrapped or not.
-                                <a>https://docs.ava.network/v1.0/en/quickstart/ava-getting-started/</a></span>
+                            <span>Whether the X Chain is bootstrapped (green) or not (red)</span>
+                        </v-tooltip>
+                    </v-list-item>
+                </v-card>
+            </v-col>
+            <v-col
+                    xs="1"
+                    sm="1"
+                    md="1"
+                    class="ma-1 pa-0"
+            >
+                <v-card
+                        :loading="$store.state.Dashboard.loading.get('pBootstrap')"
+                        :class="$store.state.Dashboard.pBootstrapped ? 'node-status-green-background' : $store.state.Dashboard.loading.get('pBootstrap') ? 'node-status-orange-background' : 'node-status-red-background'"
+                        tile
+                >
+                    <v-list-item>
+                        <v-list-item-content>
+                            <v-list-item-title class="headline">P</v-list-item-title>
+                        </v-list-item-content>
+                        <v-tooltip top>
+                            <template v-slot:activator="{ on }">
+                                <span v-on="on" class="material-icons">
+                                    help_outline
+                                </span>
+                            </template>
+                            <span>Whether the P Chain is bootstrapped (green) or not (red)</span>
+                        </v-tooltip>
+                    </v-list-item>
+                </v-card>
+            </v-col>
+            <v-col
+                    xs="1"
+                    sm="1"
+                    md="1"
+                    class="ma-1 pa-0"
+            >
+                <v-card
+                        :loading="$store.state.Dashboard.loading.get('cBootstrap')"
+                        :class="$store.state.Dashboard.cBootstrapped ? 'node-status-green-background' : $store.state.Dashboard.loading.get('cBootstrap') ? 'node-status-orange-background' : 'node-status-red-background'"
+                        tile
+                >
+                    <v-list-item>
+                        <v-list-item-content>
+                            <v-list-item-title class="headline">C</v-list-item-title>
+                        </v-list-item-content>
+                        <v-tooltip top>
+                            <template v-slot:activator="{ on }">
+                                <span v-on="on" class="material-icons">
+                                    help_outline
+                                </span>
+                            </template>
+                            <span>Whether the C Chain is bootstrapped (green) or not (red)</span>
                         </v-tooltip>
                     </v-list-item>
                 </v-card>
@@ -397,7 +448,9 @@
             this.intervalId = setInterval(() => {
                 this.$store.dispatch('Dashboard/fetchBootstrapStatus', this.intervalId)
             }, 120000);
-            dashboardCtx.actions.fetchBootstrapStatus(this.intervalId);
+            dashboardCtx.actions.fetchBootstrapStatusCChain(this.intervalId);
+            dashboardCtx.actions.fetchBootstrapStatusPChain(this.intervalId);
+            dashboardCtx.actions.fetchBootstrapStatusXChain(this.intervalId);
             metricsCtx.actions.fetchMetrics();
         },
         mounted() {
@@ -439,8 +492,9 @@
                 dashboardCtx.actions.fetchPeers();
                 dashboardCtx.actions.fetchUsers();
                 metricsCtx.actions.fetchMetrics()
-                dashboardCtx.actions.fetchBootstrapStatus(this.intervalId)
-                dashboardCtx.actions.fetchCurrentValidators();
+                dashboardCtx.actions.fetchBootstrapStatusCChain(this.intervalId);
+                dashboardCtx.actions.fetchBootstrapStatusPChain(this.intervalId);
+                dashboardCtx.actions.fetchBootstrapStatusXChain(this.intervalId);                dashboardCtx.actions.fetchCurrentValidators();
                 this.fetchInterestingMetrics();
                 await new Promise(r => setTimeout(() => this.refreshDisabled = false, 10000));
 
