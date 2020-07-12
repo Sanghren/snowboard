@@ -119,9 +119,7 @@ class SubnetsActions extends Actions<SubnetsState,
             this.mutations.setSubnetValidators(validators)
             await this.dashboardApi.actions.fetchNodeId();
             const validating = validators.find((s: Validator) => s.id === this.dashboardApi.getters.nodeId)
-            console.log(`BOUH - ${validating}`)
             if(validating) {
-                console.log(`BUUH - ${JSON.stringify(validating)}`)
                 this.mutations.setSubnetCurrentNodeValidating({subnetId: subnetID, validatorInfo: validating } as SubnetCurrentNodeValidating)
             }
             this.mutations.setLoaded('fetchSubnetCurrentValidators')
