@@ -1,3 +1,7 @@
+## NOTE
+
+I have no time to maintain this right now but am still planning to do so ! 
+
 # Snowboard
 
 Snowboard is a Vue.js frontend for [Gecko](https://github.com/ava-labs/gecko), the official Go implementation of an AVA node.
